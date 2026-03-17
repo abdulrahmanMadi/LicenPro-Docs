@@ -1,0 +1,202 @@
+<div class="help-page">
+  <div class="help-page-header">
+    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(244, 114, 182, 0.1)); color: #ec4899;">
+      <i class="ki-filled ki-arrow-mix"></i>
+    </div>
+    <div>
+      <h1>Webhooks</h1>
+      <p>Webhooks allow you to receive real-time notifications when events occur in your LicenPro account. Use them to automate workflows, sync with external systems, or trigger custom actions.</p>
+    </div>
+  </div>
+
+  <div class="help-content">
+    <section class="help-section">
+      <h2>Available Events</h2>
+      <p>LicenPro can send webhooks for the following events:</p>
+      
+      <div class="help-feature-grid">
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
+            <i class="ki-filled ki-plus-squared" style="color: #22c55e;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>license.created</h4>
+            <p>A new license was created</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
+            <i class="ki-filled ki-verify" style="color: #3b82f6;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>license.activated</h4>
+            <p>A license was activated on a device</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(245, 158, 11, 0.1);">
+            <i class="ki-filled ki-timer" style="color: #f59e0b;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>license.expiring</h4>
+            <p>A license is about to expire (7 days)</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(239, 68, 68, 0.1);">
+            <i class="ki-filled ki-cross-circle" style="color: #ef4444;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>license.expired</h4>
+            <p>A license has expired</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(168, 85, 247, 0.1);">
+            <i class="ki-filled ki-shield-cross" style="color: #a855f7;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>license.revoked</h4>
+            <p>A license was revoked</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(6, 182, 212, 0.1);">
+            <i class="ki-filled ki-disconnect" style="color: #06b6d4;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>activation.deactivated</h4>
+            <p>A device was deactivated</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Webhook Payload</h2>
+      <p>All webhooks are sent as HTTP POST requests with a JSON payload. See the API Reference for detailed payload structures.</p>
+    </section>
+
+    <section class="help-section">
+      <h2>Setting Up Webhooks</h2>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>Create an Endpoint</h5>
+            <p>Set up an HTTPS endpoint on your server to receive webhook events. The endpoint must be publicly accessible.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Configure in Dashboard</h5>
+            <p>Go to Product Settings → Webhooks and add your endpoint URL.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Select Events</h5>
+            <p>Choose which events you want to receive notifications for.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Set Secret Key</h5>
+            <p>Configure a secret key to verify webhook signatures and ensure requests are from LicenPro.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">5</div>
+          <div class="help-step-item-content">
+            <h5>Test Your Endpoint</h5>
+            <p>Use the "Send Test" button to verify your endpoint is receiving and processing webhooks correctly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Verifying Webhook Signatures</h2>
+      <p>All webhooks include a signature header for verification. The signature is computed using HMAC-SHA256 with your secret key.</p>
+      
+      <div class="help-warning-box">
+        <div class="help-warning-icon">
+          <i class="ki-filled ki-shield-cross"></i>
+        </div>
+        <div>
+          <strong>Security:</strong> Always verify webhook signatures before processing. This prevents attackers from sending fake webhook events to your endpoint.
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Retry Policy</h2>
+      <p>If your endpoint fails to respond with a 2xx status code, LicenPro will retry:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>First Retry</h5>
+            <p>After 1 minute</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Second Retry</h5>
+            <p>After 5 minutes</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Third Retry</h5>
+            <p>After 30 minutes</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Final Retry</h5>
+            <p>After 2 hours (then marked as failed)</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Respond Quickly:</strong> Return a 200 OK response within 30 seconds. Process webhook data asynchronously if needed to avoid timeouts.
+        </div>
+      </div>
+    </section>
+
+    <div class="help-next-steps">
+      <h2>Related Topics</h2>
+      <div class="help-next-steps-grid">
+        <a routerLink="/api-reference" class="help-next-step-card">
+          <i class="ki-filled ki-data"></i>
+          <h4>REST API</h4>
+          <p>API documentation</p>
+        </a>
+        <a routerLink="/subscription-license" class="help-next-step-card">
+          <i class="ki-filled ki-calendar-tick"></i>
+          <h4>Subscriptions</h4>
+          <p>Renewal webhooks</p>
+        </a>
+        <a routerLink="/sdk-dotnet" class="help-next-step-card">
+          <i class="ki-filled ki-microsoft"></i>
+          <h4>.NET SDK</h4>
+          <p>SDK integration</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

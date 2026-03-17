@@ -124,10 +124,8 @@
 .docs-brand {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
   text-decoration: none;
-  font-size: 1.125rem;
-  font-weight: 700;
   color: var(--foreground, #0f172a);
 }
 
@@ -135,9 +133,40 @@
   color: #f1f5f9;
 }
 
-.docs-brand i {
-  font-size: 1.375rem;
-  color: #6366f1;
+.docs-logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.docs-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.docs-brand-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.docs-brand-subtitle {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--muted-foreground, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[data-bs-theme="dark"] .docs-brand-subtitle {
+  color: #94a3b8;
+}
+
+.docs-mobile-brand .docs-logo-img {
+  width: 28px;
+  height: 28px;
 }
 
 /* ===== THEME TOGGLE ===== */

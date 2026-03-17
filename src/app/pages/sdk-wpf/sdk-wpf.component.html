@@ -1,0 +1,96 @@
+<div class="help-page">
+  <div class="help-page-header">
+    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); color: #6366f1;">
+      <i class="ki-filled ki-element-11"></i>
+    </div>
+    <div>
+      <h1>WPF Integration Guide</h1>
+      <p>Complete guide to integrating LicenPro licensing into your WPF applications using MVVM patterns.</p>
+    </div>
+  </div>
+
+  <div class="help-content">
+    <section class="help-section">
+      <h2>Installation</h2>
+      <div class="help-code-example">
+        <div class="help-code-header">Package Manager Console</div>
+        <pre><code>Install-Package LicenPro</code></pre>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Setup Steps</h2>
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>Override OnStartup in App.xaml.cs</h5>
+            <p>Initialize SDK and check for existing license before showing windows.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Create LicenseActivationViewModel</h5>
+            <p>ViewModel with LicenseKey, StatusMessage, IsActivating properties and ActivateCommand.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Create LicenseActivationWindow</h5>
+            <p>XAML view with TextBox bound to LicenseKey and Button bound to ActivateCommand.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Implement ILicenseService</h5>
+            <p>Service for dependency injection with IsLicenseValidAsync, ValidateAsync, HasFeature methods.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Best Practices</h2>
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Use INotifyPropertyChanged:</strong> Implement property change notifications for proper data binding.
+        </div>
+      </div>
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Dependency Injection:</strong> Register ILicenseService in your DI container for testability.
+        </div>
+      </div>
+    </section>
+
+    <div class="help-next-steps">
+      <h2>Related Topics</h2>
+      <div class="help-next-steps-grid">
+        <a routerLink="/sdk-winforms" class="help-next-step-card">
+          <i class="ki-filled ki-windows"></i>
+          <h4>WinForms</h4>
+          <p>WinForms integration</p>
+        </a>
+        <a routerLink="/sdk-dotnet" class="help-next-step-card">
+          <i class="ki-filled ki-microsoft"></i>
+          <h4>.NET SDK</h4>
+          <p>Core SDK reference</p>
+        </a>
+        <a routerLink="/api-reference" class="help-next-step-card">
+          <i class="ki-filled ki-data"></i>
+          <h4>REST API</h4>
+          <p>API documentation</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

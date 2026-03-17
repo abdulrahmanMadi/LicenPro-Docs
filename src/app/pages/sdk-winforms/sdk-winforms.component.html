@@ -1,0 +1,210 @@
+<div class="help-page">
+  <div class="help-page-header">
+    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(34, 211, 238, 0.1)); color: #06b6d4;">
+      <i class="ki-filled ki-windows"></i>
+    </div>
+    <div>
+      <h1>WinForms Integration Guide</h1>
+      <p>Step-by-step guide to adding LicenPro licensing to your Windows Forms applications. Learn how to validate licenses at startup, handle activation, and provide a seamless user experience.</p>
+    </div>
+  </div>
+
+  <div class="help-content">
+    <section class="help-section">
+      <h2>Prerequisites</h2>
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">✓</div>
+          <div class="help-step-item-content">
+            <h5>Visual Studio 2019 or later</h5>
+            <p>With .NET desktop development workload installed</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">✓</div>
+          <div class="help-step-item-content">
+            <h5>.NET 6+ or .NET Framework 4.7.2+</h5>
+            <p>WinForms project targeting a supported framework</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">✓</div>
+          <div class="help-step-item-content">
+            <h5>LicenPro Product Created</h5>
+            <p>With RSA keys generated and public key downloaded</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Step 1: Install NuGet Package</h2>
+      <p>Add the LicenPro SDK to your WinForms project:</p>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">Package Manager Console</div>
+        <pre><code>Install-Package LicenPro</code></pre>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Step 2: Modify Program.cs</h2>
+      <p>Update your Program.cs to validate the license before showing the main form:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>Change Main to async Task</h5>
+            <p>Change "static void Main()" to "static async Task Main()" to support async license operations.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Initialize SDK</h5>
+            <p>Create SdkSettings with ServerBaseEndpoint set to "https://www.licenpro.tech/api" and call SdkConfiguration.Initialize(settings).</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Load Public Key</h5>
+            <p>Create LicensingSecrets with your public key and call LicenseUtils.LoadLicensingSecrets(secrets).</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Check for License File</h5>
+            <p>Look for "license.bin" in the application directory. If found, load and validate it using LicenseManager.LoadLicenseAsync(licensePath).</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">5</div>
+          <div class="help-step-item-content">
+            <h5>Show Appropriate Form</h5>
+            <p>If license is valid, show MainForm. Otherwise, show LicenseActivationForm.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Step 3: Create License Activation Form</h2>
+      <p>Create a form for users to enter and activate their license:</p>
+      
+      <div class="help-feature-grid">
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-text"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>License Key TextBox</h4>
+            <p>Input field for the license key</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-check-circle"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Activate Button</h4>
+            <p>Triggers validation and activation</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-information"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Status Label</h4>
+            <p>Shows validation progress and results</p>
+          </div>
+        </div>
+      </div>
+      
+      <p>In the Activate button click handler:</p>
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>Validate Online</h5>
+            <p>Call LicenseManager.ValidateLicenseAsync(licenseKey)</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Download License File</h5>
+            <p>If valid, call LicenseManager.DownloadLicenseFileAsync(licenseKey, licensePath)</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Open Main Form</h5>
+            <p>Hide activation form and show the main application form</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Best Practices</h2>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Async/Await:</strong> Always use async methods for license operations to keep the UI responsive. Never block the UI thread with synchronous calls.
+        </div>
+      </div>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Error Handling:</strong> Wrap license operations in try-catch blocks and provide user-friendly error messages.
+        </div>
+      </div>
+      
+      <div class="help-warning-box">
+        <div class="help-warning-icon">
+          <i class="ki-filled ki-shield-cross"></i>
+        </div>
+        <div>
+          <strong>Security:</strong> Don't store the license key in plain text. Use the license file (.bin) which is cryptographically signed and harder to tamper with.
+        </div>
+      </div>
+    </section>
+
+    <div class="help-next-steps">
+      <h2>Related Topics</h2>
+      <div class="help-next-steps-grid">
+        <a routerLink="/sdk-wpf" class="help-next-step-card">
+          <i class="ki-filled ki-element-11"></i>
+          <h4>WPF Integration</h4>
+          <p>Modern desktop apps</p>
+        </a>
+        <a routerLink="/sdk-dotnet" class="help-next-step-card">
+          <i class="ki-filled ki-microsoft"></i>
+          <h4>.NET SDK</h4>
+          <p>Core SDK reference</p>
+        </a>
+        <a routerLink="/perpetual-license" class="help-next-step-card">
+          <i class="ki-filled ki-user"></i>
+          <h4>Perpetual License</h4>
+          <p>License types</p>
+        </a>
+        <a routerLink="/rsa-keys" class="help-next-step-card">
+          <i class="ki-filled ki-shield-tick"></i>
+          <h4>RSA Keys</h4>
+          <p>Key configuration</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,260 @@
+<div class="help-page">
+  <div class="help-page-header">
+    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1)); color: #10b981;">
+      <i class="ki-filled ki-data"></i>
+    </div>
+    <div>
+      <h1>REST API Reference</h1>
+      <p>Complete documentation for the LicenPro REST API. Use these endpoints to automate license management, integrate with your backend systems, or build custom licensing workflows.</p>
+    </div>
+  </div>
+
+  <div class="help-content">
+    <section class="help-section">
+      <h2>Authentication</h2>
+      <p>All API requests require authentication using an API key. Include your API key in the request header:</p>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">HTTP Header</div>
+        <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+      </div>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Get Your API Key:</strong> Navigate to Dashboard → API Keys to create and manage your API keys.
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Base URL</h2>
+      <div class="help-code-example">
+        <div class="help-code-header">Production</div>
+        <pre><code>https://www.licenpro.tech/api</code></pre>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>License Endpoints</h2>
+      
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-post">POST</span>
+          <span class="api-path">/licenses</span>
+        </div>
+        <p>Create a new license</p>
+        
+        <div class="help-code-example">
+          <div class="help-code-header">Request Body</div>
+          <pre><code>{{ '{' }}
+  "productId": "guid",
+  "type": "Standard",
+  "userName": "John Doe",
+  "email": "john&#64;example.com",
+  "company": "Acme Inc",
+  "expirationDate": "2025-12-31T23:59:59Z",
+  "maxActivations": 3,
+  "features": ["premium", "export"]
+{{ '}' }}</code></pre>
+        </div>
+        
+        <div class="help-code-example">
+          <div class="help-code-header">Response (201 Created)</div>
+          <pre><code>{{ '{' }}
+  "id": "guid",
+  "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+  "status": "Active",
+  "createdAt": "2025-01-12T10:00:00Z"
+{{ '}' }}</code></pre>
+        </div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-get">GET</span>
+          <span class="api-path">/licenses/{{ '{' }}id{{ '}' }}</span>
+        </div>
+        <p>Get license details by ID</p>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-get">GET</span>
+          <span class="api-path">/licenses/validate/{{ '{' }}key{{ '}' }}</span>
+        </div>
+        <p>Validate a license key</p>
+        
+        <div class="help-code-example">
+          <div class="help-code-header">Response (200 OK)</div>
+          <pre><code>{{ '{' }}
+  "isValid": true,
+  "status": "Valid",
+  "license": {{ '{' }}
+    "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+    "userName": "John Doe",
+    "expirationDate": "2025-12-31T23:59:59Z",
+    "type": "Standard",
+    "features": ["premium", "export"]
+  {{ '}' }}
+{{ '}' }}</code></pre>
+        </div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-post">POST</span>
+          <span class="api-path">/licenses/{{ '{' }}id{{ '}' }}/revoke</span>
+        </div>
+        <p>Revoke a license</p>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-get">GET</span>
+          <span class="api-path">/licenses/{{ '{' }}id{{ '}' }}/download</span>
+        </div>
+        <p>Download license file (.bin)</p>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Activation Endpoints</h2>
+      
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-post">POST</span>
+          <span class="api-path">/activations</span>
+        </div>
+        <p>Activate a license on a device</p>
+        
+        <div class="help-code-example">
+          <div class="help-code-header">Request Body</div>
+          <pre><code>{{ '{' }}
+  "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+  "hardwareId": "unique-hardware-fingerprint",
+  "machineName": "DESKTOP-ABC123",
+  "osVersion": "Windows 11"
+{{ '}' }}</code></pre>
+        </div>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-delete">DELETE</span>
+          <span class="api-path">/activations/{{ '{' }}id{{ '}' }}</span>
+        </div>
+        <p>Deactivate a license from a device</p>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-post">POST</span>
+          <span class="api-path">/activations/heartbeat</span>
+        </div>
+        <p>Send heartbeat for floating licenses</p>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Product Endpoints</h2>
+      
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-get">GET</span>
+          <span class="api-path">/products</span>
+        </div>
+        <p>List all products</p>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-post">POST</span>
+          <span class="api-path">/products</span>
+        </div>
+        <p>Create a new product</p>
+      </div>
+
+      <div class="api-endpoint">
+        <div class="api-endpoint-header">
+          <span class="api-method api-method-get">GET</span>
+          <span class="api-path">/products/{{ '{' }}id{{ '}' }}/licenses</span>
+        </div>
+        <p>List all licenses for a product</p>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Error Responses</h2>
+      <p>The API uses standard HTTP status codes:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #22c55e;">200</div>
+          <div class="help-step-item-content">
+            <h5>OK</h5>
+            <p>Request successful</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #22c55e;">201</div>
+          <div class="help-step-item-content">
+            <h5>Created</h5>
+            <p>Resource created successfully</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #f59e0b;">400</div>
+          <div class="help-step-item-content">
+            <h5>Bad Request</h5>
+            <p>Invalid request parameters</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #ef4444;">401</div>
+          <div class="help-step-item-content">
+            <h5>Unauthorized</h5>
+            <p>Invalid or missing API key</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #ef4444;">404</div>
+          <div class="help-step-item-content">
+            <h5>Not Found</h5>
+            <p>Resource not found</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number" style="background: #ef4444;">429</div>
+          <div class="help-step-item-content">
+            <h5>Too Many Requests</h5>
+            <p>Rate limit exceeded</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="help-next-steps">
+      <h2>Related Topics</h2>
+      <div class="help-next-steps-grid">
+        <a routerLink="/webhooks" class="help-next-step-card">
+          <i class="ki-filled ki-arrow-mix"></i>
+          <h4>Webhooks</h4>
+          <p>Event notifications</p>
+        </a>
+        <a routerLink="/sdk-dotnet" class="help-next-step-card">
+          <i class="ki-filled ki-microsoft"></i>
+          <h4>.NET SDK</h4>
+          <p>SDK integration</p>
+        </a>
+        <a routerLink="/first-license" class="help-next-step-card">
+          <i class="ki-filled ki-key"></i>
+          <h4>Create License</h4>
+          <p>License creation guide</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

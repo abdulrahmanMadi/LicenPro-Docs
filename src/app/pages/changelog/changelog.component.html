@@ -1,0 +1,86 @@
+<div class="changelog-page">
+  <!-- Hero Section -->
+  <div class="changelog-hero">
+    <div class="changelog-hero-content">
+      <div class="changelog-hero-icon">
+        <i class="ki-filled ki-notepad"></i>
+      </div>
+      <h1>Changelog</h1>
+      <p>Stay up to date with the latest features, improvements, and bug fixes in LicenPro.</p>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="changelog-timeline">
+    @for (entry of changelog; track entry.version) {
+      <div class="changelog-entry">
+        <!-- Version Badge -->
+        <div class="changelog-version-badge" [attr.data-type]="entry.type">
+          <span class="changelog-version">v{{ entry.version }}</span>
+          <span class="changelog-type">{{ entry.type }}</span>
+        </div>
+
+        <!-- Entry Content -->
+        <div class="changelog-entry-content">
+          <!-- Header -->
+          <div class="changelog-entry-header">
+            <div class="changelog-entry-meta">
+              <h2>Version {{ entry.version }}</h2>
+              <span class="changelog-date">
+                <i class="ki-filled ki-calendar"></i>
+                {{ entry.date }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Highlights -->
+          @if (entry.highlights.length > 0) {
+            <div class="changelog-highlights">
+              <h4>Highlights</h4>
+              <div class="changelog-highlights-list">
+                @for (highlight of entry.highlights; track highlight) {
+                  <div class="changelog-highlight">
+                    <i class="ki-filled ki-star"></i>
+                    <span>{{ highlight }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Changes -->
+          <div class="changelog-changes">
+            @for (change of entry.changes; track change.category) {
+              <div class="changelog-change-group" [attr.data-category]="change.category">
+                <div class="changelog-change-header">
+                  <i class="ki-filled" [class]="getCategoryIcon(change.category)"></i>
+                  <span>{{ getCategoryLabel(change.category) }}</span>
+                </div>
+                <ul class="changelog-change-list">
+                  @for (item of change.items; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Subscribe Banner -->
+  <div class="changelog-subscribe">
+    <div class="changelog-subscribe-content">
+      <i class="ki-filled ki-notification-on"></i>
+      <div>
+        <h3>Stay Updated</h3>
+        <p>Get notified when we release new features and updates.</p>
+      </div>
+    </div>
+    <a href="mailto:updates&#64;licenpro.com?subject=Subscribe to Updates" class="changelog-subscribe-btn">
+      <i class="ki-filled ki-sms"></i>
+      Subscribe to Updates
+    </a>
+  </div>
+</div>

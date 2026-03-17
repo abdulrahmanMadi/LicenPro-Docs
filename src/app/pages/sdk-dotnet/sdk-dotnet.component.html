@@ -1,0 +1,292 @@
+<div class="help-page">
+  <div class="help-page-header">
+    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(96, 165, 250, 0.1)); color: #3b82f6;">
+      <i class="ki-filled ki-microsoft"></i>
+    </div>
+    <div>
+      <h1>.NET SDK Integration Guide</h1>
+      <p>Complete guide to integrating LicenPro licensing into your .NET applications. The SDK supports .NET 6+, .NET Framework 4.7.2+, and works with Console, WinForms, WPF, and ASP.NET applications.</p>
+    </div>
+  </div>
+
+  <div class="help-content">
+    <section class="help-section">
+      <h2>Installation</h2>
+      <p>Install the LicenPro SDK via NuGet Package Manager:</p>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">Package Manager Console</div>
+        <pre><code>Install-Package LicenPro</code></pre>
+      </div>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">.NET CLI</div>
+        <pre><code>dotnet add package LicenPro</code></pre>
+      </div>
+
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1.125rem; font-weight: 600;">Required Dependencies</h3>
+      <p>The LicenPro SDK requires the following NuGet packages for configuration management:</p>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">.NET CLI</div>
+        <pre><code>dotnet add package Microsoft.Extensions.Configuration --version 8.0.0
+dotnet add package Microsoft.Extensions.Configuration.Abstractions --version 8.0.0
+dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.0
+dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</code></pre>
+      </div>
+
+      <div class="help-warning-box">
+        <div class="help-warning-icon">
+          <i class="ki-filled ki-shield-cross"></i>
+        </div>
+        <div>
+          <strong>Important:</strong> Without these packages, you will get the error: <code style="background: rgba(245, 158, 11, 0.15); padding: 2px 6px; border-radius: 4px;">Could not load file or assembly 'Microsoft.Extensions.Configuration'</code>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Quick Start Steps</h2>
+      <p>Follow these steps to integrate licensing into your application:</p>
+      
+      <div class="stepper-container">
+        <div class="stepper-item">
+          <div class="stepper-number">1</div>
+          <div class="stepper-content">
+            <div class="stepper-header">
+              <h3>Initialize SDK Settings</h3>
+              <p>Configure the server endpoint</p>
+            </div>
+            <div class="stepper-body">
+              <p>Create an SdkSettings object with your server endpoint (<code>https://licenpro.runasp.net/api</code>) and call <code>SdkConfiguration.Initialize(settings)</code>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="stepper-item">
+          <div class="stepper-number">2</div>
+          <div class="stepper-content">
+            <div class="stepper-header">
+              <h3>Load Your Public Key</h3>
+              <p>Configure license validation</p>
+            </div>
+            <div class="stepper-body">
+              <p>Download your public key from Product Settings in the dashboard. Create a <code>LicensingSecrets</code> object with the public key and call <code>LicenseUtils.LoadLicensingSecrets(secrets)</code>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="stepper-item">
+          <div class="stepper-number">3</div>
+          <div class="stepper-content">
+            <div class="stepper-header">
+              <h3>Validate License</h3>
+              <p>Check license validity</p>
+            </div>
+            <div class="stepper-body">
+              <p>Use <code>LicenseManager.ValidateLicenseAsync(licenseKey)</code> for online validation, or <code>LicenseManager.LoadLicenseAsync(filePath)</code> for offline validation with a license file.</p>
+            </div>
+          </div>
+        </div>
+        <div class="stepper-item">
+          <div class="stepper-number">4</div>
+          <div class="stepper-content">
+            <div class="stepper-header">
+              <h3>Check License Status</h3>
+              <p>Handle the validation result</p>
+            </div>
+            <div class="stepper-body">
+              <p>The result contains a <code>Status</code> property (Valid, Expired, Revoked, Invalid, etc.) and a <code>License</code> object with details like UserName, ExpirationDate, and Features.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Key Classes and Methods</h2>
+      
+      <div class="help-feature-grid">
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-setting-2"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>SdkConfiguration</h4>
+            <p>Initialize SDK with server endpoint and settings</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-key"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>LicenseManager</h4>
+            <p>Validate, load, and manage licenses</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-shield-tick"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>LicenseUtils</h4>
+            <p>Load public keys and licensing secrets</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon">
+            <i class="ki-filled ki-document"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>BaseLicense</h4>
+            <p>Base class for all license types</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>License Types</h2>
+      <p>Cast the BaseLicense to specific types for additional properties:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-filled ki-user"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>StandardLicense</h5>
+            <p>Single-user perpetual license with UserName property</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-filled ki-timer"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>TrialLicense</h5>
+            <p>Time-limited evaluation license</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-filled ki-calendar-tick"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>SubscriptionLicense</h5>
+            <p>Recurring billing with Tier property</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-filled ki-people"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>FloatingLicense</h5>
+            <p>Concurrent user seats with MaxSeats property</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Error Handling</h2>
+      <p>Handle different license statuses appropriately:</p>
+      
+      <div class="help-feature-grid">
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
+            <i class="ki-filled ki-check" style="color: #22c55e;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Valid</h4>
+            <p>License is valid - proceed with application</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(245, 158, 11, 0.1);">
+            <i class="ki-filled ki-timer" style="color: #f59e0b;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Expired</h4>
+            <p>Show renewal dialog to user</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(239, 68, 68, 0.1);">
+            <i class="ki-filled ki-cross" style="color: #ef4444;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Revoked</h4>
+            <p>License was revoked - exit application</p>
+          </div>
+        </div>
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(107, 114, 128, 0.1);">
+            <i class="ki-filled ki-disconnect" style="color: #6b7280;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>NetworkError</h4>
+            <p>Try offline validation with license file</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Best Practices</h2>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Use Async Methods:</strong> Always use async/await for license operations to keep your UI responsive.
+        </div>
+      </div>
+      
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="ki-filled ki-information-2"></i>
+        </div>
+        <div>
+          <strong>Cache License Files:</strong> Download and store license files locally for offline validation support.
+        </div>
+      </div>
+      
+      <div class="help-warning-box">
+        <div class="help-warning-icon">
+          <i class="ki-filled ki-shield-cross"></i>
+        </div>
+        <div>
+          <strong>Protect Your Public Key:</strong> While safe to distribute, consider obfuscating the public key in your application to make reverse engineering harder.
+        </div>
+      </div>
+    </section>
+
+    <div class="help-next-steps">
+      <h2>Platform-Specific Guides</h2>
+      <div class="help-next-steps-grid">
+        <a routerLink="/sdk-winforms" class="help-next-step-card">
+          <i class="ki-filled ki-windows"></i>
+          <h4>WinForms</h4>
+          <p>Desktop app integration</p>
+        </a>
+        <a routerLink="/sdk-wpf" class="help-next-step-card">
+          <i class="ki-filled ki-element-11"></i>
+          <h4>WPF</h4>
+          <p>Modern desktop apps</p>
+        </a>
+        <a routerLink="/api-reference" class="help-next-step-card">
+          <i class="ki-filled ki-data"></i>
+          <h4>REST API</h4>
+          <p>API documentation</p>
+        </a>
+        <a routerLink="/rsa-keys" class="help-next-step-card">
+          <i class="ki-filled ki-shield-tick"></i>
+          <h4>RSA Keys</h4>
+          <p>Key configuration</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
