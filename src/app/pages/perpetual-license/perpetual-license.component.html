@@ -2,11 +2,11 @@
   <!-- Page Header -->
   <div class="help-page-header">
     <div class="help-page-icon help-page-icon-info">
-      <i class="ki-filled ki-user"></i>
+      <i class="ki-duotone ki-users"></i>
     </div>
     <div>
       <h1>Perpetual License</h1>
-      <p>A Perpetual License is a single-user license that never expires. It's the most common licensing model for desktop applications - customers pay once and use the software forever. Perfect for traditional software sales with no recurring fees.</p>
+      <p>A Perpetual License is a multi-user license that never expires. It's a common licensing model for desktop applications - customers pay once and use the software forever. Perfect for traditional software sales with no recurring fees.</p>
     </div>
   </div>
 
@@ -14,12 +14,12 @@
     <!-- Overview -->
     <section class="help-section">
       <h2>What is a Perpetual License?</h2>
-      <p>A Perpetual License grants a single user permanent access to your software. Unlike subscriptions or trials, it doesn't expire and works completely offline by default. Each license is tied to a specific user via their email address.</p>
+      <p>A Perpetual License grants a customer permanent access to your software for one-time purchase licensing. Unlike subscriptions or trials, it doesn't expire and works completely offline by default. A single license can be used by multiple users/devices (based on your configured limits and usage policy) while still being issued to a customer identity.</p>
       
       <div class="help-feature-grid">
         <div class="help-feature-card">
           <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="ki-filled ki-infinity" style="color: #22c55e;"></i>
+            <i class="ki-duotone ki-time" style="color: #22c55e;"></i>
           </div>
           <div class="help-feature-content">
             <h4>Never Expires</h4>
@@ -28,16 +28,22 @@
         </div>
         <div class="help-feature-card">
           <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
-            <i class="ki-filled ki-user" style="color: #3b82f6;"></i>
+            <i class="ki-duotone ki-users" style="color: #3b82f6;"></i>
           </div>
           <div class="help-feature-content">
-            <h4>Single User</h4>
-            <p>One license per customer, tied to their email address</p>
+            <h4>Multi User</h4>
+            <p>One license can be used by multiple users/devices (as defined by your limits)</p>
           </div>
         </div>
         <div class="help-feature-card">
           <div class="help-feature-icon" style="background: rgba(168, 85, 247, 0.1);">
-            <i class="ki-filled ki-wifi-off" style="color: #a855f7;"></i>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+              <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+              <line x1="12" y1="20" x2="12.01" y2="20"/>
+              <line x1="2" y1="2" x2="22" y2="22"/>
+            </svg>
           </div>
           <div class="help-feature-content">
             <h4>Works Offline</h4>
@@ -46,11 +52,239 @@
         </div>
         <div class="help-feature-card">
           <div class="help-feature-icon" style="background: rgba(236, 72, 153, 0.1);">
-            <i class="ki-filled ki-heartbeat" style="color: #ec4899;"></i>
+            <i class="ki-duotone ki-pulse" style="color: #ec4899;"></i>
           </div>
           <div class="help-feature-content">
             <h4>Optional Online Mode</h4>
             <p>Enable heartbeat monitoring for usage tracking and analytics</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>How Multi-User Perpetual Licensing Works</h2>
+      <p>Perpetual licensing is flexible: you sell a one-time license to a customer identity, then control how it can be used through limits and policy (for example, number of activations/devices, or seats). The license stays valid as long as it is not revoked and the usage stays within the configured limits.</p>
+
+      <div class="help-feature-grid">
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
+            <i class="ki-duotone ki-users" style="color: #3b82f6;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Customer Identity</h4>
+            <p>Keep a consistent customer identifier (name + email) for support, re-issuing, and audit trails.</p>
+          </div>
+        </div>
+
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(168, 85, 247, 0.1);">
+            <i class="ki-duotone ki-setting-2" style="color: #a855f7;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Usage Limits</h4>
+            <p>Define what “multi-user” means for your product: seats, devices/activations, or another measurable limit.</p>
+          </div>
+        </div>
+
+        <div class="help-feature-card">
+          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
+            <i class="ki-duotone ki-shield" style="color: #22c55e;"></i>
+          </div>
+          <div class="help-feature-content">
+            <h4>Compliance & Control</h4>
+            <p>Revoke a license if needed, and optionally enable online validation for stronger enforcement and tracking.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Validation Flow -->
+    <section class="help-section">
+      <h2>Validation Flow Details</h2>
+      <p>Step-by-step breakdown of what happens during license validation:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>File Loading</h5>
+            <p>SDK reads the <code>license.bin</code> file from the specified path. If the file doesn't exist or is corrupted, validation fails with <code>InvalidFormat</code> status.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Signature Verification</h5>
+            <p>SDK verifies the RSA-SHA256 signature using the provided public key. If the signature doesn't match, validation fails with <code>SignatureMismatch</code> status. This ensures the license file hasn't been tampered with.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>License Type Check</h5>
+            <p>If <code>ExpectedLicenseType</code> is set, SDK verifies the license type matches. If it doesn't match, validation fails with <code>WrongLicenseType</code> status.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Credential Validation</h5>
+            <p>SDK checks that <code>UserName</code> matches <code>IssuedTo</code> and <code>LicenseKey</code> matches the license key in the file. If either doesn't match, validation fails with <code>CredentialsMismatch</code> status.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">5</div>
+          <div class="help-step-item-content">
+            <h5>Expiration Check</h5>
+            <p>If the license has an expiration date, SDK checks if it's still valid. If expired, validation fails with <code>Expired</code> status.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">6</div>
+          <div class="help-step-item-content">
+            <h5>Online Validation (Optional)</h5>
+            <p>If <code>ForceOnlineValidation = true</code>, SDK connects to the dashboard API to check license status. This verifies the license hasn't been revoked and establishes a session for tracking.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">7</div>
+          <div class="help-step-item-content">
+            <h5>Feature Loading</h5>
+            <p>SDK loads assigned features from the license file and makes them available through <code>FeatureManager</code>. Your application can then check which features are enabled.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">8</div>
+          <div class="help-step-item-content">
+            <h5>Session Heartbeat (Online Mode)</h5>
+            <p>If online validation is enabled, SDK automatically sends heartbeat pings to the dashboard every 5 minutes. This keeps the session alive and updates the "Last Heartbeat" timestamp in the dashboard.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Offline vs Online Validation (Recommended Strategy)</h2>
+      <p>Perpetual licenses work offline by default, which is ideal for desktop and secure environments. If you need stronger enforcement, analytics, or device management, enable online validation for periodic checks.</p>
+
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-globe"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Use Offline Validation When</h5>
+            <p>Customers operate without reliable internet, you ship air-gapped software, or you prioritize zero-runtime dependencies on your backend.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-wifi"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Enable Online Validation When</h5>
+            <p>You need usage telemetry, proactive abuse prevention, rapid revocation, or a strict device/seat enforcement workflow.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-time"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Hybrid Approach</h5>
+            <p>Validate offline on every launch, and periodically re-check online (for example, once per day/week) to keep UX smooth but maintain control.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Implementation Checklist</h2>
+      <p>Use this checklist to ensure your perpetual license flow is robust and supportable:</p>
+
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-check-circle"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Define Limits</h5>
+            <p>Decide whether your multi-user policy is based on activations/devices, seats, or another metric, and configure it consistently in dashboard + app.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-key"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Protect Your Public Key</h5>
+            <p>Ship the public key with your app and treat it as a required dependency for offline validation (never embed private keys).</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-document"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>License File Storage</h5>
+            <p>Store the license file in a stable location and provide a UX for import/replace when customers reinstall or migrate devices.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-message-text-2"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Support Playbook</h5>
+            <p>Document how to re-issue licenses, handle migration, and resolve exceeded-limits scenarios without blocking legitimate customers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>Common Issues & Troubleshooting</h2>
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-cross-circle"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Validation Fails After Reinstall</h5>
+            <p>Ensure the license file is re-imported and the application uses the same customer identity fields used when issuing the license.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-information"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Exceeded Limits</h5>
+            <p>Provide a clear message explaining what limit was exceeded (devices/seats) and how to resolve it (deactivate old device, upgrade tier, or contact support).</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="ki-duotone ki-shield"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Revoked License</h5>
+            <p>Guide the customer to renew or request a new license. In-app, show a dedicated “License Status” screen with the last validation result.</p>
           </div>
         </div>
       </div>
@@ -64,7 +298,7 @@
       <div class="help-steps-list">
         <div class="help-step-item">
           <div class="help-step-item-number">
-            <i class="ki-filled ki-check"></i>
+            <i class="pi pi-check"></i>
           </div>
           <div class="help-step-item-content">
             <h5>Desktop Applications</h5>
@@ -73,7 +307,7 @@
         </div>
         <div class="help-step-item">
           <div class="help-step-item-number">
-            <i class="ki-filled ki-check"></i>
+            <i class="pi pi-check"></i>
           </div>
           <div class="help-step-item-content">
             <h5>Professional Tools</h5>
@@ -82,7 +316,7 @@
         </div>
         <div class="help-step-item">
           <div class="help-step-item-number">
-            <i class="ki-filled ki-check"></i>
+            <i class="pi pi-check"></i>
           </div>
           <div class="help-step-item-content">
             <h5>Offline Environments</h5>
@@ -91,7 +325,7 @@
         </div>
         <div class="help-step-item">
           <div class="help-step-item-number">
-            <i class="ki-filled ki-check"></i>
+            <i class="pi pi-check"></i>
           </div>
           <div class="help-step-item-content">
             <h5>Simple Sales Model</h5>
@@ -124,26 +358,33 @@
         <div class="help-step-item">
           <div class="help-step-item-number">3</div>
           <div class="help-step-item-content">
-            <h5>Enter User Information</h5>
-            <p>Add the customer's <strong>name</strong> and <strong>email</strong>. The email is used as the stable identifier for validation.</p>
+            <h5>Enter Customer Information</h5>
+            <p>Add the customer <strong>name</strong> and <strong>email</strong>. Use this identity consistently for validation and customer support workflows.</p>
           </div>
         </div>
         <div class="help-step-item">
           <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Configure Usage Limits</h5>
+            <p>Set the allowed usage for the license (for example, seats/devices/activations) to match your multi-user policy.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">5</div>
           <div class="help-step-item-content">
             <h5>Set Expiration (Optional)</h5>
             <p>Leave blank for perpetual validity, or set a date for limited-time perpetual licenses (e.g., for major version upgrades).</p>
           </div>
         </div>
         <div class="help-step-item">
-          <div class="help-step-item-number">5</div>
+          <div class="help-step-item-number">6</div>
           <div class="help-step-item-content">
             <h5>Configure Features (Optional)</h5>
             <p>Assign specific features to enable or disable functionality based on the license tier.</p>
           </div>
         </div>
         <div class="help-step-item">
-          <div class="help-step-item-number">6</div>
+          <div class="help-step-item-number">7</div>
           <div class="help-step-item-content">
             <h5>Generate and Deliver</h5>
             <p>Create the license and download the <strong>.bin</strong> file. Send it to your customer via email or download link.</p>
@@ -152,9 +393,108 @@
       </div>
     </section>
 
+    <!-- Complete Flow: Dashboard to SDK to User Machine -->
+    <section class="help-section">
+      <h2>Complete Flow: Dashboard → SDK → User Machine</h2>
+      <p>Understanding how perpetual licenses flow from creation in the dashboard to validation on the user's machine:</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>Dashboard: Create License</h5>
+            <p>In the LicenPro Dashboard, navigate to <strong>Licenses → Create License</strong>. Select <strong>Perpetual</strong> type, enter the end user's email (e.g., <code>user@example.com</code>), select the product release, and configure optional settings like expiration date and features.</p>
+            <div class="help-code-example" style="margin-top: 10px;">
+              <div class="help-code-header">Dashboard Configuration</div>
+              <pre><code>License Type: Perpetual
+End User Email: user@example.com
+Product: PhotoEditor Pro
+Release: v1.0.0
+Expiration: (Optional) 2027-12-31
+Features: Pages Edit, Export PDF
+Activation Mode: Offline (or Online for tracking)</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Dashboard: Generate License Files</h5>
+            <p>The dashboard generates three critical files that link the license to the user's machine:</p>
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li><strong>license.bin</strong> - Encrypted binary file containing license data, signed with RSA private key</li>
+              <li><strong>LicenseKey.txt</strong> - Plain text file with the license key (e.g., <code>LP-A1B2-C3D4-E5F6</code>)</li>
+              <li><strong>PublicKey.pem</strong> - RSA public key for signature verification</li>
+            </ul>
+            <p style="margin-top: 8px;">These files are automatically downloaded as a ZIP package and can be sent to the end user via email or download link.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>User Machine: Receive License Files</h5>
+            <p>The end user receives the license package and extracts it to their machine. They should store these files in a secure location (e.g., <code>C:\ProgramData\YourApp\License\</code>).</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>SDK: Load License Files</h5>
+            <p>Your application uses the LicenPro SDK to load and validate the license files. The SDK reads the <code>license.bin</code> file, verifies the RSA signature using the public key, and checks that the credentials match.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">5</div>
+          <div class="help-step-item-content">
+            <h5>SDK: Validate Credentials</h5>
+            <p>The SDK validates three key pieces of information:</p>
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li><strong>UserName</strong> - Must match the email used when creating the license</li>
+              <li><strong>LicenseKey</strong> - Must match the generated license key</li>
+              <li><strong>PublicKey</strong> - Used to verify the license file signature</li>
+            </ul>
+            <p style="margin-top: 8px;">If all three match, the license is valid and the application can proceed.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">6</div>
+          <div class="help-step-item-content">
+            <h5>SDK: Connect Session (Optional)</h5>
+            <p>If online validation is enabled (<code>ForceOnlineValidation = true</code>), the SDK connects to the dashboard server to establish a session. This enables:</p>
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li>Real-time session tracking in the dashboard</li>
+              <li>Heartbeat monitoring (automatic ping every 5 minutes)</li>
+              <li>Usage analytics and feature tracking</li>
+              <li>Remote license revocation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">7</div>
+          <div class="help-step-item-content">
+            <h5>Dashboard: Monitor Sessions</h5>
+            <p>When online validation is enabled, you can monitor active sessions in the dashboard under <strong>Sessions</strong>. You'll see:</p>
+            <ul style="margin-top: 8px; margin-left: 20px;">
+              <li>User email and device name</li>
+              <li>IP address and operating system</li>
+              <li>Connection time and last heartbeat</li>
+              <li>Online/Offline status</li>
+            </ul>
+            <p style="margin-top: 8px;">You can force disconnect sessions or revoke licenses remotely if needed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SDK Integration -->
     <section class="help-section">
-      <h2>SDK Integration</h2>
+      <h2>SDK Integration Examples</h2>
       <p>Here's how to validate a perpetual license in your .NET application:</p>
       
       <div class="help-code-example">
@@ -162,14 +502,26 @@
         <pre><code>using LicenPro.SDK;
 using LicenPro.Enums;
 
-// Create the license client
+// Create the license client with credentials
 var client = new LicenseClient(new LicenseClientOptions
 {{ '{' }}
-    LicenseFilePath = "license.bin",
-    PublicKey = "YOUR_PUBLIC_KEY",
-    UserName = "customer@email.com",
-    LicenseKey = "LP-XXXX-XXXX",
-    ExpectedLicenseType = LicenseType.Perpetual
+    // Path to the license.bin file
+    LicenseFilePath = @"C:\ProgramData\YourApp\License\license.bin",
+    
+    // RSA public key (Base64, without PEM headers)
+    PublicKey = "MIIBCgKCAQEA...",
+    
+    // User email (must match dashboard)
+    UserName = "user@example.com",
+    
+    // License key (must match dashboard)
+    LicenseKey = "LP-A1B2-C3D4-E5F6",
+    
+    // Verify it's a perpetual license
+    ExpectedLicenseType = LicenseType.Perpetual,
+    
+    // Allow .bin files only (recommended)
+    AllowNonBinFiles = false
 {{ '}' }});
 
 // Validate the license (offline by default)
@@ -177,23 +529,257 @@ var result = await client.ValidateAsync();
 
 if (result.IsValid)
 {{ '{' }}
-    Console.WriteLine($"License Valid!");
+    Console.WriteLine("✓ License Valid!");
     Console.WriteLine($"User: {{ '{' }}client.License?.IssuedTo{{ '}' }}");
-    Console.WriteLine($"Expires: {{ '{' }}client.License?.ExpirationDate ?? "Never"{{ '}' }}");
+    Console.WriteLine($"Expires: {{ '{' }}client.License?.ExpirationDate?.ToString("yyyy-MM-dd") ?? "Never"{{ '}' }}");
+    
+    // Check assigned features
+    if (FeatureManager.IsFeatureEnabled("Pages Edit"))
+    {{ '{' }}
+        Console.WriteLine("✓ Pages Edit feature enabled");
+    {{ '}' }}
 {{ '}' }}
 else
 {{ '{' }}
-    Console.WriteLine($"Error: {{ '{' }}result.ErrorMessage{{ '}' }}");
+    Console.WriteLine($"✗ Validation Failed: {{ '{' }}result.ErrorMessage{{ '}' }}");
+    Console.WriteLine($"Status: {{ '{' }}result.Status{{ '}' }}");
+{{ '}' }}</code></pre>
+      </div>
+
+      <div class="help-code-example">
+        <div class="help-code-header">C# - Online Validation with Session Tracking</div>
+        <pre><code>using LicenPro.SDK;
+using LicenPro.Enums;
+
+// Create the license client with online validation enabled
+var client = new LicenseClient(new LicenseClientOptions
+{{ '{' }}
+    LicenseFilePath = @"C:\ProgramData\YourApp\License\license.bin",
+    PublicKey = "MIIBCgKCAQEA...",
+    UserName = "user@example.com",
+    LicenseKey = "LP-A1B2-C3D4-E5F6",
+    ExpectedLicenseType = LicenseType.Perpetual,
+    
+    // Enable online validation for session tracking
+    ForceOnlineValidation = true,
+    
+    // Optional: Custom server endpoint
+    ServerEndpoint = "https://your-licenpro-server.com/api"
+{{ '}' }});
+
+// Handle session disconnection events
+client.SessionDisconnected += (sender, message) =>
+{{ '{' }}
+    Console.WriteLine($"⚠ Session Disconnected: {{ '{' }}message{{ '}' }}");
+    // Show warning to user or attempt reconnection
+{{ '}' }};
+
+// Validate the license
+var result = await client.ValidateAsync();
+
+if (result.IsValid)
+{{ '{' }}
+    Console.WriteLine("✓ License Valid!");
+    
+    // Connect to dashboard for session tracking
+    await client.ConnectSessionAsync();
+    Console.WriteLine("✓ Session connected to dashboard");
+    
+    // Your application logic here...
+    // The SDK will automatically send heartbeats every 5 minutes
+    
+    // When application closes, disconnect the session
+    await client.DisconnectAsync();
+{{ '}' }}
+else
+{{ '{' }}
+    Console.WriteLine($"✗ Validation Failed: {{ '{' }}result.ErrorMessage{{ '}' }}");
+{{ '}' }}</code></pre>
+      </div>
+
+      <div class="help-code-example">
+        <div class="help-code-header">C# - WinForms Integration Example</div>
+        <pre><code>using LicenPro.SDK;
+using LicenPro.Exceptions;
+
+public partial class MainForm : Form
+{{ '{' }}
+    private LicenseClient? _licenseClient;
+
+    public MainForm()
+    {{ '{' }}
+        InitializeComponent();
+        
+        // Handle form closing to disconnect session
+        FormClosing += async (_, __) =>
+        {{ '{' }}
+            try
+            {{ '{' }}
+                if (_licenseClient != null)
+                    await _licenseClient.DisconnectAsync();
+            {{ '}' }}
+            catch {{ '{' }} {{ '}' }}
+        {{ '}' }};
+    {{ '}' }}
+
+    private async void btnValidate_Click(object sender, EventArgs e)
+    {{ '{' }}
+        // Dispose previous client if exists
+        if (_licenseClient != null)
+        {{ '{' }}
+            await _licenseClient.DisposeAsync();
+            _licenseClient = null;
+        {{ '}' }}
+
+        // Create new license client
+        _licenseClient = new LicenseClient(new LicenseClientOptions
+        {{ '{' }}
+            LicenseFilePath = txtLicenseFile.Text,
+            PublicKey = txtPublicKey.Text,
+            UserName = txtUserName.Text,
+            LicenseKey = txtLicenseKey.Text,
+            ExpectedLicenseType = LicenseType.Perpetual,
+            AllowNonBinFiles = true,
+            ForceOnlineValidation = true
+        {{ '}' }});
+
+        // Handle session disconnection
+        _licenseClient.SessionDisconnected += (_, msg) =>
+        {{ '{' }}
+            if (InvokeRequired)
+                Invoke(() => OnSessionDisconnected(msg));
+            else
+                OnSessionDisconnected(msg);
+        {{ '}' }};
+
+        // Validate the license
+        var result = await _licenseClient.ValidateAsync();
+        
+        if (result.IsValid)
+        {{ '{' }}
+            lblStatus.Text = "License is VALID!";
+            lblStatus.ForeColor = Color.Green;
+            
+            // Connect to session for dashboard visibility
+            await _licenseClient.ConnectSessionAsync();
+            
+            // Show assigned features
+            RefreshFeaturesList();
+            
+            MessageBox.Show(
+                "License Validation Successful!\\n\\nThe license is valid.",
+                "Valid License",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        {{ '}' }}
+        else
+        {{ '{' }}
+            lblStatus.Text = result.Status.ToString();
+            lblStatus.ForeColor = Color.Red;
+            
+            MessageBox.Show(
+                result.ErrorMessage,
+                result.ErrorTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        {{ '}' }}
+    {{ '}' }}
+
+    private void RefreshFeaturesList()
+    {{ '{' }}
+        lstFeatures.Items.Clear();
+        
+        var allFeatures = FeatureManager.GetAllFeatures();
+        if (allFeatures == null || allFeatures.Count == 0)
+        {{ '{' }}
+            lstFeatures.Items.Add("(No features assigned)");
+            return;
+        {{ '}' }}
+
+        foreach (var feature in allFeatures)
+        {{ '{' }}
+            var isEnabled = FeatureManager.IsFeatureEnabled(feature.Key);
+            var status = isEnabled ? "✓" : "✗";
+            var displayText = $"{{ '{' }}status{{ '}' }} {{ '{' }}feature.Key{{ '}' }} ({{ '{' }}feature.Value.Type{{ '}' }})";
+            lstFeatures.Items.Add(displayText);
+        {{ '}' }}
+    {{ '}' }}
+
+    private void OnSessionDisconnected(string message)
+    {{ '{' }}
+        lblStatus.Text = "Session Disconnected";
+        lblStatus.ForeColor = Color.Orange;
+        MessageBox.Show(
+            $"Session disconnected:\\n{{ '{' }}message{{ '}' }}",
+            "Session Warning",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Warning);
+    {{ '}' }}
 {{ '}' }}</code></pre>
       </div>
 
       <div class="help-tip-box">
         <div class="help-tip-icon">
-          <i class="ki-filled ki-information-2"></i>
+          <i class="pi pi-info-circle"></i>
         </div>
         <div>
           <strong>Offline vs Online Mode:</strong> By default, perpetual licenses work offline. Set <code>ForceOnlineValidation = true</code> to enable session tracking, heartbeat monitoring, and real-time usage analytics in your dashboard.
         </div>
+      </div>
+
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="pi pi-shield"></i>
+        </div>
+        <div>
+          <strong>Credential Matching:</strong> The <code>UserName</code> and <code>LicenseKey</code> in your SDK code must exactly match the values used when creating the license in the dashboard. Any mismatch will result in a <code>CredentialsMismatch</code> validation error.
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Management -->
+    <section class="help-section">
+      <h2>Feature Management</h2>
+      <p>Control which features are available based on the license tier:</p>
+      
+      <div class="help-code-example">
+        <div class="help-code-header">C# - Feature Checking</div>
+        <pre><code>using LicenPro.Utilities;
+using LicenPro.Exceptions;
+
+// Check if a feature is enabled
+if (FeatureManager.IsFeatureEnabled("Pages Edit"))
+{{ '{' }}
+    // Enable the feature in your UI
+    btnPagesEdit.Enabled = true;
+{{ '}' }}
+
+// Throw exception if feature is not allowed
+try
+{{ '{' }}
+    FeatureManager.ThrowIfNotAllowed("Export PDF", trackUsage: true);
+    
+    // Feature is allowed, proceed with export
+    ExportToPdf();
+{{ '}' }}
+catch (FeatureNotLicensedException ex)
+{{ '{' }}
+    MessageBox.Show(ex.Message, "Feature Not Available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+{{ '}' }}
+
+// Track feature usage for analytics
+FeatureManager.TrackFeatureUsage("Pages Edit", new Dictionary&lt;string, object&gt;
+{{ '{' }}
+    ["action"] = "save",
+    ["pageCount"] = 5
+{{ '}' }});
+
+// Get all assigned features
+var allFeatures = FeatureManager.GetAllFeatures();
+foreach (var feature in allFeatures)
+{{ '{' }}
+    Console.WriteLine($"{{ '{' }}feature.Key{{ '}' }}: {{ '{' }}feature.Value.Type{{ '}' }}");
+{{ '}' }}</code></pre>
       </div>
     </section>
 
@@ -203,7 +789,7 @@ else
       
       <div class="help-tip-box">
         <div class="help-tip-icon">
-          <i class="ki-filled ki-information-2"></i>
+          <i class="pi pi-info-circle"></i>
         </div>
         <div>
           <strong>User Email as Identifier:</strong> Use the customer's email as the UserName field when creating the license. Your app should validate using the same email string to ensure license belongs to the right user.
@@ -212,7 +798,7 @@ else
       
       <div class="help-tip-box">
         <div class="help-tip-icon">
-          <i class="ki-filled ki-information-2"></i>
+          <i class="pi pi-info-circle"></i>
         </div>
         <div>
           <strong>Graceful Expiration Handling:</strong> Even perpetual licenses can have optional expiration dates. Always check <code>License.ExpirationDate</code> and handle expired licenses gracefully with renewal prompts.
@@ -221,10 +807,78 @@ else
       
       <div class="help-tip-box">
         <div class="help-tip-icon">
-          <i class="ki-filled ki-information-2"></i>
+          <i class="pi pi-info-circle"></i>
         </div>
         <div>
           <strong>Feature-Based Tiers:</strong> Use features to create license tiers (Basic, Pro, Enterprise). This lets you sell different price points with the same codebase.
+        </div>
+      </div>
+    </section>
+
+    <!-- Validation Status Codes -->
+    <section class="help-section">
+      <h2>Validation Status Codes</h2>
+      <p>Understanding validation status codes helps you provide better error messages to users:</p>
+
+      <div class="help-docs-content">
+        <h4>Common Validation Status Codes</h4>
+        <p>When validating a license, the SDK returns a status code indicating the result. These codes help you diagnose issues and provide meaningful feedback to users:</p>
+        <ul>
+          <li><strong>Valid</strong> — License is valid and active. All checks passed successfully.</li>
+          <li><strong>InvalidFormat</strong> — License file is corrupted or has an invalid structure. The file may have been tampered with or incorrectly generated.</li>
+          <li><strong>SignatureMismatch</strong> — RSA signature verification failed. This indicates the license was not signed with the correct private key or the public key in your app doesn't match.</li>
+          <li><strong>CredentialsMismatch</strong> — The UserName or LicenseKey provided to the SDK doesn't match the values stored in the license file.</li>
+          <li><strong>WrongLicenseType</strong> — The license type (Perpetual, Trial, Subscription, Floating) doesn't match what your application expects.</li>
+          <li><strong>Expired</strong> — The license has passed its expiration date. Users need to renew their license.</li>
+          <li><strong>Revoked</strong> — The license has been revoked by an administrator and is no longer valid.</li>
+          <li><strong>DeviceBlocked</strong> — The current device is blocked from using this license, typically due to too many activations.</li>
+        </ul>
+      </div>
+
+      <div class="help-code-example">
+        <div class="help-code-header">Status Code Reference</div>
+        <pre><code>Valid                  - License is valid and active
+InvalidFormat          - License file is corrupted or invalid
+SignatureMismatch      - RSA signature verification failed
+CredentialsMismatch    - UserName or LicenseKey don't match
+WrongLicenseType       - License type doesn't match expected type
+Expired                - License has expired
+Revoked                - License has been revoked by admin
+DeviceBlocked          - Device is blocked from using this license</code></pre>
+      </div>
+
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="pi pi-exclamation-triangle"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>CredentialsMismatch</h5>
+            <p><strong>Cause:</strong> UserName or LicenseKey in SDK doesn't match dashboard values.</p>
+            <p><strong>Solution:</strong> Verify credentials exactly match (case-sensitive). Check for extra spaces or special characters.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="pi pi-exclamation-triangle"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>SignatureMismatch</h5>
+            <p><strong>Cause:</strong> Public key doesn't match the private key used to sign the license.</p>
+            <p><strong>Solution:</strong> Ensure you're using the correct PublicKey.pem file. Re-download license package if corrupted.</p>
+          </div>
+        </div>
+
+        <div class="help-step-item">
+          <div class="help-step-item-number">
+            <i class="pi pi-exclamation-triangle"></i>
+          </div>
+          <div class="help-step-item-content">
+            <h5>Session Disconnects</h5>
+            <p><strong>Cause:</strong> Network issues or heartbeat timeout.</p>
+            <p><strong>Solution:</strong> Check internet connection, verify firewall allows connections to dashboard API, implement reconnection logic.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -234,28 +888,32 @@ else
       <h2>Related Topics</h2>
       <p>Learn more about other license types and features:</p>
       
-      <div class="help-next-steps-grid">
-        <a routerLink="/trial-license" class="help-next-step-card">
-          <i class="ki-filled ki-timer"></i>
-          <h4>Trial License</h4>
-          <p>Time-limited evaluation</p>
-        </a>
-        <a routerLink="/subscription-license" class="help-next-step-card">
-          <i class="ki-filled ki-calendar-tick"></i>
-          <h4>Subscription</h4>
-          <p>Recurring billing model</p>
-        </a>
-        <a routerLink="/floating-license" class="help-next-step-card">
-          <i class="ki-filled ki-people"></i>
-          <h4>Floating License</h4>
-          <p>Concurrent users</p>
-        </a>
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="ki-filled ki-code"></i>
-          <h4>.NET SDK</h4>
-          <p>Integration guide</p>
-        </a>
-      </div>
+      <ul class="docs-list">
+        <li>
+          <a routerLink="/trial-license">
+            <i class="pi pi-clock"></i>
+            <strong>Trial License</strong> — Time-limited evaluation
+          </a>
+        </li>
+        <li>
+          <a routerLink="/subscription-license">
+            <i class="pi pi-calendar"></i>
+            <strong>Subscription</strong> — Recurring billing model
+          </a>
+        </li>
+        <li>
+          <a routerLink="/floating-license">
+            <i class="pi pi-users"></i>
+            <strong>Floating License</strong> — Concurrent users
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sdk-dotnet">
+            <i class="pi pi-code"></i>
+            <strong>.NET SDK</strong> — Integration guide
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

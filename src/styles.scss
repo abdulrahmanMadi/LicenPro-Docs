@@ -1,5 +1,7 @@
 /* LicenPro Docs - Global Styles */
 
+@import "primeicons/primeicons.css";
+
 /* CSS Variables */
 :root {
   --background: #f8fafc;
@@ -45,39 +47,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   min-height: 100vh;
-}
-
-/* Keenicons Webfont - inline fallback */
-.ki-filled {
-  font-family: 'keenicons-fill' !important;
-  font-style: normal;
-  font-weight: normal;
-  speak: none;
-  display: inline-block;
-  text-decoration: inherit;
-  width: 1em;
-  margin-right: .2em;
-  text-align: center;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1em;
-  -webkit-font-smoothing: antialiased;
-}
-
-.ki-outline {
-  font-family: 'keenicons-outline' !important;
-  font-style: normal;
-  font-weight: normal;
-  speak: none;
-  display: inline-block;
-  text-decoration: inherit;
-  width: 1em;
-  margin-right: .2em;
-  text-align: center;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1em;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar styling */

@@ -93,7 +93,7 @@ export class DocsLayoutComponent {
       icon: 'ki-key-square',
       expanded: true,
       children: [
-        { id: 'perpetual', label: 'Perpetual license', icon: 'ki-user', route: '/perpetual-license' },
+        { id: 'perpetual', label: 'Perpetual license', icon: 'ki-users', route: '/perpetual-license' },
         { id: 'trial', label: 'Trial license', icon: 'ki-timer', route: '/trial-license' },
         { id: 'subscription', label: 'Subscription license', icon: 'ki-calendar-tick', route: '/subscription-license' },
         { id: 'floating', label: 'Floating license', icon: 'ki-people', route: '/floating-license' },

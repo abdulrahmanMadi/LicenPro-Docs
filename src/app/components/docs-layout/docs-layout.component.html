@@ -1,32 +1,20 @@
 <div class="docs-layout">
-  <!-- Mobile Header -->
+  <!-- Mobile Header - Just logo, no toggle -->
   <div class="docs-mobile-header">
-    <button class="docs-hamburger" (click)="toggleSidebar()" aria-label="Toggle navigation">
-      <i class="ki-filled" [class.ki-burger-menu-1]="!isSidebarOpen" [class.ki-cross]="isSidebarOpen"></i>
-    </button>
     <a routerLink="/" class="docs-mobile-brand">
-      <img src="assets/images/logo.png" alt="LicenPro" class="docs-logo-img">
-      <span>Documentation</span>
+      <img src="Assets/1x/Logo4.png" alt="LicenPro" class="docs-logo-img">
     </a>
     <button class="docs-theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
       <i class="ki-filled" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
     </button>
   </div>
 
-  <!-- Sidebar -->
-  <aside class="docs-sidebar" [class.open]="isSidebarOpen">
+  <!-- Sidebar - Always visible, no toggle -->
+  <aside class="docs-sidebar">
     <div class="docs-sidebar-header">
       <a routerLink="/" class="docs-brand">
-        <img src="assets/images/logo.png" alt="LicenPro" class="docs-logo-img">
-        <span class="docs-brand-text">
-          <span class="docs-brand-name">LicenPro</span>
-          <span class="docs-brand-subtitle">Documentation</span>
-        </span>
+        <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
       </a>
-      <button class="docs-theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
-        <i class="ki-filled" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
-        <span class="docs-theme-label">{{ currentTheme() === 'dark' ? 'Light' : 'Dark' }}</span>
-      </button>
     </div>
 
     <!-- Search -->
@@ -101,17 +89,13 @@
     </div>
   </aside>
 
-  <!-- Overlay -->
-  <div class="docs-overlay" [class.visible]="isSidebarOpen" (click)="toggleSidebar()"></div>
+  <!-- Overlay removed - sidebar always visible -->
 
   <!-- Main Content -->
   <main class="docs-main">
-    <!-- Topbar -->
+    <!-- Topbar - No sidebar toggle -->
     <header class="docs-topbar">
       <div class="docs-topbar-start">
-        <button class="docs-sidebar-toggle" (click)="toggleSidebar()" aria-label="Toggle sidebar">
-          <i class="ki-filled ki-burger-menu-1"></i>
-        </button>
       </div>
       <nav class="docs-topbar-nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Guides</a>

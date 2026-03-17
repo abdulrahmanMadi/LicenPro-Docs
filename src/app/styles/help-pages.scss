@@ -888,8 +888,8 @@
 }
 
 .help-feature-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: none;
 }
 
 .help-feature-icon {
@@ -898,14 +898,26 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: rgba(99, 102, 241, 0.1);
+  background: var(--muted, #f1f5f9) !important;
   border-radius: 12px;
   flex-shrink: 0;
 }
 
 .help-feature-icon i {
   font-size: 1.25rem;
-  color: #6366f1;
+  color: var(--muted-foreground, #64748b) !important;
+}
+
+[data-bs-theme="dark"] .help-feature-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-bs-theme="dark"] .help-feature-icon {
+  background: rgba(51, 65, 85, 0.5) !important;
+}
+
+[data-bs-theme="dark"] .help-feature-icon i {
+  color: #94a3b8 !important;
 }
 
 .help-feature-content h4 {
@@ -1001,4 +1013,98 @@
     left: 17px;
     top: 36px;
   }
+}
+
+/* Docs List - Related Topics */
+.docs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.docs-list li {
+  margin-bottom: 0.75rem;
+}
+
+.docs-list li:last-child {
+  margin-bottom: 0;
+}
+
+.docs-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--foreground, #0f172a);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.docs-list a:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
+}
+
+.docs-list a i {
+  font-size: 1.125rem;
+  color: #6366f1;
+  width: 1.5rem;
+  text-align: center;
+}
+
+.docs-list a strong {
+  font-weight: 600;
+}
+
+/* Help Docs Content - Documentation-style text content */
+.help-docs-content {
+  margin-bottom: 1.5rem;
+}
+
+.help-docs-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground, #0f172a);
+  margin: 0 0 0.75rem;
+}
+
+[data-bs-theme="dark"] .help-docs-content h4 {
+  color: #e2e8f0;
+}
+
+.help-docs-content p {
+  font-size: 0.9375rem;
+  color: var(--secondary-foreground, #475569);
+  margin: 0 0 1rem;
+  line-height: 1.6;
+}
+
+[data-bs-theme="dark"] .help-docs-content p {
+  color: #cbd5e1;
+}
+
+.help-docs-content ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.help-docs-content li {
+  font-size: 0.875rem;
+  color: var(--secondary-foreground, #475569);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+[data-bs-theme="dark"] .help-docs-content li {
+  color: #cbd5e1;
+}
+
+.help-docs-content li strong {
+  color: var(--foreground, #0f172a);
+  font-weight: 600;
+}
+
+[data-bs-theme="dark"] .help-docs-content li strong {
+  color: #e2e8f0;
 }
