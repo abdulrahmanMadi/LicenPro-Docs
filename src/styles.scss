@@ -1,1 +1,84 @@
-/* You can add global styles to this file, and also import other style files */
+/* LicenPro Docs - Global Styles */
+
+/* CSS Variables */
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+}
+
+[data-bs-theme="dark"] {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: rgba(30, 41, 59, 0.6);
+  --card-foreground: #f1f5f9;
+  --muted: rgba(51, 65, 85, 0.5);
+  --muted-foreground: #94a3b8;
+  --border: rgba(51, 65, 85, 0.4);
+  --primary: #818cf8;
+  --primary-foreground: #0f172a;
+}
+
+/* Base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+}
+
+/* Keenicons Webfont - inline fallback */
+.ki-filled {
+  font-family: 'keenicons' !important;
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
