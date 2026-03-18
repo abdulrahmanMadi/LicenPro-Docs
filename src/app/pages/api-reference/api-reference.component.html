@@ -16,7 +16,12 @@
       
       <div class="help-code-example">
         <div class="help-code-header">HTTP Header</div>
-        <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+        <pre><code>X-API-KEY: YOUR_API_KEY</code></pre>
+      </div>
+
+      <div class="help-code-example">
+        <div class="help-code-header">Backward compatible header (supported)</div>
+        <pre><code>Authorization: X-API-KEY YOUR_API_KEY</code></pre>
       </div>
       
       <div class="help-tip-box">
@@ -32,8 +37,16 @@
     <section class="help-section">
       <h2>Base URL</h2>
       <div class="help-code-example">
-        <div class="help-code-header">Production</div>
-        <pre><code>https://www.licenpro.tech/api</code></pre>
+        <div class="help-code-header">Your API base URL</div>
+        <pre><code>https://YOUR_DOMAIN/api</code></pre>
+      </div>
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="pi pi-info-circle"></i>
+        </div>
+        <div>
+          <strong>Tip:</strong> The SDK uses <code>SdkSettings.ServerBaseEndpoint</code> and expects the <code>/api</code> prefix (for example: <code>https://licenpro.runasp.net/api</code>).
+        </div>
       </div>
     </section>
 
@@ -50,24 +63,30 @@
         <div class="help-code-example">
           <div class="help-code-header">Request Body</div>
           <pre><code>{{ '{' }}
-  "productId": "guid",
-  "type": "Standard",
-  "userName": "John Doe",
-  "email": "john&#64;example.com",
-  "company": "Acme Inc",
-  "expirationDate": "2025-12-31T23:59:59Z",
-  "maxActivations": 3,
-  "features": ["premium", "export"]
+  "name": "Acme Pro - Perpetual (3 devices)",
+  "type": "Perpetual",
+  "issuedTo": "john&#64;example.com",
+  "issuer": "Acme Licensing Team",
+  "softwareReleaseId": "GUID",
+  "expirationDate": null,
+  "maxActiveUsersCount": 3,
+  "hardwareId": null,
+  "notes": "Invoice #INV-1024",
+  "entitlementSetIds": ["GUID"]
 {{ '}' }}</code></pre>
         </div>
         
         <div class="help-code-example">
-          <div class="help-code-header">Response (201 Created)</div>
+          <div class="help-code-header">Response (200 OK)</div>
           <pre><code>{{ '{' }}
-  "id": "guid",
-  "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
-  "status": "Active",
-  "createdAt": "2025-01-12T10:00:00Z"
+  "success": true,
+  "message": "License created successfully",
+  "data": {{ '{' }}
+    "licenseId": "GUID",
+    "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+    "type": "Perpetual",
+    "status": "Valid"
+  {{ '}' }}
 {{ '}' }}</code></pre>
         </div>
       </div>

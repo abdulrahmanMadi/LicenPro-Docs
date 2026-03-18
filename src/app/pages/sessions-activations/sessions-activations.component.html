@@ -156,10 +156,10 @@
           <div class="stepper-content">
             <div class="stepper-header">
               <h3>Heartbeat</h3>
-              <p>Automatic every 30 seconds</p>
+              <p>Automatic (interval provided by server)</p>
             </div>
             <div class="stepper-body">
-              <p>The SDK automatically sends heartbeats to keep the session alive. If heartbeats stop, the session times out.</p>
+              <p>The SDK automatically sends heartbeats to keep the session alive. The server returns a recommended heartbeat interval (seconds) when you connect. If heartbeats stop, the session will time out.</p>
             </div>
           </div>
         </div>
@@ -199,10 +199,10 @@
           <div class="stepper-content">
             <div class="stepper-header">
               <h3>Activate</h3>
-              <p>ActivationManager.ActivateDeviceAsync()</p>
+              <p>LicenseClient.TryActivateDeviceAsync()</p>
             </div>
             <div class="stepper-body">
-              <p>The SDK sends the device fingerprint to the server. If activation slots are available, the device is registered.</p>
+              <p>The SDK sends the device fingerprint (hardware ID) to the server. If activation slots are available, the device is registered.</p>
             </div>
           </div>
         </div>
@@ -253,46 +253,48 @@ await SessionManager.DisconnectAsync();</code></pre>
 
       <div class="help-code-example">
         <div class="help-code-header">C# - Activations (Device registration)</div>
-        <pre><code>// Activate device (call once, on first run)
-var success = await ActivationManager.ActivateDeviceAsync(licenseKey);
+        <pre><code>// Activate device (typically on first run / first validation)
+var client = new LicenseClient(new LicenseClientOptions
+{{ '{' }}
+    LicenseFilePath = @"C:\ProgramData\YourApp\license.bin",
+    PublicKey = "YOUR_PUBLIC_KEY",
+    UserName = "user@example.com",
+    LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+    ServerEndpoint = "https://YOUR_DOMAIN/api",
+    ForceOnlineValidation = true
+{{ '}' }});
 
-if (success)
-{{ '{' }}
-    Console.WriteLine("Device registered successfully!");
-    // Device is now permanently registered
-{{ '}' }}
-else
-{{ '{' }}
-    Console.WriteLine("Activation failed - device limit may be reached");
-{{ '}' }}</code></pre>
+var validate = await client.ValidateAsync();
+if (!validate.IsValid)
+    throw new Exception(validate.ErrorMessage);
+
+// For license types that require it, this will call /api/activations
+var activated = await client.TryActivateDeviceAsync();
+Console.WriteLine(activated ? "Device activated" : "Device activation skipped or not required");</code></pre>
       </div>
 
       <div class="help-code-example">
         <div class="help-code-header">C# - Both Systems (Recommended for enterprise)</div>
         <pre><code>public async Task StartApplicationAsync(string licenseKey)
 {{ '{' }}
-    // Step 1: Register device (first time only)
-    var activationResult = await ActivationManager.ActivateDeviceAsync(licenseKey);
-    
-    if (!activationResult)
+    // Step 1: Validate + activate device (when required)
+    var client = BuildLicenseClient(licenseKey);
+    var validation = await client.ValidateAsync();
+    if (!validation.IsValid)
     {{ '{' }}
-        // Device limit reached
-        MessageBox.Show("Maximum devices reached. Deactivate another device first.");
+        MessageBox.Show(validation.ErrorMessage);
         return;
     {{ '}' }}
-    
-    // Step 2: Connect session (every time app runs)
-    var sessionResult = await SessionManager.ConnectAsync(licenseKey, Environment.UserName);
-    
-    if (!sessionResult.Success)
+
+    // Step 2: Connect an online session (when you want real-time tracking / concurrency control)
+    var session = await client.ConnectSessionAsync();
+    if (!session.Success)
     {{ '{' }}
-        // Too many concurrent users
-        MessageBox.Show("Too many users online. Try again later.");
+        MessageBox.Show(session.Message ?? "Could not connect session.");
         return;
     {{ '}' }}
-    
-    // App is ready!
-    Console.WriteLine("Device registered + Session connected");
+
+    Console.WriteLine("Validated + (optional) activated + session connected");
 {{ '}' }}</code></pre>
       </div>
 

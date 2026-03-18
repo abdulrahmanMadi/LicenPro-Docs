@@ -421,13 +421,13 @@ Activation Mode: Offline (or Online for tracking)</code></pre>
           <div class="help-step-item-number">2</div>
           <div class="help-step-item-content">
             <h5>Dashboard: Generate License Files</h5>
-            <p>The dashboard generates three critical files that link the license to the user's machine:</p>
+            <p>The dashboard generates the signed license file and exposes the other values you need for the SDK:</p>
             <ul style="margin-top: 8px; margin-left: 20px;">
-              <li><strong>license.bin</strong> - Encrypted binary file containing license data, signed with RSA private key</li>
-              <li><strong>LicenseKey.txt</strong> - Plain text file with the license key (e.g., <code>LP-A1B2-C3D4-E5F6</code>)</li>
-              <li><strong>PublicKey.pem</strong> - RSA public key for signature verification</li>
+              <li><strong>license.bin</strong> – Signed binary license file generated per product using that product's RSA private key.</li>
+              <li><strong>License Key</strong> – The textual license key shown in the dashboard (you can copy/paste it or export it yourself if needed).</li>
+              <li><strong>Public Key</strong> – The RSA public key stored on the product and used by the SDK to verify signatures. You typically copy this value from the product settings into your app configuration.</li>
             </ul>
-            <p style="margin-top: 8px;">These files are automatically downloaded as a ZIP package and can be sent to the end user via email or download link.</p>
+            <p style="margin-top: 8px;">The <strong>license.bin</strong> file is downloaded directly from the dashboard for each license. You can send this file, the license key, and the public key to your customer via email or a secure download flow.</p>
           </div>
         </div>
 
@@ -866,7 +866,7 @@ DeviceBlocked          - Device is blocked from using this license</code></pre>
           <div class="help-step-item-content">
             <h5>SignatureMismatch</h5>
             <p><strong>Cause:</strong> Public key doesn't match the private key used to sign the license.</p>
-            <p><strong>Solution:</strong> Ensure you're using the correct PublicKey.pem file. Re-download license package if corrupted.</p>
+            <p><strong>Solution:</strong> Ensure you’re using the correct product <strong>public key</strong> (the one paired with the private key used to sign this license file). If in doubt, re-download the license file from the dashboard and copy the public key again from Product Settings.</p>
           </div>
         </div>
 

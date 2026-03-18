@@ -63,7 +63,7 @@
           <div class="help-step-item-number">2</div>
           <div class="help-step-item-content">
             <h5>Initialize SDK</h5>
-            <p>Create SdkSettings with ServerBaseEndpoint set to "https://www.licenpro.tech/api" and call SdkConfiguration.Initialize(settings).</p>
+            <p>Create <code>SdkSettings</code> with <code>ServerBaseEndpoint</code> set to your API base URL (for example <code>https://licenpro.runasp.net/api</code>), then call <code>SdkConfiguration.Initialize(settings)</code>.</p>
           </div>
         </div>
         <div class="help-step-item">
@@ -130,14 +130,14 @@
           <div class="help-step-item-number">1</div>
           <div class="help-step-item-content">
             <h5>Validate Online</h5>
-            <p>Call LicenseManager.ValidateLicenseAsync(licenseKey)</p>
+            <p>Use <code>LicenseClient.ValidateAsync()</code> (recommended) or load a <code>license.bin</code> file using <code>LicenseManager.LoadLicenseAsync(filePath)</code>.</p>
           </div>
         </div>
         <div class="help-step-item">
           <div class="help-step-item-number">2</div>
           <div class="help-step-item-content">
             <h5>Download License File</h5>
-            <p>If valid, call LicenseManager.DownloadLicenseFileAsync(licenseKey, licensePath)</p>
+            <p>If validation succeeds, store the license file in a stable location (for example <code>C:\ProgramData\YourApp\license.bin</code>). In most products, the license file is distributed to the customer from the dashboard (downloaded by an admin and sent to the user).</p>
           </div>
         </div>
         <div class="help-step-item">

@@ -12,73 +12,26 @@
   <div class="help-content">
     <section class="help-section">
       <h2>Available Events</h2>
-      <p>LicenPro can send webhooks for the following events:</p>
+      <p>Webhooks are planned for a future release. In the current backend build, there are no webhook delivery endpoints/controllers enabled yet.</p>
       
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-plus-circle" style="color: #22c55e;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>license.created</h4>
-            <p>A new license was created</p>
-          </div>
+      <div class="help-warning-box">
+        <div class="help-warning-icon">
+          <i class="pi pi-info-circle"></i>
         </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
-            <i class="pi pi-check-circle" style="color: #3b82f6;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>license.activated</h4>
-            <p>A license was activated on a device</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(245, 158, 11, 0.1);">
-            <i class="pi pi-clockr" style="color: #f59e0b;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>license.expiring</h4>
-            <p>A license is about to expire (7 days)</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(239, 68, 68, 0.1);">
-            <i class="pi pi-times-circle" style="color: #ef4444;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>license.expired</h4>
-            <p>A license has expired</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(168, 85, 247, 0.1);">
-            <i class="pi pi-shield" style="color: #a855f7;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>license.revoked</h4>
-            <p>A license was revoked</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(6, 182, 212, 0.1);">
-            <i class="pi pi-ban" style="color: #06b6d4;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>activation.deactivated</h4>
-            <p>A device was deactivated</p>
-          </div>
+        <div>
+          <strong>Workaround today:</strong> if you need integrations (CRM/billing/telemetry), poll the REST API endpoints (licenses/status, sessions, activations) or write directly from your own dashboard UI when actions occur.
         </div>
       </div>
     </section>
 
     <section class="help-section">
       <h2>Webhook Payload</h2>
-      <p>All webhooks are sent as HTTP POST requests with a JSON payload. See the API Reference for detailed payload structures.</p>
+      <p>Webhook payload formats will be documented here once webhook delivery is enabled. For now, use the REST API as the integration surface.</p>
     </section>
 
     <section class="help-section">
       <h2>Setting Up Webhooks</h2>
+      <p>This section will be enabled when webhooks are shipped.</p>
       
       <div class="help-steps-list">
         <div class="help-step-item">
@@ -121,7 +74,7 @@
 
     <section class="help-section">
       <h2>Verifying Webhook Signatures</h2>
-      <p>All webhooks include a signature header for verification. The signature is computed using HMAC-SHA256 with your secret key.</p>
+      <p>Signature verification will be documented when webhooks are shipped.</p>
       
       <div class="help-warning-box">
         <div class="help-warning-icon">
@@ -135,7 +88,7 @@
 
     <section class="help-section">
       <h2>Retry Policy</h2>
-      <p>If your endpoint fails to respond with a 2xx status code, LicenPro will retry:</p>
+      <p>Retry policy will be documented when webhooks are shipped.</p>
       
       <div class="help-steps-list">
         <div class="help-step-item">

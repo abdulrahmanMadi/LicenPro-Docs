@@ -182,14 +182,14 @@ Status: Active</code></pre>
                 <div class="sub-step-number">3.3</div>
                 <div class="sub-step-content">
                   <h5>Download Public Key</h5>
-                  <p>Download the <strong>public key (.pem file)</strong> - you'll need this in your application.</p>
+                  <p>Copy or download the <strong>public key</strong> - you’ll ship it with your application so the SDK can verify license signatures.</p>
                 </div>
               </div>
               <div class="sub-step">
                 <div class="sub-step-number">3.4</div>
                 <div class="sub-step-content">
                   <h5>Store Keys Securely</h5>
-                  <p>The private key is stored securely on LicenPro servers. Keep your public key safe.</p>
+                  <p>The private key stays on the LicenPro server (per product) and is used to sign license files. Your app only needs the public key.</p>
                 </div>
               </div>
             </div>
@@ -343,7 +343,7 @@ var result = await LicenseManager.LoadLicenseAsync(licensePath);
 if (result.Status == LicenseStatus.Valid && result.License != null)
 {{ '{' }}
     Console.WriteLine("✅ License is valid!");
-    Console.WriteLine($"   Licensed to: {{ '{' }}(result.License as StandardLicense)?.UserName{{ '}' }}");
+    Console.WriteLine($"   Licensed to: {{ '{' }}(result.License as PerpetualLicense)?.UserName{{ '}' }}");
 {{ '}' }}
 else
 {{ '{' }}

@@ -82,7 +82,7 @@ dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</co
               <p>Check license validity</p>
             </div>
             <div class="stepper-body">
-              <p>Use <code>LicenseManager.ValidateLicenseAsync(licenseKey)</code> for online validation, or <code>LicenseManager.LoadLicenseAsync(filePath)</code> for offline validation with a license file.</p>
+              <p>For most apps, use <code>LicenseClient</code> because it combines offline file validation, optional online validation, device activation, and sessions into a single flow.</p>
             </div>
           </div>
         </div>
@@ -154,8 +154,8 @@ dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</co
             <i class="pi pi-user"></i>
           </div>
           <div class="help-step-item-content">
-            <h5>StandardLicense</h5>
-            <p>Single-user perpetual license with UserName property</p>
+            <h5>PerpetualLicense</h5>
+            <p>Perpetual license (optionally expiring) issued to a customer identity</p>
           </div>
         </div>
         <div class="help-step-item">
@@ -173,7 +173,7 @@ dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</co
           </div>
           <div class="help-step-item-content">
             <h5>SubscriptionLicense</h5>
-            <p>Recurring billing with Tier property</p>
+            <p>Time-bound subscription with subscription duration and expiry</p>
           </div>
         </div>
         <div class="help-step-item">
@@ -182,7 +182,7 @@ dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</co
           </div>
           <div class="help-step-item-content">
             <h5>FloatingLicense</h5>
-            <p>Concurrent user seats with MaxSeats property</p>
+            <p>Concurrent seats/license sessions with MaxActiveUsersCount</p>
           </div>
         </div>
       </div>
