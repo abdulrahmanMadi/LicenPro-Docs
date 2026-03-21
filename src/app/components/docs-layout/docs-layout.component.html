@@ -2,7 +2,7 @@
   <!-- Mobile Header - Just logo, no toggle -->
   <div class="docs-mobile-header">
     <a routerLink="/" class="docs-mobile-brand">
-      <img src="Assets/1x/Logo4.png" alt="LicenPro" class="docs-logo-img">
+      <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
     </a>
     <button class="docs-theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
       <i class="ki-filled" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
@@ -78,13 +78,13 @@
 
     <!-- Sidebar Footer -->
     <div class="docs-sidebar-footer">
-      <a href="https://github.com" target="_blank" rel="noopener" class="docs-sidebar-link">
-        <i class="ki-filled ki-github"></i>
-        <span>GitHub</span>
-      </a>
-      <a href="https://licenpro.com" class="docs-sidebar-link">
+      <a href="https://www.licenpro.tech" target="_blank" rel="noopener" class="docs-sidebar-link">
         <i class="ki-filled ki-home"></i>
-        <span>LicenPro Home</span>
+        <span>LicenPro Dashboard</span>
+      </a>
+      <a href="https://www.licenpro.tech/dashboard/support" class="docs-sidebar-link">
+        <i class="ki-filled ki-support"></i>
+        <span>Support Center</span>
       </a>
     </div>
   </aside>
