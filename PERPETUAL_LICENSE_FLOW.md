@@ -82,10 +82,9 @@ The flow ensures secure, tamper-proof licensing using RSA cryptography while sup
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │ Step 1: Load license.bin                             │  │
 │  │ Step 2: Verify RSA signature with PublicKey.pem      │  │
-│  │ Step 3: Validate UserName matches IssuedTo           │  │
-│  │ Step 4: Validate LicenseKey matches                  │  │
-│  │ Step 5: Check expiration date (if set)               │  │
-│  │ Step 6: Load assigned features                       │  │
+│  │ Step 3: Validate LicenseKey matches                  │  │
+│  │ Step 4: Check expiration date (if set)               │  │
+│  │ Step 5: Load assigned features                       │  │
 │  └──────────────────────────────────────────────────────┘  │
 │                            ↓                                │
 │  ┌──────────────────────────────────────────────────────┐  │
@@ -242,7 +241,7 @@ The three files are packaged into a ZIP file and can be:
 ### Step 1: Install LicenPro SDK
 
 ```bash
-dotnet add package LicenPro.SDK --version 1.0.0-rc1
+dotnet add package LicenPro.SDK --version 1.2.4
 ```
 
 ### Step 2: Basic Offline Validation
@@ -259,9 +258,6 @@ var client = new LicenseClient(new LicenseClientOptions
     
     // RSA public key (Base64, without PEM headers)
     PublicKey = "MIIBCgKCAQEA...",
-    
-    // User email (must match IssuedTo in dashboard)
-    UserName = "user@example.com",
     
     // License key (must match generated key)
     LicenseKey = "LP-A1B2-C3D4-E5F6",
@@ -297,7 +293,6 @@ var client = new LicenseClient(new LicenseClientOptions
 {
     LicenseFilePath = @"C:\ProgramData\YourApp\License\license.bin",
     PublicKey = "MIIBCgKCAQEA...",
-    UserName = "user@example.com",
     LicenseKey = "LP-A1B2-C3D4-E5F6",
     ExpectedLicenseType = LicenseType.Perpetual,
     
@@ -355,9 +350,7 @@ if (result.IsValid)
    - Fails if types don't match
 
 4. **Credential Validation**
-   - Checks `UserName` matches `IssuedTo`
    - Checks `LicenseKey` matches stored key
-   - Both must match exactly (case-sensitive)
 
 5. **Expiration Check**
    - If expiration date is set, checks if still valid
@@ -384,7 +377,7 @@ if (result.IsValid)
 | `Valid` | License is valid and active | Proceed with application |
 | `InvalidFormat` | License file is corrupted | Re-download license file |
 | `SignatureMismatch` | Signature verification failed | Check public key matches |
-| `CredentialsMismatch` | UserName or LicenseKey don't match | Verify credentials |
+| `CredentialsMismatch` | LicenseKey doesn't match | Verify credentials |
 | `WrongLicenseType` | License type doesn't match expected | Check license type |
 | `Expired` | License has expired | Renew license |
 | `Revoked` | License has been revoked | Contact support |
@@ -423,13 +416,17 @@ if (result.IsValid)
 When online validation is enabled, you can monitor sessions in the dashboard:
 
 **Session Information:**
-- User email
+- Display user
 - Device name
 - IP address
 - Operating system
 - Connection time
 - Last heartbeat
 - Online/Offline status
+
+**Displayed user behavior:**
+- Perpetual licenses: shows the PC user name (from the running machine)
+- Other licenses: shows the user identity stored in the license file
 
 **Available Actions:**
 - Force disconnect session
@@ -519,10 +516,9 @@ foreach (var feature in allFeatures)
 
 #### 1. Validation Fails with "CredentialsMismatch"
 
-**Cause:** UserName or LicenseKey in SDK doesn't match dashboard values
+**Cause:** LicenseKey in SDK doesn't match the license file
 
 **Solution:**
-- Verify `UserName` exactly matches `IssuedTo` in dashboard (case-sensitive)
 - Verify `LicenseKey` exactly matches generated key
 - Check for extra spaces or special characters
 
@@ -570,7 +566,6 @@ foreach (var feature in allFeatures)
 
 ### 1. Credential Management
 
-- Use end user's email as `UserName` for consistency
 - Store license files in secure, stable locations
 - Never hardcode license keys in source code
 - Provide UI for users to import/update license files

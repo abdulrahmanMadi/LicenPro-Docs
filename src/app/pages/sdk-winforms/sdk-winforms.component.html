@@ -181,6 +181,51 @@
       </div>
     </section>
 
+    <section class="help-section">
+      <h2>Secure Credential Caching (Advanced)</h2>
+      <p>For a seamless user experience, you can securely cache the License Key and Public Key after the first successful validation. On subsequent launches, the app can auto-validate without prompting the user.</p>
+      
+      <div class="help-steps-list">
+        <div class="help-step-item">
+          <div class="help-step-item-number">1</div>
+          <div class="help-step-item-content">
+            <h5>After First Validation</h5>
+            <p>When validation succeeds, encrypt and store the LicenseKey and PublicKey using Windows DPAPI (<code>ProtectedData.Protect</code>) with <code>DataProtectionScope.CurrentUser</code>. This ensures credentials can only be decrypted by the same Windows user on the same machine.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">2</div>
+          <div class="help-step-item-content">
+            <h5>Store Protected License</h5>
+            <p>Also cache the license file in encrypted form (e.g., <code>license.secure.bin</code>) using <code>LicenseFileProtector.ProtectAsync</code>. This creates a tamper-resistant local copy tied to the license key.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">3</div>
+          <div class="help-step-item-content">
+            <h5>Auto-Validate on Startup</h5>
+            <p>On app launch, check for the cached credentials and protected license. If present, load them automatically and call <code>ValidateOfflineAsync</code> (fast, no network). The app starts instantly without user interaction.</p>
+          </div>
+        </div>
+        <div class="help-step-item">
+          <div class="help-step-item-number">4</div>
+          <div class="help-step-item-content">
+            <h5>Security Benefits</h5>
+            <p>The cached data is useless if copied to another machine or user account. Even if the files are extracted, they cannot be decrypted without the original Windows user context.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="help-tip-box">
+        <div class="help-tip-icon">
+          <i class="pi pi-info-circle"></i>
+        </div>
+        <div>
+          <strong>UX Tip:</strong> This pattern provides both security and convenience—users validate once, then enjoy instant startup times on subsequent launches. The test app in the LicenPro SDK repository demonstrates this implementation.
+        </div>
+      </div>
+    </section>
+
     <div class="help-next-steps">
       <h2>Related Topics</h2>
       <div class="help-next-steps-grid">

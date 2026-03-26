@@ -343,7 +343,7 @@ var result = await LicenseManager.LoadLicenseAsync(licensePath);
 if (result.Status == LicenseStatus.Valid && result.License != null)
 {{ '{' }}
     Console.WriteLine("✅ License is valid!");
-    Console.WriteLine($"   Licensed to: {{ '{' }}(result.License as PerpetualLicense)?.UserName{{ '}' }}");
+    Console.WriteLine($"   License type: {{ '{' }}result.License.Type{{ '}' }}");
 {{ '}' }}
 else
 {{ '{' }}

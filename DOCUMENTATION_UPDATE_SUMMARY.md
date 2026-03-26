@@ -22,7 +22,7 @@ A 7-step guide showing the complete journey of a perpetual license:
 2. **Dashboard: Generate License Files** - Three critical files (license.bin, LicenseKey.txt, PublicKey.pem)
 3. **User Machine: Receive License Files** - End user receives and stores files
 4. **SDK: Load License Files** - Application loads and verifies files
-5. **SDK: Validate Credentials** - Three-way validation (UserName, LicenseKey, PublicKey)
+5. **SDK: Validate Credentials** - Two-way validation (LicenseKey, PublicKey)
 6. **SDK: Connect Session (Optional)** - Online mode for tracking
 7. **Dashboard: Monitor Sessions** - Real-time monitoring and management
 
@@ -54,7 +54,6 @@ var client = new LicenseClient(new LicenseClientOptions
 {
     LicenseFilePath = @"C:\ProgramData\YourApp\License\license.bin",
     PublicKey = "MIIBCgKCAQEA...",
-    UserName = "user@example.com",
     LicenseKey = "LP-A1B2-C3D4-E5F6",
     ExpectedLicenseType = LicenseType.Perpetual
 });
@@ -99,7 +98,7 @@ Comprehensive guide to status codes:
 - `Valid` - License is valid and active
 - `InvalidFormat` - License file is corrupted
 - `SignatureMismatch` - RSA signature verification failed
-- `CredentialsMismatch` - UserName or LicenseKey don't match
+- `CredentialsMismatch` - LicenseKey doesn't match
 - `WrongLicenseType` - License type doesn't match expected
 - `Expired` - License has expired
 - `Revoked` - License has been revoked
@@ -210,9 +209,8 @@ Common issues and solutions:
 
 ### 4. Credential Matching
 Critical requirement: Three pieces must match exactly:
-1. **UserName** in SDK = **IssuedTo** in dashboard
-2. **LicenseKey** in SDK = Generated key in dashboard
-3. **PublicKey** in SDK = Public key from dashboard
+1. **LicenseKey** in SDK = Generated key in dashboard
+2. **PublicKey** in SDK = Public key from dashboard
 
 Any mismatch results in `CredentialsMismatch` validation error.
 

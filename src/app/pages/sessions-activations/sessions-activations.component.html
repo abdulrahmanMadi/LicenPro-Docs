@@ -238,17 +238,22 @@
       
       <div class="help-code-example">
         <div class="help-code-header">C# - Sessions (Real-time tracking)</div>
-        <pre><code>// Connect when app starts
-var result = await SessionManager.ConnectAsync(licenseKey, Environment.UserName);
-
-if (result.Success)
+        <pre><code>// Recommended: validate with LicenseClient
+// The SDK will connect sessions automatically during ValidateAsync (when online is available)
+var client = new LicenseClient(new LicenseClientOptions
 {{ '{' }}
-    Console.WriteLine($"Connected! Session: {{ '{' }}result.SessionId{{ '}' }}");
-    // Heartbeats are sent automatically
-{{ '}' }}
+    LicenseFilePath = @"C:\\ProgramData\\YourApp\\license.bin",
+    PublicKey = "YOUR_PUBLIC_KEY",
+    LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+    ServerEndpoint = "https://YOUR_DOMAIN/api"
+{{ '}' }});
+
+var validation = await client.ValidateAsync();
+if (!validation.IsValid)
+    throw new Exception(validation.ErrorMessage);
 
 // Disconnect when app closes
-await SessionManager.DisconnectAsync();</code></pre>
+await client.DisconnectAsync();</code></pre>
       </div>
 
       <div class="help-code-example">
@@ -256,9 +261,8 @@ await SessionManager.DisconnectAsync();</code></pre>
         <pre><code>// Activate device (typically on first run / first validation)
 var client = new LicenseClient(new LicenseClientOptions
 {{ '{' }}
-    LicenseFilePath = @"C:\ProgramData\YourApp\license.bin",
+    LicenseFilePath = @"C:\\ProgramData\\YourApp\\license.bin",
     PublicKey = "YOUR_PUBLIC_KEY",
-    UserName = "user@example.com",
     LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
     ServerEndpoint = "https://YOUR_DOMAIN/api",
     ForceOnlineValidation = true

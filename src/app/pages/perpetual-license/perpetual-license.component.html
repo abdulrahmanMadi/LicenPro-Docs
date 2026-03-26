@@ -133,7 +133,7 @@
           <div class="help-step-item-number">4</div>
           <div class="help-step-item-content">
             <h5>Credential Validation</h5>
-            <p>SDK checks that <code>UserName</code> matches <code>IssuedTo</code> and <code>LicenseKey</code> matches the license key in the file. If either doesn't match, validation fails with <code>CredentialsMismatch</code> status.</p>
+            <p>SDK checks that <code>LicenseKey</code> matches the license key in the file. If it doesn't match, validation fails with <code>CredentialsMismatch</code> status.</p>
           </div>
         </div>
 
@@ -451,13 +451,12 @@ Activation Mode: Offline (or Online for tracking)</code></pre>
           <div class="help-step-item-number">5</div>
           <div class="help-step-item-content">
             <h5>SDK: Validate Credentials</h5>
-            <p>The SDK validates three key pieces of information:</p>
+            <p>The SDK validates two key pieces of information:</p>
             <ul style="margin-top: 8px; margin-left: 20px;">
-              <li><strong>UserName</strong> - Must match the email used when creating the license</li>
               <li><strong>LicenseKey</strong> - Must match the generated license key</li>
               <li><strong>PublicKey</strong> - Used to verify the license file signature</li>
             </ul>
-            <p style="margin-top: 8px;">If all three match, the license is valid and the application can proceed.</p>
+            <p style="margin-top: 8px;">If both match, the license is valid and the application can proceed.</p>
           </div>
         </div>
 
@@ -511,9 +510,6 @@ var client = new LicenseClient(new LicenseClientOptions
     // RSA public key (Base64, without PEM headers)
     PublicKey = "MIIBCgKCAQEA...",
     
-    // User email (must match dashboard)
-    UserName = "user@example.com",
-    
     // License key (must match dashboard)
     LicenseKey = "LP-A1B2-C3D4-E5F6",
     
@@ -556,7 +552,6 @@ var client = new LicenseClient(new LicenseClientOptions
 {{ '{' }}
     LicenseFilePath = @"C:\ProgramData\YourApp\License\license.bin",
     PublicKey = "MIIBCgKCAQEA...",
-    UserName = "user@example.com",
     LicenseKey = "LP-A1B2-C3D4-E5F6",
     ExpectedLicenseType = LicenseType.Perpetual,
     
@@ -636,7 +631,6 @@ public partial class MainForm : Form
         {{ '{' }}
             LicenseFilePath = txtLicenseFile.Text,
             PublicKey = txtPublicKey.Text,
-            UserName = txtUserName.Text,
             LicenseKey = txtLicenseKey.Text,
             ExpectedLicenseType = LicenseType.Perpetual,
             AllowNonBinFiles = true,
@@ -732,7 +726,7 @@ public partial class MainForm : Form
           <i class="pi pi-shield"></i>
         </div>
         <div>
-          <strong>Credential Matching:</strong> The <code>UserName</code> and <code>LicenseKey</code> in your SDK code must exactly match the values used when creating the license in the dashboard. Any mismatch will result in a <code>CredentialsMismatch</code> validation error.
+          <strong>Credential Matching:</strong> The <code>LicenseKey</code> in your SDK code must exactly match the license key generated in the dashboard. Any mismatch will result in a <code>CredentialsMismatch</code> validation error.
         </div>
       </div>
     </section>
@@ -792,7 +786,7 @@ foreach (var feature in allFeatures)
           <i class="pi pi-info-circle"></i>
         </div>
         <div>
-          <strong>User Email as Identifier:</strong> Use the customer's email as the UserName field when creating the license. Your app should validate using the same email string to ensure license belongs to the right user.
+          <strong>License Identity:</strong> The license file contains the customer identity (IssuedTo) for reference and support purposes. This is displayed in the dashboard Sessions view for all license types except Perpetual (which shows the PC username).
         </div>
       </div>
       
@@ -827,7 +821,7 @@ foreach (var feature in allFeatures)
           <li><strong>Valid</strong> — License is valid and active. All checks passed successfully.</li>
           <li><strong>InvalidFormat</strong> — License file is corrupted or has an invalid structure. The file may have been tampered with or incorrectly generated.</li>
           <li><strong>SignatureMismatch</strong> — RSA signature verification failed. This indicates the license was not signed with the correct private key or the public key in your app doesn't match.</li>
-          <li><strong>CredentialsMismatch</strong> — The UserName or LicenseKey provided to the SDK doesn't match the values stored in the license file.</li>
+          <li><strong>CredentialsMismatch</strong> — The LicenseKey provided to the SDK doesn't match the value stored in the license file.</li>
           <li><strong>WrongLicenseType</strong> — The license type (Perpetual, Trial, Subscription, Floating) doesn't match what your application expects.</li>
           <li><strong>Expired</strong> — The license has passed its expiration date. Users need to renew their license.</li>
           <li><strong>Revoked</strong> — The license has been revoked by an administrator and is no longer valid.</li>
@@ -840,7 +834,7 @@ foreach (var feature in allFeatures)
         <pre><code>Valid                  - License is valid and active
 InvalidFormat          - License file is corrupted or invalid
 SignatureMismatch      - RSA signature verification failed
-CredentialsMismatch    - UserName or LicenseKey don't match
+CredentialsMismatch    - LicenseKey doesn't match
 WrongLicenseType       - License type doesn't match expected type
 Expired                - License has expired
 Revoked                - License has been revoked by admin
@@ -854,8 +848,8 @@ DeviceBlocked          - Device is blocked from using this license</code></pre>
           </div>
           <div class="help-step-item-content">
             <h5>CredentialsMismatch</h5>
-            <p><strong>Cause:</strong> UserName or LicenseKey in SDK doesn't match dashboard values.</p>
-            <p><strong>Solution:</strong> Verify credentials exactly match (case-sensitive). Check for extra spaces or special characters.</p>
+            <p><strong>Cause:</strong> LicenseKey in SDK doesn't match the license file value.</p>
+            <p><strong>Solution:</strong> Verify LicenseKey exactly matches (case-sensitive). Check for extra spaces or special characters.</p>
           </div>
         </div>
 
