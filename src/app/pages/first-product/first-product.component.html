@@ -1,291 +1,113 @@
 <div class="help-page">
-  <!-- Page Header -->
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-primary">
-      <i class="pi pi-box"></i>
-    </div>
+  <header class="help-page-header">
+    <h1>Create Your First Product</h1>
+    <p class="lead">Learn how to set up your first software product in LicenPro. Products represent the applications you want to protect and manage with licenses.</p>
+  </header>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-time"></i>
     <div>
-      <h1>Create Your First Product</h1>
-      <p>Learn how to set up your first software product in LicenPro. Products are the foundation of your licensing system - they represent the software applications you want to protect with licenses.</p>
+      <span class="callout-title">Estimated time: 5-10 minutes</span>
+      <p>This guide covers the initial dashboard setup and RSA key generation required for your first product.</p>
     </div>
   </div>
 
-  <!-- Time Estimate -->
-  <div class="help-time-estimate">
-    <i class="pi pi-clock"></i>
-    <span>Estimated time: 5-10 minutes</span>
+  <h2>Product Capabilities</h2>
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-key"></i>
+      <h4>License Management</h4>
+      <p>Generate and manage keys specific to this application.</p>
+    </div>
+    <div class="integration-card">
+       <i class="ki-outline ki-cloud-download"></i>
+       <h4>Release Tracking</h4>
+       <p>Track software versions and distribute updates.</p>
+    </div>
+    <div class="integration-card">
+       <i class="ki-outline ki-shield-tick"></i>
+       <h4>RSA Signing</h4>
+       <p>Enterprise-grade cryptographic license security.</p>
+    </div>
   </div>
 
-  <div class="help-content">
-    <!-- What is a Product Section -->
-    <section class="help-section">
-      <h2>What is a Product?</h2>
-      <p>In LicenPro, a Product represents your software application that you want to protect with licensing. Each product has its own set of licenses, releases, and configuration settings.</p>
-      
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-key"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>License Management</h4>
-            <p>Generate and manage licenses specific to this product</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-cloud-download"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Release Tracking</h4>
-            <p>Track software versions and distribute updates</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-shield"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>RSA Key Pairs</h4>
-            <p>Secure cryptographic keys for license validation</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-chart-line-up"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Analytics</h4>
-            <p>Track activations, usage, and license metrics</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Prerequisites Section -->
-    <section class="help-section">
-      <h2>Prerequisites</h2>
-      <p>Before creating your first product, make sure you have:</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">✓</div>
-          <div class="help-step-item-content">
-            <h5>A LicenPro Account</h5>
-            <p>You need to be registered and logged into your LicenPro dashboard. If you haven't registered yet, <a href="https://app.licenpro.com/auth/register" target="_blank">create an account here</a>.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">✓</div>
-          <div class="help-step-item-content">
-            <h5>Product Information Ready</h5>
-            <p>Have your product name, description, and basic details ready. You can always edit these later.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Step by Step Guide with Professional Stepper -->
-    <section class="help-section">
-      <h2>Step-by-Step Guide</h2>
-      
-      <div class="stepper-container">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Navigate to Products</h3>
-              <p>Access the products section from your dashboard</p>
-            </div>
-            <div class="stepper-body">
-              <p>From your dashboard, click on <strong>"Products"</strong> in the left sidebar menu. This will take you to the products list page where you can see all your existing products.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Click "Create Product"</h3>
-              <p>Start the product creation process</p>
-            </div>
-            <div class="stepper-body">
-              <p>Click the <strong>"Create Product"</strong> button in the top right corner of the products page. This will open the product creation form.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Enter Product Details</h3>
-              <p>Fill in the required information</p>
-            </div>
-            <div class="stepper-body">
-              <ul class="help-list">
-                <li><strong>Product Name:</strong> A unique name for your software (e.g., "MyApp Pro")</li>
-                <li><strong>Description:</strong> A brief description of what your software does</li>
-                <li><strong>Company Name:</strong> Your company or organization name</li>
-                <li><strong>Website URL:</strong> (Optional) Your product's website</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Configure License Settings</h3>
-              <p>Set up your default licensing preferences</p>
-            </div>
-            <div class="stepper-body">
-              <ul class="help-list">
-                <li><strong>Default License Type:</strong> Choose Standard, Trial, Subscription, etc.</li>
-                <li><strong>Max Activations:</strong> How many devices can use one license</li>
-                <li><strong>Heartbeat Interval:</strong> How often the app should check license validity</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">5</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Generate RSA Keys</h3>
-              <p>Create encryption keys for license security</p>
-            </div>
-            <div class="stepper-body">
-              <p>Click <strong>"Generate RSA Keys"</strong> to create a new key pair for your product. These keys are used to sign and verify licenses.</p>
-              <div class="help-warning-box">
-                <div class="help-warning-icon">
-                  <i class="pi pi-shield"></i>
-                </div>
-                <div>
-                  <strong>Important:</strong> Your private key is used by the server to sign license files and should never be embedded in apps. Your application validates offline using the <strong>public key</strong>.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">6</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Save Your Product</h3>
-              <p>Complete the product creation</p>
-            </div>
-            <div class="stepper-body">
-              <p>Review all the information and click <strong>"Create Product"</strong> to save. Your product is now ready for license generation!</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Product Settings Explained -->
-    <section class="help-section">
-      <h2>Understanding Product Settings</h2>
-      <p>Here's a detailed explanation of each product setting and how it affects your licensing:</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-tag"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Product Name</h5>
-            <p>The display name of your software product. This appears in license files and the dashboard.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-mobile"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Max Activations</h5>
-            <p>The maximum number of devices that can activate a single license. Set to 1 for single-device licenses.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-clock"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Heartbeat Interval</h5>
-            <p>How often (in minutes) your application should contact the server to verify the license is still valid.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-shield"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>RSA Key Pair</h5>
-            <p>Cryptographic keys used to sign licenses. The public key is embedded in your app for verification.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tips Section -->
-    <section class="help-section">
-      <h2>Best Practices</h2>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Use Descriptive Names:</strong> Choose product names that clearly identify your software. This makes it easier to manage multiple products.
-        </div>
-      </div>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Secure Your Keys:</strong> Always download and securely backup your RSA private key. If lost, you'll need to regenerate keys and reissue all licenses.
-        </div>
-      </div>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Never Share Private Keys:</strong> Your private key should never be shared or embedded in your application. Only the public key should be distributed.
-        </div>
-      </div>
-    </section>
-
-    <!-- What's Next -->
-    <div class="help-next-steps">
-      <h2>What's Next?</h2>
-      <p>Now that you've created your product, here are the next steps:</p>
-      
-      <div class="help-next-steps-grid">
-        <a routerLink="/first-license" class="help-next-step-card">
-          <i class="pi pi-key"></i>
-          <h4>Generate License</h4>
-          <p>Create your first license key</p>
-        </a>
-        <a routerLink="/rsa-keys" class="help-next-step-card">
-          <i class="pi pi-shield"></i>
-          <h4>RSA Configuration</h4>
-          <p>Learn about key management</p>
-        </a>
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>Integrate SDK</h4>
-          <p>Add licensing to your app</p>
-        </a>
+  <h2 style="margin-top: 4rem;">Step-by-Step Guide</h2>
+  <div class="doc-stepper">
+    <div class="step-item active">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Navigate to Products</h3>
+        <p>From your dashboard, click on <strong>"Products"</strong> in the left sidebar menu. This central hub shows all applications currently managed by your account.</p>
       </div>
     </div>
+
+    <div class="step-item active">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Primary Details</h3>
+        <p>Click the <strong>"Create Product"</strong> button in the top right. You'll need to provide:</p>
+        <ul style="margin: 1rem 0; padding-left: 20px;">
+          <li><strong>Product Name:</strong> A unique name for your software.</li>
+          <li><strong>Description:</strong> A brief summary for your records.</li>
+          <li><strong>Company Name:</strong> Your organization name.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Configure License Settings</h3>
+        <p>Set the default behavior for this product's licenses:</p>
+        <ul style="margin: 1rem 0; padding-left: 20px;">
+          <li><strong>Default Type:</strong> Perpetual, Trial, or Subscription.</li>
+          <li><strong>Max Activations:</strong> Number of devices allowed per key.</li>
+          <li><strong>Heartbeat:</strong> How often the app checks validity online.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <h3>Generate RSA Security Keys</h3>
+        <p>Click <strong>"Generate RSA Keys"</strong>. This creates the cryptographic pair used to sign your licenses.</p>
+        
+        <div class="help-callout warning">
+          <i class="ki-outline ki-shield"></i>
+          <div>
+            <span class="callout-title">Security Recommendation</span>
+            <p>Your <strong>Private Key</strong> is kept on the LicenPro server to sign licenses. Your application only needs the <strong>Public Key</strong> embedded in its code for verification.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-item active">
+       <div class="step-number">5</div>
+       <div class="step-content">
+         <h3>Save & Initialize</h3>
+         <p>Review your settings and click <strong>"Create Product"</strong>. You'll be redirected to the product dashboard where you can start generating licenses immediately.</p>
+       </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 5rem;">What's Next?</h2>
+  <div class="integration-grid">
+    <a routerLink="/first-license" class="integration-card">
+      <i class="ki-outline ki-key"></i>
+      <h4>First License</h4>
+      <p>Generate a unique key for your new product.</p>
+    </a>
+    <a routerLink="/rsa-keys" class="integration-card">
+       <i class="ki-outline ki-shield"></i>
+       <h4>Key Management</h4>
+       <p>Learn how to store and rotate RSA keys.</p>
+    </a>
+    <a routerLink="/sdk-dotnet" class="integration-card">
+       <i class="ki-outline ki-code"></i>
+       <h4>Integrate SDK</h4>
+       <p>Connect your .NET app to the new product.</p>
+    </a>
   </div>
 </div>

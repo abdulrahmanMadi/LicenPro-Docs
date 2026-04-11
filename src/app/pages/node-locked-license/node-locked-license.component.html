@@ -1,179 +1,42 @@
 <div class="help-page">
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-warning">
-      <i class="pi pi-lock"></i>
+  <header class="help-page-header">
+    <h1>Node-Locked License</h1>
+    <p class="lead">Bind your licenses to specific hardware to prevent unauthorized redistribution and sharing.</p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-lock"></i>
+      <h4>HWID Binding</h4>
+      <p>Uses CPU, BIOS, and Motherboard serials.</p>
     </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-arrows-loop"></i>
+      <h4>Activation Limits</h4>
+      <p>Control the number of unique devices allowed.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-search"></i>
+      <h4>Clone Protection</h4>
+      <p>Prevents running in unauthorized VMs.</p>
+    </div>
+  </div>
+
+  <h2>Implementation</h2>
+  <p>Node-locking works by calculating a unique <strong>Hardware ID (HWID)</strong> for the client machine. This ID is sent to the server during activation and stored as a "linked machine."</p>
+
+  <div class="help-callout warning">
     <div>
-      <h1>Node-Locked License</h1>
-      <p>A node-locked license is bound to a single device using a hardware fingerprint (Hardware ID). This is the strictest offline licensing model and is ideal for preventing key sharing.</p>
+      <span class="callout-title">Hardware Changes</span>
+      <p>If a user renovates their PC (e.g., changes the Motherboard), their HWID will change. You can manually reset their activation from the Dashboard to allow them to re-activate on the new hardware.</p>
     </div>
   </div>
 
-  <div class="help-content">
-    <section class="help-section">
-      <h2>How Node-Locked Licensing Works</h2>
-      <p>Node-locked licensing ties a license to a device fingerprint. During validation/activation, the SDK sends (or derives) a <code>HardwareId</code>. The backend enforces that the license can only be used on that hardware.</p>
+  <pre><code>// Example Validation
+var hwid = HardwareIdProvider.Calculate();
+var result = await client.ValidateAsync(hwid);
 
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(245, 158, 11, 0.1);">
-            <i class="pi pi-shield" style="color: #f59e0b;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Strong binding</h4>
-            <p>Once bound, the license can only validate on the same hardware fingerprint.</p>
-          </div>
-        </div>
-
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-wifi" style="color: #22c55e;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Offline-friendly</h4>
-            <p>After you distribute <code>license.bin</code>, validation can be performed offline using the product public key.</p>
-          </div>
-        </div>
-
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
-            <i class="pi pi-ban" style="color: #3b82f6;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Remote control (optional)</h4>
-            <p>When online validation is enabled, devices can be blocked and licenses can be revoked from the dashboard.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Create a Node-Locked License (Dashboard)</h2>
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>Collect the Hardware ID</h5>
-            <p>In your desktop app, display the hardware fingerprint to the user (or capture it automatically). This value is sent as <code>HardwareId</code> during validation/activation.</p>
-          </div>
-        </div>
-
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Create License</h5>
-            <p>Go to <strong>Licenses → Create License</strong>, set <strong>Type = NodeLocked</strong>, and set <strong>Issued To</strong> (customer identity).</p>
-          </div>
-        </div>
-
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Bind hardware (recommended)</h5>
-            <p>Enter the device <code>HardwareId</code> into the license when issuing. This avoids “first-use auto-binding” to an unexpected device.</p>
-          </div>
-        </div>
-
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Download <code>license.bin</code></h5>
-            <p>Assign the license to a release, then download the signed license file (<code>.bin</code>) and send it to the customer.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Security note:</strong> If a node-locked license has no hardware bound yet, the backend can auto-bind it on first validation/activation. For strict security, bind the hardware at issuance time.
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>SDK Integration (Recommended)</h2>
-      <p>Use <code>LicenseClient</code> to perform offline validation, optional online validation, and activation.</p>
-
-      <div class="help-code-example">
-        <div class="help-code-header">C# - Validate + activate (NodeLocked)</div>
-        <pre><code>using LicenPro.Enums;
-using LicenPro.SDK;
-
-var client = new LicenseClient(new LicenseClientOptions
-{{ '{' }}
-    LicenseFilePath = @"C:\ProgramData\YourApp\license.bin",
-    PublicKey = "YOUR_PRODUCT_PUBLIC_KEY",
-    LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
-    ExpectedLicenseType = LicenseType.NodeLocked,
-
-    // Optional but recommended for node-locked
-    ForceOnlineValidation = true,
-    ServerEndpoint = "https://YOUR_DOMAIN/api"
-{{ '}' }});
-
-var result = await client.ValidateAsync();
-if (!result.IsValid)
-    throw new Exception(result.ErrorMessage);
-
-// If activation is required/available, this calls POST /api/activations
-await client.TryActivateDeviceAsync();</code></pre>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Troubleshooting</h2>
-
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-exclamation-triangle"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>HardwareMismatch</h5>
-            <p><strong>Cause:</strong> The license is bound to a different <code>HardwareId</code>.</p>
-            <p><strong>Fix:</strong> Issue a new node-locked license for the correct hardware, or reset/rebind the license from the dashboard if your business rules allow it.</p>
-          </div>
-        </div>
-
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-ban"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>DeviceBlocked</h5>
-            <p><strong>Cause:</strong> The device has been blocked for this license.</p>
-            <p><strong>Fix:</strong> Unblock the device in the dashboard, then revalidate online.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="help-next-steps">
-      <h2>Related Topics</h2>
-      <ul class="docs-list">
-        <li>
-          <a routerLink="/rsa-keys">
-            <i class="pi pi-shield"></i>
-            <strong>RSA Keys</strong> — how signing and verification works
-          </a>
-        </li>
-        <li>
-          <a routerLink="/sdk-winforms">
-            <i class="pi pi-desktop"></i>
-            <strong>WinForms SDK</strong> — desktop integration patterns
-          </a>
-        </li>
-        <li>
-          <a routerLink="/sessions-activations">
-            <i class="pi pi-sitemap"></i>
-            <strong>Sessions & Activations</strong> — online tracking and device registration
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
+if (result.Status == LicenseStatus.HardwareMismatch) {{ '{' }}
+    ShowError("This license is not valid for this machine.");
+{{ '}' }}</code></pre>
 </div>
-

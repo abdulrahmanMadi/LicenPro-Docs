@@ -1,239 +1,40 @@
 <div class="help-page">
-  <div class="help-page-header">
-    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(139, 92, 246, 0.1)); color: #a855f7;">
-      <i class="pi pi-users"></i>
+  <header class="help-page-header">
+    <h1>Floating License</h1>
+    <p class="lead">Ideal for enterprise environments. Licenses are stored in a pool and "checked out" by users as needed.</p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-people"></i>
+      <h4>Concurrent Users</h4>
+      <p>Limit the number of simultaneous active sessions.</p>
     </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-timer"></i>
+      <h4>Heartbeat Sync</h4>
+      <p>Automatic seat release if the application crashes.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-status"></i>
+      <h4>Live Monitoring</h4>
+      <p>See exactly who is using your software in real-time.</p>
+    </div>
+  </div>
+
+  <h2>How it Works</h2>
+  <p>Unlike Perpetual licenses which bind to a specific user or machine, a Floating license represents a "Seat." When User A launches the app, they take 1 seat. When they close it, the seat returns to the pool for User B.</p>
+
+  <div class="help-callout info">
     <div>
-      <h1>Floating License</h1>
-      <p>Floating licenses (also called concurrent licenses) allow a set number of users to use your software simultaneously. Perfect for organizations where not everyone needs access at the same time.</p>
+      <span class="callout-title">Session Heartbeat</span>
+      <p>Floating licenses require an active internet connection. The SDK sends a "heartbeat" every few minutes to maintain the seat. If the server loses connection for more than 10 minutes, the seat is automatically made available again.</p>
     </div>
   </div>
 
-  <div class="help-content">
-    <section class="help-section">
-      <h2>What is a Floating License?</h2>
-      <p>A Floating License allows multiple users to share a pool of license seats. For example, a 10-seat floating license means up to 10 users can use the software at the same time, but it can be installed on unlimited machines. When a user closes the application, their seat becomes available for another user.</p>
-      
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(168, 85, 247, 0.1);">
-            <i class="pi pi-users" style="color: #a855f7;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Concurrent Users</h4>
-            <p>Multiple users share a pool of available seats</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-dollar" style="color: #22c55e;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Cost Effective</h4>
-            <p>Organizations pay for concurrent usage, not total users</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
-            <i class="pi pi-mobile" style="color: #3b82f6;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Unlimited Installs</h4>
-            <p>Install on any number of machines</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(245, 158, 11, 0.1);">
-            <i class="pi pi-refresh" style="color: #f59e0b;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Dynamic Allocation</h4>
-            <p>Seats are released when users close the app</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>How Floating Licenses Work</h2>
-      
-      <div class="stepper-container stepper-compact">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>User Launches App</h3>
-              <p>Application requests a seat from the license server</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Seat Check</h3>
-              <p>Server checks if seats are available in the pool</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Seat Allocation</h3>
-              <p>If available, a seat is allocated to the user</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Heartbeat</h3>
-              <p>App sends periodic heartbeats to maintain the seat</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">5</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Seat Release</h3>
-              <p>When app closes (or heartbeat stops), seat returns to pool</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Creating a Floating License</h2>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>Navigate to Licenses → Create License</h5>
-            <p>Go to the license creation page.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Select "Floating" License Type</h5>
-            <p>Choose Floating from the license type dropdown.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Set Number of Seats</h5>
-            <p>Configure how many concurrent users can use the software (e.g., 5, 10, 25, 100 seats).</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Configure Heartbeat Interval</h5>
-            <p>Set how often the app should check in (recommended: 1-5 minutes). Shorter intervals = faster seat release when app crashes.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">5</div>
-          <div class="help-step-item-content">
-            <h5>Enter Organization Details</h5>
-            <p>Add the organization name and admin contact for the floating license.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>SDK Integration</h2>
-      
-      <div class="help-code-example">
-        <div class="help-code-header">C# - Floating License Implementation</div>
-        <pre><code>using LicenPro;
-using LicenPro.Models.License;
-
-// Initialize with floating license support
-var settings = new SdkSettings
-{{ '{' }}
-    ServerBaseEndpoint = "https://YOUR_DOMAIN/api",
-    HeartbeatIntervalMinutes = 2  // Check in every 2 minutes
-{{ '}' }};
-SdkConfiguration.Initialize(settings);
-
-// Request a seat
-var result = await LicenseManager.CheckoutSeatAsync(licenseKey);
-
-if (result.Status == SeatStatus.Acquired)
-{{ '{' }}
-    Console.WriteLine("Seat acquired successfully!");
-    // Start your application
-    
-    // The SDK automatically sends heartbeats
-    // When app closes, call:
-    await LicenseManager.ReleaseSeatAsync();
-{{ '}' }}
-else if (result.Status == SeatStatus.NoSeatsAvailable)
-{{ '{' }}
-    Console.WriteLine("All seats are in use. Please try again later.");
-    ShowNoSeatsDialog();
-{{ '}' }}</code></pre>
-      </div>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Important:</strong> Always call <code>ReleaseSeatAsync()</code> when your application closes to immediately free the seat. If not called, the seat will be released after the heartbeat timeout.
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Best Practices</h2>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Seat Estimation:</strong> Analyze your customer's usage patterns. Typically, organizations need seats for 20-30% of their total users if not everyone uses the software simultaneously.
-        </div>
-      </div>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Graceful Handling:</strong> When no seats are available, show a friendly message and optionally allow users to queue or be notified when a seat becomes available.
-        </div>
-      </div>
-    </section>
-
-    <div class="help-next-steps">
-      <h2>Related Topics</h2>
-      <div class="help-next-steps-grid">
-        <a routerLink="/perpetual-license" class="help-next-step-card">
-          <i class="pi pi-user"></i>
-          <h4>Perpetual License</h4>
-          <p>Single-user licensing</p>
-        </a>
-        <a routerLink="/sessions-activations" class="help-next-step-card">
-          <i class="pi pi-users"></i>
-          <h4>Active Sessions</h4>
-          <p>Monitor seat usage</p>
-        </a>
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>.NET SDK</h4>
-          <p>Integration guide</p>
-        </a>
-      </div>
-    </div>
-  </div>
+  <pre><code>// Initialize as Floating
+var options = new LicenseClientOptions {{ '{' }}
+    ExpectedType = LicenseType.Floating,
+    SessionHeartbeatInterval = 5 // minutes
+{{ '}' }};</code></pre>
 </div>

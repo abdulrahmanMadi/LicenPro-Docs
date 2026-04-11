@@ -7,94 +7,138 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   template: `
     <div class="doc-page">
-      <h1>Welcome to LicenPro Documentation</h1>
-      <p class="lead">Get started with LicenPro licensing system. Choose a topic from the sidebar or explore the quick links below.</p>
+      <h1 class="text-accent">LicenPro Documentation</h1>
+      <p class="lead">Everything you need to integrate professional software licensing into your applications.</p>
       
       <div class="doc-cards">
         <a routerLink="/quick-start" class="doc-card">
-          <i class="ki-filled ki-rocket"></i>
+          <i class="ki-outline ki-rocket"></i>
           <h3>Quick Start</h3>
           <p>Get up and running in minutes</p>
         </a>
         <a routerLink="/first-product" class="doc-card">
-          <i class="ki-filled ki-abstract-26"></i>
-          <h3>Create Your First Product</h3>
+          <i class="ki-outline ki-abstract-26"></i>
+          <h3>First Product</h3>
           <p>Learn how to define products</p>
         </a>
-        <a routerLink="/first-license" class="doc-card">
-          <i class="ki-filled ki-key"></i>
-          <h3>Generate Your First License</h3>
-          <p>Create and distribute licenses</p>
+        <a routerLink="/perpetual-license" class="doc-card">
+          <i class="ki-outline ki-key"></i>
+          <h3>Models</h3>
+          <p>Explore licensing strategies</p>
         </a>
         <a routerLink="/sdk-dotnet" class="doc-card">
-          <i class="ki-filled ki-microsoft"></i>
-          <h3>.NET SDK</h3>
-          <p>Integrate with your application</p>
+          <i class="ki-outline ki-microsoft"></i>
+          <h3>SDKs</h3>
+          <p>Integrate with your codebase</p>
         </a>
+      </div>
+
+      <div class="getting-help">
+        <h2>Need help?</h2>
+        <p>Our technical team is available to help you with your integration requirements.</p>
+        <div class="help-links">
+          <a href="https://licenpro.tech/support" class="help-item">
+            <i class="ki-outline ki-support"></i>
+            <span>Support Center</span>
+          </a>
+          <a href="https://github.com/LicenPro" class="help-item">
+            <i class="ki-outline ki-github"></i>
+            <span>GitHub Community</span>
+          </a>
+        </div>
       </div>
     </div>
   `,
   styles: [`
     .doc-page {
-      max-width: 800px;
+      animation: fadeIn 0.4s ease-out;
     }
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--foreground, #0f172a);
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    [data-bs-theme="dark"] h1 {
-      color: #f1f5f9;
-    }
+
     .lead {
-      font-size: 1.125rem;
-      color: var(--muted-foreground, #64748b);
-      margin-bottom: 2rem;
+      font-size: 1.25rem;
+      color: var(--muted-foreground);
+      margin-bottom: 3rem;
+      max-width: 600px;
     }
+
     .doc-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
     }
+
     .doc-card {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
       padding: 1.5rem;
-      background: var(--card, #ffffff);
-      border: 1px solid var(--border, #e2e8f0);
-      border-radius: 8px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      &:hover {
+        border-color: var(--primary);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+        
+        [data-bs-theme="dark"] & {
+           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+      }
+
+      i {
+        font-size: 1.75rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        color: var(--foreground);
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+        margin: 0;
+        line-height: 1.4;
+      }
     }
-    [data-bs-theme="dark"] .doc-card {
-      background: rgba(30, 41, 59, 0.6);
-      border-color: rgba(51, 65, 85, 0.5);
-    }
-    .doc-card:hover {
-      border-color: #6366f1;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
-    }
-    .doc-card i {
-      font-size: 1.5rem;
-      color: #6366f1;
-      margin-bottom: 0.75rem;
-    }
-    .doc-card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--foreground, #0f172a);
-      margin: 0 0 0.25rem 0;
-    }
-    [data-bs-theme="dark"] .doc-card h3 {
-      color: #f1f5f9;
-    }
-    .doc-card p {
-      font-size: 0.875rem;
-      color: var(--muted-foreground, #64748b);
-      margin: 0;
+
+    .getting-help {
+      padding: 2rem;
+      background: var(--sidebar-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+
+      h2 { margin-top: 0; }
+      
+      .help-links {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1.5rem;
+      }
+
+      .help-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9375rem;
+
+        &:hover { text-decoration: underline; }
+      }
     }
   `]
 })

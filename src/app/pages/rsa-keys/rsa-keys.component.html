@@ -1,246 +1,42 @@
 <div class="help-page">
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-warning">
-      <i class="pi pi-shield"></i>
+  <header class="help-page-header">
+    <h1>RSA Key Management</h1>
+    <p class="lead">LicenPro uses asymmetric cryptography (RSA) to ensure that only you can issue valid licenses for your software.</p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-lock-2"></i>
+      <h4>Private Key</h4>
+      <p>Stored securely on our servers. Used to "sign" digital license files.</p>
     </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>Public Key</h4>
+      <p>Hardcoded in your application. Used to verify the server's signature.</p>
+    </div>
+  </div>
+
+  <h2>Security Principles</h2>
+  <div class="help-callout info">
     <div>
-      <h1>RSA Key Configuration</h1>
-      <p>Learn how RSA cryptographic keys work in LicenPro to secure your licenses. RSA keys ensure that licenses cannot be forged or tampered with, providing strong protection for your software.</p>
+      <span class="callout-title">Asymmetric Signing</span>
+      <p>Because the Public Key can only <em>verify</em> (not create) a signature, your app can safely check license validity even when disconnected from the internet without exposing your master signing key.</p>
     </div>
   </div>
 
-  <div class="help-content">
-    <section class="help-section">
-      <h2>What are RSA Keys?</h2>
-      <p>RSA (Rivest-Shamir-Adleman) is an asymmetric cryptographic algorithm that uses a pair of keys: a public key and a private key. In LicenPro, these keys are used to sign and verify licenses.</p>
-      
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(239, 68, 68, 0.1);">
-            <i class="pi pi-lock" style="color: #ef4444;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Private Key</h4>
-            <p>Used by the server to sign licenses. Keep this secret and secure - never share it!</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-lock" style="color: #22c55e;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Public Key</h4>
-            <p>Embedded in your application to verify license signatures. Safe to distribute.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>How License Signing Works</h2>
-      <p>Here's the flow of how RSA keys protect your licenses:</p>
-      
-      <div class="stepper-container stepper-compact">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>License Creation</h3>
-              <p>When you create a license, the server generates license data (user info, expiration, features, etc.)</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Digital Signature</h3>
-              <p>The server uses your private key to create a digital signature of the license data</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>License Distribution</h3>
-              <p>The signed license (key or file) is delivered to your customer</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Verification</h3>
-              <p>Your application uses the public key to verify the signature is valid</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Generating RSA Keys</h2>
-      <p>Follow these steps to generate RSA keys for your product:</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>Go to Product Settings</h5>
-            <p>Navigate to your product and click on the "Settings" tab.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Find RSA Keys Section</h5>
-            <p>Scroll down to the "RSA Key Configuration" section.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Generate New Keys</h5>
-            <p>Click "Generate New Key Pair". LicenPro will create a 2048-bit RSA key pair.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Download Public Key</h5>
-            <p>Click "Download Public Key" to get the .pem file. You'll embed this in your application.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">5</div>
-          <div class="help-step-item-content">
-            <h5>Private Key Handling</h5>
-            <p>The private key is stored server-side and used to sign license files. Only download/export it if you have a secure key management process (vault/HSM) and a clear rotation plan.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Security Warning:</strong> Never share your private key. Never embed it in your application. Never commit it to source control.
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Using the Public Key</h2>
-      <p>To use the public key in your application:</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>Download the .pem file</h5>
-            <p>Get the public key from Product Settings → Download Public Key</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Extract the Base64 content</h5>
-            <p>Open the .pem file and copy the Base64 string between the header and footer lines</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Create LicensingSecrets</h5>
-            <p>Create a LicensingSecrets object with the PublicKey property set to your Base64 key</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Load the secrets</h5>
-            <p>Call LicenseUtils.LoadLicensingSecrets(secrets) to initialize</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Embedding vs File:</strong> For desktop apps, embedding the public key as a string is more secure. For web apps, use a file.
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Security Best Practices</h2>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Use Strong Key Sizes</h5>
-            <p>LicenPro uses 2048-bit RSA keys by default, which provides strong security.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Secure Key Storage</h5>
-            <p>Store private key backups in encrypted storage like a password manager or secure vault.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Obfuscate Public Key</h5>
-            <p>Consider obfuscating the public key in your app to make reverse engineering harder.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Rotate Keys Periodically</h5>
-            <p>Rotate keys annually or immediately if you suspect a compromise.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="help-next-steps">
-      <h2>What's Next?</h2>
-      <p>Now that you understand RSA keys, continue with:</p>
-      
-      <div class="help-next-steps-grid">
-        <a routerLink="/first-license" class="help-next-step-card">
-          <i class="pi pi-key"></i>
-          <h4>Generate License</h4>
-          <p>Create your first license</p>
-        </a>
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>.NET SDK</h4>
-          <p>Integrate in your app</p>
-        </a>
-        <a routerLink="/perpetual-license" class="help-next-step-card">
-          <i class="pi pi-user"></i>
-          <h4>License Types</h4>
-          <p>Learn about license types</p>
-        </a>
-      </div>
+  <h2>Rotation & Backup</h2>
+  <p>You can regenerate your RSA keys at any time from the Product Settings. However, please be aware:</p>
+  
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield-cross"></i>
+    <div>
+      <span class="callout-title">Breaking Changes</span>
+      <p>Rotating keys will invalidate all existing licenses signed with the old key. You must update your application's source code with the new <strong>Public Key</strong> before re-issuing licenses to users.</p>
     </div>
   </div>
+
+  <pre><code>// Example: Embedding Public Key in C#
+var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AM...";
+LicenseUtils.LoadPublicKey(publicKey);</code></pre>
 </div>

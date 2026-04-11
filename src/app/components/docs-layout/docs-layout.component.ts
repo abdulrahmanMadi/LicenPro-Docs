@@ -78,49 +78,49 @@ export class DocsLayoutComponent {
     {
       id: 'getting-started',
       label: 'Get Started',
-      icon: 'ki-rocket',
+      icon: 'ki-outline ki-rocket',
       expanded: true,
       children: [
-        { id: 'quick-start', label: 'Quick Start', icon: 'ki-flag', route: '/quick-start' },
-        { id: 'first-product', label: 'Create your first product', icon: 'ki-abstract-26', route: '/first-product' },
-        { id: 'first-license', label: 'Generate your first license', icon: 'ki-key', route: '/first-license' },
-        { id: 'rsa-keys', label: 'RSA keys', icon: 'ki-shield-tick', route: '/rsa-keys' }
+        { id: 'quick-start', label: 'Quick Start', icon: 'ki-outline ki-flag', route: '/quick-start' },
+        { id: 'first-product', label: 'Create your first product', icon: 'ki-outline ki-abstract-26', route: '/first-product' },
+        { id: 'first-license', label: 'Generate your first license', icon: 'ki-outline ki-key', route: '/first-license' },
+        { id: 'rsa-keys', label: 'RSA keys', icon: 'ki-outline ki-shield-tick', route: '/rsa-keys' }
       ]
     },
     {
       id: 'license-models',
       label: 'License models',
-      icon: 'ki-key-square',
+      icon: 'ki-outline ki-key-square',
       expanded: true,
       children: [
-        { id: 'perpetual', label: 'Perpetual license', icon: 'ki-users', route: '/perpetual-license' },
-        { id: 'trial', label: 'Trial license', icon: 'ki-timer', route: '/trial-license' },
-        { id: 'subscription', label: 'Subscription license', icon: 'ki-calendar-tick', route: '/subscription-license' },
-        { id: 'floating', label: 'Floating license', icon: 'ki-people', route: '/floating-license' },
-        { id: 'node-locked', label: 'Node-locked license', icon: 'ki-lock', route: '/node-locked-license' }
+        { id: 'perpetual', label: 'Perpetual license', icon: 'ki-outline ki-users', route: '/perpetual-license' },
+        { id: 'trial', label: 'Trial license', icon: 'ki-outline ki-timer', route: '/trial-license' },
+        { id: 'subscription', label: 'Subscription license', icon: 'ki-outline ki-calendar-tick', route: '/subscription-license' },
+        { id: 'floating', label: 'Floating license', icon: 'ki-outline ki-people', route: '/floating-license' },
+        { id: 'node-locked', label: 'Node-locked license', icon: 'ki-outline ki-lock', route: '/node-locked-license' }
       ]
     },
     {
       id: 'sdk',
       label: 'SDK & integration',
-      icon: 'ki-programming-browser',
+      icon: 'ki-outline ki-programming-browser',
       expanded: false,
       children: [
-        { id: 'sdk-dotnet', label: '.NET SDK', icon: 'ki-microsoft', route: '/sdk-dotnet' },
-        { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-windows', route: '/sdk-winforms' },
-        { id: 'sdk-wpf', label: 'WPF', icon: 'ki-element-11', route: '/sdk-wpf' },
-        { id: 'sessions-activations', label: 'Sessions & activations', icon: 'ki-chart-line', route: '/sessions-activations' },
-        { id: 'webhooks', label: 'Webhooks', icon: 'ki-arrow-mix', route: '/webhooks' },
-        { id: 'api-reference', label: 'API reference', icon: 'ki-data', route: '/api-reference' }
+        { id: 'sdk-dotnet', label: '.NET SDK', icon: 'ki-outline ki-microsoft', route: '/sdk-dotnet' },
+        { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-outline ki-windows', route: '/sdk-winforms' },
+        { id: 'sdk-wpf', label: 'WPF', icon: 'ki-outline ki-element-11', route: '/sdk-wpf' },
+        { id: 'sessions-activations', label: 'Sessions & activations', icon: 'ki-outline ki-chart-line', route: '/sessions-activations' },
+        { id: 'webhooks', label: 'Webhooks', icon: 'ki-outline ki-arrow-mix', route: '/webhooks' },
+        { id: 'api-reference', label: 'API reference', icon: 'ki-outline ki-data', route: '/api-reference' }
       ]
     },
     {
       id: 'changelog',
       label: 'Changelog',
-      icon: 'ki-notepad-edit',
+      icon: 'ki-outline ki-notepad-edit',
       expanded: false,
       children: [
-        { id: 'changelog-page', label: 'Releases', icon: 'ki-tag', route: '/changelog' }
+        { id: 'changelog-page', label: 'Releases', icon: 'ki-outline ki-tag', route: '/changelog' }
       ]
     }
   ];

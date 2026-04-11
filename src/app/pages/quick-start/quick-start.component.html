@@ -1,399 +1,100 @@
 <div class="help-page">
   <!-- Page Header -->
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-primary">
-      <i class="ki-duotone ki-rocket"></i>
-    </div>
+  <header class="help-page-header">
+    <h1>Quick Start Guide</h1>
+    <p class="lead">Get up and running with LicenPro in just 5 minutes. Protect your software with enterprise-grade licensing in three simple steps.</p>
+  </header>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-timer"></i>
     <div>
-      <h1>Quick Start Guide</h1>
-      <p>Get up and running with LicenPro in just 5 minutes. This guide will walk you through the essential steps to start protecting your software with powerful licensing.</p>
+      <span class="callout-title">Estimated time: 5 minutes</span>
+      <p>This guide covers the essential workflow from account creation to first validation.</p>
     </div>
   </div>
 
-  <!-- Time Estimate -->
-  <div class="help-time-estimate">
-    <i class="ki-duotone ki-timer"></i>
-    <span>Estimated time: <strong>5 minutes</strong></span>
-  </div>
-
-  <!-- Progress Steps Overview -->
-  <div class="help-progress-steps">
-    @for (step of steps; track step.number) {
-      <div class="help-progress-step" [class.active]="currentStep === step.number" [class.completed]="step.completed">
-        <div class="help-progress-number">{{ step.number }}</div>
-        <span>{{ step.title }}</span>
-      </div>
-      @if (step.number < steps.length) {
-        <div class="help-progress-line" [class.completed]="step.completed"></div>
-      }
-    }
-  </div>
-
-  <!-- Content with Vertical Stepper -->
-  <div class="help-content">
-    <div class="stepper-container">
-      <!-- Step 1: Create Account -->
-      <div class="stepper-item" id="step-1">
-        <div class="stepper-number">1</div>
-        <div class="stepper-content">
-          <div class="stepper-header">
-            <h3>Create Your LicenPro Account</h3>
-            <p>Sign up for a free account to get started with LicenPro.</p>
-          </div>
-          <div class="stepper-body">
-            <div class="help-instruction-card">
-              <div class="help-instruction-icon">
-                <i class="ki-duotone ki-user"></i>
-              </div>
-              <div class="help-instruction-content">
-                <h4>Registration Options</h4>
-                <p>You can create an account using:</p>
-                <ul class="help-list">
-                  <li><strong>Email & Password:</strong> Traditional registration with email verification</li>
-                  <li><strong>Google OAuth:</strong> Quick sign-up using your Google account</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">1.1</div>
-                <div class="sub-step-content">
-                  <h5>Navigate to Sign Up</h5>
-                  <p>Go to <a href="https://app.licenpro.com/auth/register" target="_blank">app.licenpro.com/auth/register</a> or click the "Sign Up" button.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">1.2</div>
-                <div class="sub-step-content">
-                  <h5>Select Your Role</h5>
-                  <p>Choose <strong>"Sell Software"</strong> if you're a software vendor who wants to license your products.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">1.3</div>
-                <div class="sub-step-content">
-                  <h5>Complete Registration</h5>
-                  <p>Fill in: Full Name, Email Address, Company Name (optional), Password (min 8 characters).</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">1.4</div>
-                <div class="sub-step-content">
-                  <h5>Verify Your Email</h5>
-                  <p>Check your inbox for a verification email and click the confirmation link.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-tip-box">
-              <div class="help-tip-icon">
-                <i class="ki-duotone ki-information"></i>
-              </div>
-              <div>
-                <strong>Pro Tip:</strong> Use a business email address for better credibility when distributing licenses.
-              </div>
-            </div>
-          </div>
+  <div class="doc-stepper">
+    <!-- Step 1: Account -->
+    <div class="step-item active">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Create Your Account</h3>
+        <p>Sign up at <a href="https://app.licenpro.tech/auth/register" target="_blank">app.licenpro.tech</a>. Choose <strong>"Software Vendor"</strong> to manage your products and licenses.</p>
+        
+        <div class="help-callout success">
+           <i class="ki-outline ki-check"></i>
+           <div>Verify your email address to unlock all dashboard features.</div>
         </div>
       </div>
+    </div>
 
-      <!-- Step 2: Create Product -->
-      <div class="stepper-item" id="step-2">
-        <div class="stepper-number">2</div>
-        <div class="stepper-content">
-          <div class="stepper-header">
-            <h3>Create Your First Product</h3>
-            <p>Set up a product to organize your software releases and licenses.</p>
-          </div>
-          <div class="stepper-body">
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">2.1</div>
-                <div class="sub-step-content">
-                  <h5>Navigate to Products</h5>
-                  <p>From your dashboard, click on <strong>"Products"</strong> in the sidebar menu, then click <strong>"Add Product"</strong>.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">2.2</div>
-                <div class="sub-step-content">
-                  <h5>Enter Product Details</h5>
-                  <p>Fill in: Product Name (e.g., "MyApp Pro"), Description, Version (e.g., "1.0.0"), Category.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">2.3</div>
-                <div class="sub-step-content">
-                  <h5>Save Your Product</h5>
-                  <p>Click <strong>"Create Product"</strong> to save. Your product is now ready for releases and licenses.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-code-example">
-              <div class="help-code-header">
-                <span>Example Product Configuration</span>
-              </div>
-              <pre><code>Product Name: MyApp Pro
-Description: Professional productivity software for teams
-Version: 1.0.0
-Category: Business Software
-Status: Active</code></pre>
-            </div>
-          </div>
+    <!-- Step 2: Product -->
+    <div class="step-item active">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Define Your Product</h3>
+        <p>Navigate to <strong>Products > Add Product</strong>. This acts as a container for your keys and releases.</p>
+        
+        <div class="doc-image">
+           <img src="assets/LandingAssets/media/dashboard.PNG" alt="Dashboard Product View">
+           <div class="image-caption">LicenPro Dashboard Product Management Interface</div>
         </div>
       </div>
+    </div>
 
-      <!-- Step 3: Configure RSA Keys -->
-      <div class="stepper-item" id="step-3">
-        <div class="stepper-number">3</div>
-        <div class="stepper-content">
-          <div class="stepper-header">
-            <h3>Configure RSA Keys</h3>
-            <p>Set up encryption keys to secure your license files.</p>
-          </div>
-          <div class="stepper-body">
-            <div class="help-warning-box">
-              <div class="help-warning-icon">
-                <i class="ki-duotone ki-shield"></i>
-              </div>
-              <div>
-                <strong>Important:</strong> RSA keys are required to generate downloadable license files (.bin). Without them, you can only use license keys for online validation.
-              </div>
-            </div>
-
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">3.1</div>
-                <div class="sub-step-content">
-                  <h5>Go to Product Settings</h5>
-                  <p>Open your product and navigate to the <strong>"Settings"</strong> tab.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">3.2</div>
-                <div class="sub-step-content">
-                  <h5>Generate RSA Key Pair</h5>
-                  <p>Click <strong>"Generate RSA Keys"</strong> to create a new public/private key pair (2048-bit RSA).</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">3.3</div>
-                <div class="sub-step-content">
-                  <h5>Download Public Key</h5>
-                  <p>Copy or download the <strong>public key</strong> - you’ll ship it with your application so the SDK can verify license signatures.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">3.4</div>
-                <div class="sub-step-content">
-                  <h5>Store Keys Securely</h5>
-                  <p>The private key stays on the LicenPro server (per product) and is used to sign license files. Your app only needs the public key.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-tip-box">
-              <div class="help-tip-icon">
-                <i class="ki-duotone ki-shield"></i>
-              </div>
-              <div>
-                <strong>Security Note:</strong> Never share your private key. The public key can be safely distributed with your application.
-              </div>
-            </div>
-          </div>
+    <!-- Step 3: Security -->
+    <div class="step-item active">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Setup RSA Security</h3>
+        <p>In your product settings, generate an <strong>RSA Key Pair</strong>. This ensures your license files are digitally signed and untamperable.</p>
+        
+        <div class="help-callout warning">
+          <i class="ki-outline ki-shield"></i>
+          <div>Keep your <strong>Private Key</strong> safe. You only need to distribute the <strong>Public Key</strong> with your app.</div>
         </div>
       </div>
+    </div>
 
-      <!-- Step 4: Generate License -->
-      <div class="stepper-item" id="step-4">
-        <div class="stepper-number">4</div>
-        <div class="stepper-content">
-          <div class="stepper-header">
-            <h3>Generate Your First License</h3>
-            <p>Create a license to distribute to your customers.</p>
-          </div>
-          <div class="stepper-body">
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">4.1</div>
-                <div class="sub-step-content">
-                  <h5>Navigate to Licenses</h5>
-                  <p>Click on <strong>"Licenses"</strong> in the sidebar, then click <strong>"Generate License"</strong>.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">4.2</div>
-                <div class="sub-step-content">
-                  <h5>Select License Type</h5>
-                  <p>Choose: <strong>Standard</strong> (single user), <strong>Trial</strong> (time-limited), <strong>Subscription</strong> (recurring), or <strong>Floating</strong> (concurrent).</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">4.3</div>
-                <div class="sub-step-content">
-                  <h5>Configure License Details</h5>
-                  <p>Fill in: License Name, Software Release, Issued To (customer email), Expiration Date.</p>
-                </div>
-              </div>
-              <div class="sub-step">
-                <div class="sub-step-number">4.4</div>
-                <div class="sub-step-content">
-                  <h5>Generate & Download</h5>
-                  <p>Click <strong>"Generate License"</strong>. You'll receive a unique license key and downloadable .bin file.</p>
-                </div>
-              </div>
-            </div>
+    <!-- Step 4: Integration -->
+    <div class="step-item active">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <h3>Integrate the SDK</h3>
+        <p>Install the NuGet package and add validation logic to your startup sequence.</p>
+        
+        <pre><code>// Install via NuGet
+// dotnet add package LicenPro
 
-            <div class="help-success-box">
-              <div class="help-success-icon">
-                <i class="ki-duotone ki-check-circle"></i>
-              </div>
-              <div>
-                <strong>Success!</strong> Your license is ready. Copy the license key or download the .bin file to distribute.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 5: Integrate SDK -->
-      <div class="stepper-item" id="step-5">
-        <div class="stepper-number">5</div>
-        <div class="stepper-content">
-          <div class="stepper-header">
-            <h3>Integrate the SDK</h3>
-            <p>Add license validation to your application.</p>
-          </div>
-          <div class="stepper-body">
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">5.1</div>
-                <div class="sub-step-content">
-                  <h5>Install the NuGet Packages</h5>
-                  <p>Add the LicenPro SDK and required dependencies to your .NET project.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-code-example">
-              <div class="help-code-header">
-                <span>.NET CLI</span>
-              </div>
-              <pre><code>dotnet add package LicenPro
-dotnet add package Microsoft.Extensions.Configuration --version 8.0.0
-dotnet add package Microsoft.Extensions.Configuration.Abstractions --version 8.0.0
-dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.0
-dotnet add package Microsoft.Extensions.Configuration.Binder --version 8.0.0</code></pre>
-            </div>
-
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">5.2</div>
-                <div class="sub-step-content">
-                  <h5>Initialize the SDK</h5>
-                  <p>Configure the SDK with your public key and server endpoint.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-code-example">
-              <div class="help-code-header">
-                <span>C# - Program.cs</span>
-              </div>
-              <pre><code>using LicenPro;
-using LicenPro.Models.Utils;
-using LicenPro.Utilities;
-
-// Configure SDK settings
-var settings = new SdkSettings
-{{ '{' }}
-    ServerBaseEndpoint = "https://licenpro.runasp.net/api"
+var settings = new SdkSettings {{ '{' }} 
+    ServerBaseEndpoint = "https://api.licenpro.tech" 
 {{ '}' }};
 SdkConfiguration.Initialize(settings);
 
-// Load your public key (from Product Settings)
-var publicKey = "YOUR_PUBLIC_KEY_HERE";
-var secrets = new LicensingSecrets {{ '{' }} PublicKey = publicKey {{ '}' }};
-LicenseUtils.LoadLicensingSecrets(secrets);</code></pre>
-            </div>
-
-            <div class="sub-steps">
-              <div class="sub-step">
-                <div class="sub-step-number">5.3</div>
-                <div class="sub-step-content">
-                  <h5>Validate the License</h5>
-                  <p>Load and validate the license file in your application.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="help-code-example">
-              <div class="help-code-header">
-                <span>C# - License Validation</span>
-              </div>
-              <pre><code>using LicenPro;
-using LicenPro.Enums;
-using LicenPro.Models.License;
-
-var licensePath = Path.Combine(AppContext.BaseDirectory, "license.bin");
-var result = await LicenseManager.LoadLicenseAsync(licensePath);
-
-if (result.Status == LicenseStatus.Valid && result.License != null)
-{{ '{' }}
-    Console.WriteLine("✅ License is valid!");
-    Console.WriteLine($"   License type: {{ '{' }}result.License.Type{{ '}' }}");
-{{ '}' }}
-else
-{{ '{' }}
-    Console.WriteLine($"❌ License invalid: {{ '{' }}result.Status{{ '}' }}");
-{{ '}' }}</code></pre>
-            </div>
-
-            <div class="help-success-box">
-              <div class="help-success-icon">
-                <i class="ki-duotone ki-check-circle"></i>
-              </div>
-              <div>
-                <strong>Congratulations!</strong> You've successfully integrated LicenPro into your application. Your software is now protected with professional licensing.
-              </div>
-            </div>
-          </div>
-        </div>
+var result = await LicenseManager.LoadLicenseAsync("license.bin");</code></pre>
       </div>
     </div>
-
-    <!-- Next Steps -->
-    <section class="help-next-steps">
-      <h2>What's Next?</h2>
-      <p>Now that you have the basics set up, explore these topics to get the most out of LicenPro:</p>
-      
-      <div class="help-next-steps-grid">
-        <a routerLink="/perpetual-license" class="help-next-step-card">
-          <i class="ki-duotone ki-key"></i>
-          <h4>License Types</h4>
-          <p>Learn about different licensing models</p>
-        </a>
-        
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="ki-duotone ki-code"></i>
-          <h4>SDK Deep Dive</h4>
-          <p>Advanced SDK features and options</p>
-        </a>
-        
-        <a routerLink="/api-reference" class="help-next-step-card">
-          <i class="ki-duotone ki-data"></i>
-          <h4>API Reference</h4>
-          <p>Complete REST API documentation</p>
-        </a>
-        
-        <a routerLink="/sessions-activations" class="help-next-step-card">
-          <i class="ki-duotone ki-package"></i>
-          <h4>Sessions & Activations</h4>
-          <p>Track usage and devices</p>
-        </a>
-      </div>
-    </section>
   </div>
+
+  <!-- Next Steps Grid -->
+  <section class="next-steps-section" style="margin-top: 5rem;">
+    <h2>Continue Learning</h2>
+    <div class="integration-grid">
+      <a routerLink="/perpetual-license" class="integration-card">
+        <i class="ki-outline ki-key"></i>
+        <h4>Licensing Models</h4>
+        <p>Floating, Perpetual, or Subscription?</p>
+      </a>
+      <a routerLink="/sdk-dotnet" class="integration-card">
+        <i class="ki-outline ki-code"></i>
+        <h4>SDK Deep Dive</h4>
+        <p>Advanced integration techniques.</p>
+      </a>
+      <a routerLink="/api-reference" class="integration-card">
+        <i class="ki-outline ki-data"></i>
+        <h4>API Reference</h4>
+        <p>Full REST API documentation.</p>
+      </a>
+    </div>
+  </section>
 </div>

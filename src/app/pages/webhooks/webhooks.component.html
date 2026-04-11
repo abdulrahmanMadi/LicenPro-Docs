@@ -1,155 +1,57 @@
 <div class="help-page">
-  <div class="help-page-header">
-    <div class="help-page-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(244, 114, 182, 0.1)); color: #ec4899;">
-      <i class="pi pi-share-alt"></i>
-    </div>
+  <header class="help-page-header">
+    <h1>Webhooks</h1>
+    <p class="lead">Connect LicenPro to your existing backend, CRM, or billing system using automated HTTP callbacks.</p>
+  </header>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-notification-on"></i>
     <div>
-      <h1>Webhooks</h1>
-      <p>Webhooks allow you to receive real-time notifications when events occur in your LicenPro account. Use them to automate workflows, sync with external systems, or trigger custom actions.</p>
+      <span class="callout-title">Event Driven</span>
+      <p>Webhooks notify your system whenever something important happens (e.g., a new license is generated or an activation fails).</p>
     </div>
   </div>
 
-  <div class="help-content">
-    <section class="help-section">
-      <h2>Available Events</h2>
-      <p>Webhooks are planned for a future release. In the current backend build, there are no webhook delivery endpoints/controllers enabled yet.</p>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Workaround today:</strong> if you need integrations (CRM/billing/telemetry), poll the REST API endpoints (licenses/status, sessions, activations) or write directly from your own dashboard UI when actions occur.
-        </div>
-      </div>
-    </section>
+  <h2>Supported Events</h2>
+  <table class="feature-table">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Trigger</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>license.created</code></td>
+        <td>Fires when a new key is issued.</td>
+      </tr>
+      <tr>
+        <td><code>activation.success</code></td>
+        <td>Fires when a machine is successfully linked.</td>
+      </tr>
+      <tr>
+        <td><code>session.start</code></td>
+        <td>Fires every time an application instance heartbeats.</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <section class="help-section">
-      <h2>Webhook Payload</h2>
-      <p>Webhook payload formats will be documented here once webhook delivery is enabled. For now, use the REST API as the integration surface.</p>
-    </section>
+  <h2>Security & Verification</h2>
+  <p>Every webhook request includes a <code>X-LicenPro-Signature</code> header. You should verify this hash using your Secret Key to ensure the request came from us.</p>
 
-    <section class="help-section">
-      <h2>Setting Up Webhooks</h2>
-      <p>This section will be enabled when webhooks are shipped.</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>Create an Endpoint</h5>
-            <p>Set up an HTTPS endpoint on your server to receive webhook events. The endpoint must be publicly accessible.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Configure in Dashboard</h5>
-            <p>Go to Product Settings → Webhooks and add your endpoint URL.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Select Events</h5>
-            <p>Choose which events you want to receive notifications for.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Set Secret Key</h5>
-            <p>Configure a secret key to verify webhook signatures and ensure requests are from LicenPro.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">5</div>
-          <div class="help-step-item-content">
-            <h5>Test Your Endpoint</h5>
-            <p>Use the "Send Test" button to verify your endpoint is receiving and processing webhooks correctly.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+  <pre><code>// Example Header
+X-LicenPro-Signature: t=161245,v1=sha256...</code></pre>
 
-    <section class="help-section">
-      <h2>Verifying Webhook Signatures</h2>
-      <p>Signature verification will be documented when webhooks are shipped.</p>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Security:</strong> Always verify webhook signatures before processing. This prevents attackers from sending fake webhook events to your endpoint.
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Retry Policy</h2>
-      <p>Retry policy will be documented when webhooks are shipped.</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">1</div>
-          <div class="help-step-item-content">
-            <h5>First Retry</h5>
-            <p>After 1 minute</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">2</div>
-          <div class="help-step-item-content">
-            <h5>Second Retry</h5>
-            <p>After 5 minutes</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">3</div>
-          <div class="help-step-item-content">
-            <h5>Third Retry</h5>
-            <p>After 30 minutes</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">4</div>
-          <div class="help-step-item-content">
-            <h5>Final Retry</h5>
-            <p>After 2 hours (then marked as failed)</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Respond Quickly:</strong> Return a 200 OK response within 30 seconds. Process webhook data asynchronously if needed to avoid timeouts.
-        </div>
-      </div>
-    </section>
-
-    <div class="help-next-steps">
-      <h2>Related Topics</h2>
-      <div class="help-next-steps-grid">
-        <a routerLink="/api-reference" class="help-next-step-card">
-          <i class="pi pi-database"></i>
-          <h4>REST API</h4>
-          <p>API documentation</p>
-        </a>
-        <a routerLink="/subscription-license" class="help-next-step-card">
-          <i class="pi pi-calendar"></i>
-          <h4>Subscriptions</h4>
-          <p>Renewal webhooks</p>
-        </a>
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>.NET SDK</h4>
-          <p>SDK integration</p>
-        </a>
-      </div>
+  <div class="integration-grid">
+    <div class="integration-card">
+       <i class="ki-outline ki-data"></i>
+       <h4>JSON Payload</h4>
+       <p>Standardized structures for easy parsing.</p>
+    </div>
+    <div class="integration-card">
+       <i class="ki-outline ki-arrows-loop"></i>
+       <h4>Automatic Retries</h4>
+       <p>We retry up to 5 times if your server is down.</p>
     </div>
   </div>
 </div>

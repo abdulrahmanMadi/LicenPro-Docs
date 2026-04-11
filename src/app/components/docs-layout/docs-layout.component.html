@@ -1,16 +1,25 @@
 <div class="docs-layout">
-  <!-- Mobile Header - Just logo, no toggle -->
+  <!-- Mobile Header -->
   <div class="docs-mobile-header">
-    <a routerLink="/" class="docs-mobile-brand">
-      <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
-    </a>
-    <button class="docs-theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
-      <i class="ki-filled" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
-    </button>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button class="docs-mobile-menu-btn" (click)="toggleSidebar()">
+        <i class="ki-outline ki-menu"></i>
+      </button>
+      <a routerLink="/" class="docs-mobile-brand">
+        <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
+      </a>
+    </div>
+    
+    <div class="docs-mobile-actions">
+      <button class="mobile-action-btn" (click)="toggleTheme()" aria-label="Toggle Theme">
+        <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
+      </button>
+    </div>
   </div>
 
-  <!-- Sidebar - Always visible, no toggle -->
-  <aside class="docs-sidebar">
+
+  <!-- Left Sidebar (Navigation) -->
+  <aside class="docs-sidebar" [class.open]="isSidebarOpen">
     <div class="docs-sidebar-header">
       <a routerLink="/" class="docs-brand">
         <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
@@ -20,22 +29,14 @@
     <!-- Search -->
     <div class="docs-search">
       <div class="docs-search-wrapper">
-        <i class="ki-filled ki-magnifier docs-search-icon"></i>
+        <i class="ki-outline ki-magnifier docs-search-icon"></i>
         <input
           type="text"
           class="docs-search-input"
           placeholder="Search documentation..."
           [(ngModel)]="searchQuery"
           (input)="onSearchChange()"
-          (keydown)="onSearchKeydown($event)"
-          aria-label="Search documentation">
-        <button
-          *ngIf="searchQuery"
-          class="docs-search-clear"
-          (click)="clearSearch()"
-          aria-label="Clear search">
-          <i class="ki-filled ki-cross"></i>
-        </button>
+          aria-label="Search">
       </div>
     </div>
 
@@ -43,31 +44,16 @@
     <nav class="docs-nav">
       <ul class="docs-nav-list">
         <li *ngFor="let item of navItems" class="docs-nav-group" [class.hidden]="item.visible === false">
-          <button
-            class="docs-nav-header"
-            (click)="toggleCategory(item)"
-            [attr.aria-expanded]="item.expanded"
-            [attr.aria-controls]="'nav-' + item.id">
-            <div class="docs-nav-header-content">
-              <i class="ki-filled" [ngClass]="item.icon"></i>
-              <span [innerHTML]="item.matchedText || item.label"></span>
-            </div>
-            <i class="ki-filled ki-down docs-nav-arrow" [class.expanded]="item.expanded"></i>
-          </button>
-
-          <ul
-            *ngIf="item.children"
-            class="docs-nav-items"
-            [id]="'nav-' + item.id"
-            [@slideDown]="item.expanded ? 'expanded' : 'collapsed'">
+          <div class="docs-nav-group-title">{{ item.label }}</div>
+          
+          <ul class="docs-nav-items">
             <li *ngFor="let child of item.children" class="docs-nav-item" [class.hidden]="child.visible === false">
               <a
                 [routerLink]="child.route"
                 routerLinkActive="active"
                 class="docs-nav-link"
-                [class.keyboard-focused]="isItemFocused(child)"
                 (click)="onNavItemClick()">
-                <i class="ki-filled" [ngClass]="child.icon"></i>
+                <i class="ki-outline" [ngClass]="child.icon"></i>
                 <span [innerHTML]="child.matchedText || child.label"></span>
               </a>
             </li>
@@ -76,43 +62,64 @@
       </ul>
     </nav>
 
-    <!-- Sidebar Footer -->
     <div class="docs-sidebar-footer">
-      <a href="https://www.licenpro.tech" target="_blank" rel="noopener" class="docs-sidebar-link">
-        <i class="ki-filled ki-home"></i>
-        <span>LicenPro Dashboard</span>
-      </a>
-      <a href="https://www.licenpro.tech/dashboard/support" class="docs-sidebar-link">
-        <i class="ki-filled ki-support"></i>
-        <span>Support Center</span>
-      </a>
+       <div class="docs-footer-ver">v2.4.0</div>
     </div>
   </aside>
 
-  <!-- Overlay removed - sidebar always visible -->
+  <!-- Overlay for Mobile -->
+  <div class="docs-overlay" [class.visible]="isSidebarOpen" (click)="toggleSidebar()"></div>
 
-  <!-- Main Content -->
-  <main class="docs-main">
-    <!-- Topbar - No sidebar toggle -->
+  <!-- Main Content Wrapper -->
+  <div class="docs-main-wrapper">
+    <!-- Topbar -->
     <header class="docs-topbar">
-      <div class="docs-topbar-start">
+      <div class="docs-topbar-breadcrumb">
+        <span>Documentation</span>
+        <i class="ki-outline ki-right"></i>
+        <span class="active">Guides</span>
       </div>
-      <nav class="docs-topbar-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Guides</a>
-        <a routerLink="/api-reference" routerLinkActive="active">API Reference</a>
-        <a routerLink="/sdk-dotnet" routerLinkActive="active">Libraries</a>
-        <a routerLink="/changelog" routerLinkActive="active">Changelog</a>
-      </nav>
-      <div class="docs-topbar-end">
-        <button class="docs-theme-toggle docs-theme-toggle-sm" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
-          <i class="ki-filled" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
+      
+      <div class="docs-topbar-actions">
+        <a href="https://github.com/LicenPro" target="_blank" class="topbar-btn">
+          <i class="ki-outline ki-github"></i>
+        </a>
+        <button class="docs-theme-toggle-btn" (click)="toggleTheme()">
+          <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
         </button>
       </div>
     </header>
 
-    <!-- Content -->
-    <div class="docs-content">
-      <router-outlet></router-outlet>
+    <div class="docs-layout-content">
+      <!-- Main Content Area -->
+      <main class="docs-content">
+        <div class="docs-content-inner">
+          <router-outlet></router-outlet>
+          
+          <!-- Footer Navigation -->
+          <footer class="docs-content-footer">
+            <div class="docs-footer-line"></div>
+            <div class="docs-footer-meta">
+              <span>Last updated 2 days ago</span>
+              <a href="#" class="edit-link"><i class="ki-outline ki-pencil"></i> Edit this page</a>
+            </div>
+          </footer>
+        </div>
+      </main>
+
+      <!-- Right Sidebar (Table of Contents) -->
+      <aside class="docs-toc">
+        <div class="docs-toc-title">On this page</div>
+        <nav class="docs-toc-nav">
+          <ul>
+            <!-- Dynamic TOC would go here, placeholders for now -->
+            <li><a href="#overview" class="active">Overview</a></li>
+            <li><a href="#features">Key Features</a></li>
+            <li><a href="#setup">Setup Guide</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+          </ul>
+        </nav>
+      </aside>
     </div>
-  </main>
+  </div>
 </div>

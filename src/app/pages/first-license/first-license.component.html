@@ -1,298 +1,53 @@
 <div class="help-page">
-  <!-- Page Header -->
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-success">
-      <i class="pi pi-key"></i>
-    </div>
+  <header class="help-page-header">
+    <h1>Generate Your First License</h1>
+    <p class="lead">Once your product is set up, you can generate license keys to distribute to your customers. Licenses are the core of LicenPro's entitlement system.</p>
+  </header>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-key"></i>
     <div>
-      <h1>Generate Your First License</h1>
-      <p>Learn how to create license keys for your software product. Licenses are the keys that unlock your software for customers, controlling access, features, and usage limits.</p>
+      <span class="callout-title">License Format</span>
+      <p>By default, LicenPro generates keys in the <code>LP-XXXX-XXXX</code> format. These are human-readable and easy for customers to copy-paste.</p>
     </div>
   </div>
 
-  <!-- Time Estimate -->
-  <div class="help-time-estimate">
-    <i class="pi pi-clock"></i>
-    <span>Estimated time: 3-5 minutes</span>
+  <h2>Generation Process</h2>
+  <div class="doc-stepper">
+    <div class="step-item active">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Select Product</h3>
+        <p>Go to the <strong>Products</strong> list or a specific product's dashboard and click <strong>"Create License"</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Configure Entitlements</h3>
+        <p>Define what the license is allowed to do:</p>
+        <ul style="margin: 1rem 0; padding-left: 20px;">
+          <li><strong>Expiry Date:</strong> When the license should stop working (leave blank for Perpetual).</li>
+          <li><strong>Allocated Seats:</strong> How many concurrent activations are allowed.</li>
+          <li><strong>Feature Flags:</strong> (Optional) Enable specific modules within your application.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Issue & Download</h3>
+        <p>Confirm the details and click <strong>"Save License"</strong>. You can then copy the key or download the <code>.lic</code> file for offline distribution.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="help-content">
-    <!-- Understanding Licenses -->
-    <section class="help-section">
-      <h2>Understanding Licenses</h2>
-      <p>A license in LicenPro is a cryptographically signed key that grants permission to use your software. Each license contains information about the user, expiration, features, and usage limits.</p>
-      
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-check-circle"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Cryptographically Signed</h4>
-            <p>Licenses are signed with RSA keys to prevent tampering</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-user"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>User Information</h4>
-            <p>Embed customer name, email, and company details</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-calendar"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Expiration Control</h4>
-            <p>Set perpetual or time-limited license validity</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon">
-            <i class="pi pi-mobile"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Activation Limits</h4>
-            <p>Control how many devices can use the license</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Prerequisites -->
-    <section class="help-section">
-      <h2>Prerequisites</h2>
-      <p>Before generating a license, ensure you have:</p>
-      
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">✓</div>
-          <div class="help-step-item-content">
-            <h5>Created a Product</h5>
-            <p>You need at least one product to generate licenses for. <a routerLink="/first-product">Learn how to create a product</a>.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">✓</div>
-          <div class="help-step-item-content">
-            <h5>Generated RSA Keys</h5>
-            <p>Your product must have RSA keys configured for license signing. <a routerLink="/rsa-keys">Learn about RSA keys</a>.</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">✓</div>
-          <div class="help-step-item-content">
-            <h5>Customer Information</h5>
-            <p>Have the customer's name and email ready for the license.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Step by Step with Professional Stepper -->
-    <section class="help-section">
-      <h2>Step-by-Step Guide</h2>
-      
-      <div class="stepper-container">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Navigate to Licenses</h3>
-              <p>Access the license management section</p>
-            </div>
-            <div class="stepper-body">
-              <p>From your dashboard, click <strong>"Licenses"</strong> in the sidebar, or go to your product and click the <strong>"Licenses"</strong> tab.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Click "Create License"</h3>
-              <p>Start the license creation process</p>
-            </div>
-            <div class="stepper-body">
-              <p>Click the <strong>"Create License"</strong> button to open the license creation form.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Select Product</h3>
-              <p>Choose the target product</p>
-            </div>
-            <div class="stepper-body">
-              <p>Choose the product this license will be for from the dropdown menu.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Choose License Type</h3>
-              <p>Select the appropriate licensing model</p>
-            </div>
-            <div class="stepper-body">
-              <ul class="help-list">
-                <li><strong>Standard:</strong> Perpetual single-user license</li>
-                <li><strong>Trial:</strong> Time-limited evaluation license</li>
-                <li><strong>Subscription:</strong> Recurring billing license</li>
-                <li><strong>Floating:</strong> Concurrent user seats</li>
-                <li><strong>Node-Locked:</strong> Hardware-bound license</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">5</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Enter Customer Details</h3>
-              <p>Fill in the licensee information</p>
-            </div>
-            <div class="stepper-body">
-              <ul class="help-list">
-                <li><strong>Customer Name:</strong> Full name of the license holder</li>
-                <li><strong>Email:</strong> Customer's email address</li>
-                <li><strong>Company:</strong> (Optional) Customer's organization</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">6</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Configure License Settings</h3>
-              <p>Set the license parameters</p>
-            </div>
-            <div class="stepper-body">
-              <ul class="help-list">
-                <li><strong>Expiration Date:</strong> When the license expires (or never)</li>
-                <li><strong>Max Activations:</strong> Number of allowed device activations</li>
-                <li><strong>Features:</strong> (Optional) Enable specific features</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">7</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Generate License</h3>
-              <p>Create the license key</p>
-            </div>
-            <div class="stepper-body">
-              <p>Click <strong>"Create License"</strong> to generate the license key. The system will create a unique, cryptographically signed license.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stepper-item">
-          <div class="stepper-number">8</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Deliver to Customer</h3>
-              <p>Distribute the license</p>
-            </div>
-            <div class="stepper-body">
-              <p>Copy the license key or download the license file (.bin) to send to your customer. You can also email it directly from the dashboard.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- License Key Format -->
-    <section class="help-section">
-      <h2>License Key Format</h2>
-      <p>LicenPro generates license keys in a standard format that's easy to copy and distribute:</p>
-      
-      <div class="help-code-example">
-        <div class="help-code-header">Example License Key</div>
-        <pre><code>XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</code></pre>
-      </div>
-      
-      <p>You can also download a license file (.bin) which contains the full license data including the digital signature.</p>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>License Files vs Keys:</strong> A <code>license.bin</code> file can be validated offline using the product public key. A license key can be validated online via the API (and is also used for sessions/activations).
-        </div>
-      </div>
-    </section>
-
-    <!-- Best Practices -->
-    <section class="help-section">
-      <h2>Best Practices</h2>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Use Accurate Customer Info:</strong> Always enter correct customer information. This helps with support and license management.
-        </div>
-      </div>
-      
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Set Reasonable Limits:</strong> Configure activation limits based on your licensing model. Too restrictive limits frustrate customers.
-        </div>
-      </div>
-      
-      <div class="help-warning-box">
-        <div class="help-warning-icon">
-          <i class="pi pi-shield"></i>
-        </div>
-        <div>
-          <strong>Keep Records:</strong> Always keep records of issued licenses. LicenPro stores all license history, but it's good practice to maintain your own records too.
-        </div>
-      </div>
-    </section>
-
-    <!-- What's Next -->
-    <div class="help-next-steps">
-      <h2>What's Next?</h2>
-      <p>Now that you've created a license, here are the next steps:</p>
-      
-      <div class="help-next-steps-grid">
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>.NET SDK</h4>
-          <p>Integrate licensing in your app</p>
-        </a>
-        <a routerLink="/perpetual-license" class="help-next-step-card">
-          <i class="pi pi-user"></i>
-          <h4>Perpetual License</h4>
-          <p>Learn about license types</p>
-        </a>
-        <a routerLink="/api-reference" class="help-next-step-card">
-          <i class="pi pi-database"></i>
-          <h4>API Reference</h4>
-          <p>Automate license creation</p>
-        </a>
-      </div>
+  <div class="help-callout warning" style="margin-top: 3rem;">
+    <i class="ki-outline ki-information"></i>
+    <div>
+      <p>Offline licenses require the user to import a binary file into your application. If your app is always online, the <strong>License Key</strong> alone is sufficient to activate.</p>
     </div>
   </div>
 </div>

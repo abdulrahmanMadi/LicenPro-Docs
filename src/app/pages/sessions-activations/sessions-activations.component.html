@@ -1,340 +1,52 @@
 <div class="help-page">
-  <!-- Page Header -->
-  <div class="help-page-header">
-    <div class="help-page-icon help-page-icon-primary">
-      <i class="pi pi-box"></i>
+  <header class="help-page-header">
+    <h1>Sessions & Activations</h1>
+    <p class="lead">Track how and where your licenses being used across the globe with real-time session management.</p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-screen"></i>
+      <h4>Activations</h4>
+      <p>A permanent record of a device linked to a license key.</p>
     </div>
-    <div>
-      <h1>Sessions vs Activations</h1>
-      <p>LicenPro provides two complementary systems for tracking license usage: Sessions for real-time online tracking, and Activations for permanent device registration. Understanding when to use each is key to implementing the right licensing strategy.</p>
+    <div class="integration-card">
+      <i class="ki-outline ki-timer"></i>
+      <h4>Sessions</h4>
+      <p>A temporary record of an active application instance.</p>
     </div>
   </div>
 
-  <!-- Content -->
-  <div class="help-content">
-    <!-- Quick Comparison -->
-    <section class="help-section">
-      <h2>Quick Comparison</h2>
-      <p>Understanding the key differences between sessions and activations:</p>
-
-      <div class="help-feature-grid">
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-globe" style="color: #22c55e;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Sessions</h4>
-            <p>Real-time online tracking - "Who is using the software RIGHT NOW?"</p>
-          </div>
-        </div>
-        <div class="help-feature-card">
-          <div class="help-feature-icon" style="background: rgba(59, 130, 246, 0.1);">
-            <i class="pi pi-sitemap" style="color: #3b82f6;"></i>
-          </div>
-          <div class="help-feature-content">
-            <h4>Activations</h4>
-            <p>Permanent device registration - "Which devices are REGISTERED?"</p>
-          </div>
-        </div>
+  <h2>Lifecycle of a License</h2>
+  <div class="doc-stepper">
+    <div class="step-item active">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Activation</h3>
+        <p>The first time a user enters their key. The HWID is recorded, and an "Activation Slot" is consumed.</p>
       </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Sessions Characteristics</h2>
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Temporary</h5>
-            <p>Disappears when app closes</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Real-time</h5>
-            <p>Tracks current online users</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Heartbeat</h5>
-            <p>Requires periodic check-ins</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Concurrent Limits</h5>
-            <p>"Max 5 users online"</p>
-          </div>
-        </div>
+    </div>
+    <div class="step-item active">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Session Start</h3>
+        <p>Every time the app launches. A session is created to track concurrency and active usage.</p>
       </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Activations Characteristics</h2>
-      <div class="help-steps-list">
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Permanent</h5>
-            <p>Stays until manually deactivated</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Device-bound</h5>
-            <p>Tracks registered machines</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>One-time</h5>
-            <p>Register once, use forever</p>
-          </div>
-        </div>
-        <div class="help-step-item">
-          <div class="help-step-item-number">
-            <i class="pi pi-check"></i>
-          </div>
-          <div class="help-step-item-content">
-            <h5>Device Limits</h5>
-            <p>"Max 3 devices registered"</p>
-          </div>
-        </div>
+    </div>
+    <div class="step-item active">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Heartbeat Sync</h3>
+        <p>The app periodically updates the session. If the heartbeat stops (crash or disconnect), the session is eventually cleaned up.</p>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="help-section">
-      <h2>Sessions Lifecycle</h2>
-      
-      <div class="stepper-container">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>App Starts</h3>
-              <p>User opens the application</p>
-            </div>
-            <div class="stepper-body">
-              <p>When the user launches your application, it prepares to establish a session with the LicenPro server.</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Connect</h3>
-              <p>SessionManager.ConnectAsync()</p>
-            </div>
-            <div class="stepper-body">
-              <p>The SDK connects to the server and creates a new session. The server tracks this user as "online".</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Heartbeat</h3>
-              <p>Automatic (interval provided by server)</p>
-            </div>
-            <div class="stepper-body">
-              <p>The SDK automatically sends heartbeats to keep the session alive. The server returns a recommended heartbeat interval (seconds) when you connect. If heartbeats stop, the session will time out.</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Disconnect</h3>
-              <p>Session removed</p>
-            </div>
-            <div class="stepper-body">
-              <p>When the app closes or disconnects, the session is removed. The user slot becomes available for others.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>Activations Lifecycle</h2>
-      
-      <div class="stepper-container">
-        <div class="stepper-item">
-          <div class="stepper-number">1</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>First Run</h3>
-              <p>New device detected</p>
-            </div>
-            <div class="stepper-body">
-              <p>When the application runs on a new device for the first time, it detects that this device hasn't been registered.</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">2</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Activate</h3>
-              <p>LicenseClient.TryActivateDeviceAsync()</p>
-            </div>
-            <div class="stepper-body">
-              <p>The SDK sends the device fingerprint (hardware ID) to the server. If activation slots are available, the device is registered.</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">3</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Registered</h3>
-              <p>Device stored permanently</p>
-            </div>
-            <div class="stepper-body">
-              <p>The device is now permanently registered. It can use the software even offline (with license file).</p>
-            </div>
-          </div>
-        </div>
-        <div class="stepper-item">
-          <div class="stepper-number">4</div>
-          <div class="stepper-content">
-            <div class="stepper-header">
-              <h3>Deactivate</h3>
-              <p>Admin removes manually</p>
-            </div>
-            <div class="stepper-body">
-              <p>To free up an activation slot, an admin must manually deactivate the device from the dashboard.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="help-section">
-      <h2>SDK Integration</h2>
-      
-      <div class="help-code-example">
-        <div class="help-code-header">C# - Sessions (Real-time tracking)</div>
-        <pre><code>// Recommended: validate with LicenseClient
-// The SDK will connect sessions automatically during ValidateAsync (when online is available)
-var client = new LicenseClient(new LicenseClientOptions
-{{ '{' }}
-    LicenseFilePath = @"C:\\ProgramData\\YourApp\\license.bin",
-    PublicKey = "YOUR_PUBLIC_KEY",
-    LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
-    ServerEndpoint = "https://YOUR_DOMAIN/api"
-{{ '}' }});
-
-var validation = await client.ValidateAsync();
-if (!validation.IsValid)
-    throw new Exception(validation.ErrorMessage);
-
-// Disconnect when app closes
-await client.DisconnectAsync();</code></pre>
-      </div>
-
-      <div class="help-code-example">
-        <div class="help-code-header">C# - Activations (Device registration)</div>
-        <pre><code>// Activate device (typically on first run / first validation)
-var client = new LicenseClient(new LicenseClientOptions
-{{ '{' }}
-    LicenseFilePath = @"C:\\ProgramData\\YourApp\\license.bin",
-    PublicKey = "YOUR_PUBLIC_KEY",
-    LicenseKey = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
-    ServerEndpoint = "https://YOUR_DOMAIN/api",
-    ForceOnlineValidation = true
-{{ '}' }});
-
-var validate = await client.ValidateAsync();
-if (!validate.IsValid)
-    throw new Exception(validate.ErrorMessage);
-
-// For license types that require it, this will call /api/activations
-var activated = await client.TryActivateDeviceAsync();
-Console.WriteLine(activated ? "Device activated" : "Device activation skipped or not required");</code></pre>
-      </div>
-
-      <div class="help-code-example">
-        <div class="help-code-header">C# - Both Systems (Recommended for enterprise)</div>
-        <pre><code>public async Task StartApplicationAsync(string licenseKey)
-{{ '{' }}
-    // Step 1: Validate + activate device (when required)
-    var client = BuildLicenseClient(licenseKey);
-    var validation = await client.ValidateAsync();
-    if (!validation.IsValid)
-    {{ '{' }}
-        MessageBox.Show(validation.ErrorMessage);
-        return;
-    {{ '}' }}
-
-    // Step 2: Connect an online session (when you want real-time tracking / concurrency control)
-    var session = await client.ConnectSessionAsync();
-    if (!session.Success)
-    {{ '{' }}
-        MessageBox.Show(session.Message ?? "Could not connect session.");
-        return;
-    {{ '}' }}
-
-    Console.WriteLine("Validated + (optional) activated + session connected");
-{{ '}' }}</code></pre>
-      </div>
-
-      <div class="help-tip-box">
-        <div class="help-tip-icon">
-          <i class="pi pi-info-circle"></i>
-        </div>
-        <div>
-          <strong>Best Practice:</strong> Use Activations to limit how many devices can use a license, and Sessions to limit how many can be online simultaneously. This gives you maximum control.
-        </div>
-      </div>
-    </section>
-
-    <div class="help-next-steps">
-      <h2>What's Next?</h2>
-      <p>Learn more about licensing in LicenPro:</p>
-      
-      <div class="help-next-steps-grid">
-        <a routerLink="/sdk-dotnet" class="help-next-step-card">
-          <i class="pi pi-code"></i>
-          <h4>.NET SDK Guide</h4>
-          <p>Complete SDK documentation</p>
-        </a>
-        
-        <a routerLink="/floating-license" class="help-next-step-card">
-          <i class="pi pi-users"></i>
-          <h4>Floating License</h4>
-          <p>Concurrent user licensing</p>
-        </a>
-        
-        <a routerLink="/api-reference" class="help-next-step-card">
-          <i class="pi pi-database"></i>
-          <h4>REST API</h4>
-          <p>API documentation</p>
-        </a>
-      </div>
+  <div class="help-callout info">
+    <i class="ki-outline ki-information"></i>
+    <div>
+      <span class="callout-title">Revocation</span>
+      <p>You can terminate a session or revoke an activation remotely from the Dashboard. The application will receive this status on its next heartbeat and can shut down or prompt for a new key.</p>
     </div>
   </div>
 </div>
