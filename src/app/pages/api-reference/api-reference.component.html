@@ -1,78 +1,156 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>API Reference</h1>
-    <p class="lead">Build custom licensing workflows or integrations using our comprehensive REST API.</p>
+    <h1>REST API reference</h1>
+    <p class="lead">
+      The LicenPro API is an ASP.NET Core app routed under <code>/api/...</code> on your deployment host (for example <code>https://your-host/api</code>).
+      Two authentication styles matter: <strong>Bearer JWT</strong> (dashboard users) for most management routes, and <strong><code>X-API-KEY</code></strong> (product API key) for selected anonymous SDK/server integration endpoints.
+    </p>
   </header>
 
-  <div class="help-callout warning">
+  <div class="help-callout info">
     <i class="ki-outline ki-key"></i>
     <div>
-      <span class="callout-title">Authentication</span>
-      <p>All API requests require a <strong>Product API Key</strong>. You can find this in your Dashboard under <strong>Product > Settings</strong>.</p>
+      <span class="callout-title">Product API key</span>
+      <p>Used by <code>POST /api/Licenses/validate</code> via <code>ApiKeyAuthFilter</code>. Send header <code>X-API-KEY: &lt;your product key&gt;</code> (or legacy <code>Authorization: X-API-KEY &lt;key&gt;</code>). Keys are hashed server-side; store the plaintext only on integrators’ servers.</p>
     </div>
   </div>
 
-  <h2>Endpoints</h2>
-  
+  <h2>Licenses</h2>
+  <p>Controller route prefix: <code>/api/Licenses</code> (class <code>LicensesController</code>).</p>
+
   <div class="api-endpoint">
     <div class="endpoint-header">
       <span class="method get">GET</span>
-      <code class="path">/v1/license/validate</code>
+      <code class="path">/api/Licenses</code>
     </div>
-    <p>Perform a server-side validation of a license key.</p>
-    
-    <h4>Parameters</h4>
-    <table class="feature-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>key</code></td>
-          <td>string</td>
-          <td>The LP license key to validate.</td>
-        </tr>
-        <tr>
-          <td><code>hwid</code></td>
-          <td>string</td>
-          <td>Hardware ID for device binding.</td>
-        </tr>
-      </tbody>
-    </table>
+    <p>Paginated license list for the authenticated operator. Query: <code>pageNumber</code>, <code>pageSize</code>, <code>search</code>, <code>status</code>, <code>type</code>.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <code class="path">/api/Licenses/&#123;id&#125;</code>
+    </div>
+    <p>Single license by GUID.</p>
   </div>
 
   <div class="api-endpoint">
     <div class="endpoint-header">
       <span class="method post">POST</span>
-      <code class="path">/v1/license/activate</code>
+      <code class="path">/api/Licenses</code>
     </div>
-    <p>Activate a license on a new device.</p>
-    
-    <h4>Request Body</h4>
-    <pre><code>{{ '{' }}
-  "licenseKey": "LP-XXXX",
-  "deviceName": "PC-Workstation",
-  "hwid": "9A8B7C..."
-{{ '}' }}</code></pre>
+    <p>Create license. Body: <code>CreateLicenseDto</code> — required <code>name</code>, <code>type</code> (enum string: Perpetual, Trial, Subscription, NodeLocked, Floating, Concurrent), <code>issuedTo</code>, <code>softwareReleaseId</code>; optional <code>expirationDate</code>, <code>maxActiveUsersCount</code>, <code>hardwareId</code>, subscription/trial duration fields, <code>entitlementSetIds</code>, <code>notes</code>.</p>
   </div>
 
-  <div class="help-callout info">
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method post">POST</span>
+      <code class="path">/api/Licenses/validate</code>
+    </div>
+    <p><strong>AllowAnonymous</strong> + <strong>X-API-KEY</strong>. <code>multipart/form-data</code>: <code>licenseKey</code>, <code>validationParams</code> (JSON string), optional <code>licenseFile</code>. Returns validity + status + type; maps hardware/revocation errors to HTTP 403/400 per implementation.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <code class="path">/api/Licenses/validate/&#123;licenseKey&#125;</code>
+    </div>
+    <p>Anonymous simple validation; optional <code>hardwareId</code> query.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <code class="path">/api/Licenses/status/&#123;licenseKey&#125;</code>
+    </div>
+    <p>Anonymous status payload for SDK-style polling.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method post">POST</span>
+      <code class="path">/api/Licenses/refresh/&#123;licenseKey&#125;</code>
+    </div>
+    <p>Refresh license material / state (optional JSON body <code>RefreshLicenseDto</code>).</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <code class="path">/api/Licenses/&#123;licenseKey&#125;/activations</code>
+    </div>
+    <p>Anonymous activation snapshot for a key.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method get">GET</span>
+      <code class="path">/api/Licenses/&#123;id&#125;/download</code>
+    </div>
+    <p>Authorized download of generated license file bytes.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method post">POST</span>
+      <code class="path">/api/Licenses/&#123;id&#125;/generate-file</code>
+    </div>
+    <p>Authorized (re)generation of license file.</p>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="endpoint-header">
+      <span class="method post">POST</span>
+      <code class="path">/api/Licenses/&#123;id&#125;/revoke</code>
+    </div>
+    <p>Revoke license (operator).</p>
+  </div>
+
+  <p>Hardware binding management includes <code>GET /api/Licenses/pending-bindings</code>, <code>POST .../confirm-binding</code>, <code>reject-binding</code>, <code>reset-binding</code>, <code>unbind-device</code>, and transfer endpoints — see controller for full list.</p>
+
+  <h2>Products (RSA keys)</h2>
+  <p>Prefix: <code>/api/Products</code>.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Products/&#123;id&#125;/keys/generate</code></li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/status</code></li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public</code></li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public/download</code></li>
+  </ul>
+
+  <h2>Security utilities</h2>
+  <p>Prefix: <code>/api/security</code>.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/security/derive-key</code> — body: <code>licenseKey</code>, <code>saltBase64</code>; returns derived key material for protected file flows.</li>
+    <li>Session listing/revocation for logged-in users under same controller (admin features vary by action).</li>
+  </ul>
+
+  <h2>Online vs offline at the API boundary</h2>
+  <p>
+    <strong>Online</strong> integrations call <code>validate</code>, <code>status</code>, <code>refresh</code>, and activation/session endpoints so the server remains authoritative for revocation, seat counts, and hardware binding.
+    <strong>Offline</strong> use is implemented inside the customer app via RSA + signed <code>license.bin</code> (see <a routerLink="/sdk-dotnet">.NET SDK</a> <code>ValidateOfflineAsync</code>) and does not hit these routes unless you add your own telemetry.
+  </p>
+
+  <div class="help-callout warning">
     <i class="ki-outline ki-information"></i>
     <div>
-      <span class="callout-title">Rate Limiting</span>
-      <p>Our API is limited to 1,000 requests per minute per Product Key. Exceeding this will return a <code>429 Too Many Requests</code> status.</p>
+      <span class="callout-title">Rate limits</span>
+      <p>Production deployments may apply throttling per API key or tenant. Treat validate endpoints as latency-sensitive and cache responsibly on your side.</p>
     </div>
   </div>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a routerLink="/rsa-keys" class="integration-card"><i class="ki-outline ki-shield-tick"></i><h4>RSA keys</h4><p>Signing model</p></a>
+      <a routerLink="/first-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>First license</h4><p>Dashboard flow</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions</h4><p>Runtime data</p></a>
+    </div>
+  </section>
 </div>
 
 <style>
   .api-endpoint {
-    margin-top: 3rem;
-    padding-top: 2rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--border);
   }
 
@@ -80,7 +158,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .method {
@@ -95,10 +173,12 @@
   .method.post { background: #3b82f6; }
 
   .path {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--foreground);
     background: var(--muted);
     border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 6px;
   }
 </style>

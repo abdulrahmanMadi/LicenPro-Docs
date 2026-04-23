@@ -1,88 +1,152 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>.NET SDK Integration</h1>
-    <p class="lead">Integrate LicenPro into any .NET application (WPF, WinForms, Console, ASP.NET Core) with our official client library.</p>
+    <h1>.NET SDK</h1>
+    <p class="lead">
+      The <strong>LicenPro</strong> NuGet package is the supported way to validate <code>license.bin</code>, run activations and sessions,
+      surface subscription expiry warnings, and perform <strong>license-aware</strong> product updates. This page reflects the public API used by the reference WinForms host and the SDK source (not legacy samples that referenced non-existent packages).
+    </p>
   </header>
 
-  <h2>Installation</h2>
-  <p>Add the <strong>LicenPro</strong> package to your project using the NuGet package manager or .NET CLI.</p>
-  <pre><code>dotnet add package LicenPro --version 2.4.0</code></pre>
-
-  <h2>Basic Initialization</h2>
-  <p>Before validating licenses, you must initialize the SDK with your server endpoint and the product's public key.</p>
-  
-  <pre><code>using LicenPro;
-using LicenPro.Models.Utils;
-
-// 1. Initial configuration
-var settings = new SdkSettings {{ '{' }} 
-    ServerBaseEndpoint = "https://api.licenpro.tech" 
-{{ '}' }};
-SdkConfiguration.Initialize(settings);
-
-// 2. Load Public Key (Copy from Dashboard > Product > Settings)
-var secrets = new LicensingSecrets {{ '{' }} 
-    PublicKey = "MIIBIjANBgkqh..." 
-{{ '}' }};
-LicenseUtils.LoadLicensingSecrets(secrets);</code></pre>
-
-  <h2>Validation Logic</h2>
-  <div class="doc-stepper">
-    <div class="step-item active">
-      <div class="step-number">1</div>
-      <div class="step-content">
-        <h3>Create Client</h3>
-        <p>The <code>LicenseClient</code> handles the heavy lifting of reading files, checking RSA signatures, and server communication.</p>
-      </div>
-    </div>
-    <div class="step-item active">
-      <div class="step-number">2</div>
-      <div class="step-content">
-        <h3>Call ValidateAsync</h3>
-        <p>This method returns a comprehensive status result. It checks for expiry, signature validity, and server-side revocation in one call.</p>
-      </div>
+  <div class="help-callout info">
+    <i class="ki-outline ki-information"></i>
+    <div>
+      <span class="callout-title">Package and runtime</span>
+      <p>Target <strong>.NET 6+</strong> or <strong>.NET Framework 4.7.2+</strong>. Install <code>LicenPro</code> from NuGet (SDK assembly ships as 1.7.x — check NuGet for the latest). Namespaces you will use most: <code>LicenPro.SDK</code>, <code>LicenPro.Models.Utils</code>, <code>LicenPro.SDK.AppHosting</code>, <code>LicenPro.SDK.Updates</code>.</p>
     </div>
   </div>
 
-  <pre><code>// Example Validation
+  <h2>1. Configuration and API base URL</h2>
+  <p>
+    Almost every call goes to your LicenPro API. The base URL must be absolute and end with <code>/api</code>
+    (for example <code>https://licenpro.runasp.net/api</code> for the shared cloud, or <code>https://localhost:7138/api</code> when developing against a local API).
+  </p>
+  <p>Settings resolution order:</p>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>SdkConfiguration.Initialize(...)</code> if you invoke it yourself.</li>
+    <li>Otherwise the SDK scans the application base directory for <code>licenpro.settings.json</code>, then <code>appsettings.json</code> (either file may contain a nested <code>LicenPro</code> object with the same shape as <code>SdkSettings</code>).</li>
+    <li>If nothing is found, built-in defaults apply (override for self-hosted).</li>
+  </ol>
+
+  <pre><code>dotnet add package LicenPro
+
+using LicenPro.Models.Utils;
+using LicenPro.SDK;
+
+var settings = new SdkSettings {{ '{' }}
+    ServerBaseEndpoint = "https://licenpro.runasp.net/api"
+{{ '}' }};
+SdkConfiguration.Initialize(settings);</code></pre>
+
+  <p>
+    When you construct <code>LicenseClient</code>, you may set <code>LicenseClientOptions.ServerEndpoint</code>; the client normalizes it to end with <code>/api</code> and calls <code>SdkConfiguration.Initialize</code> during validation if needed.
+    Optional <code>LicensingSecrets:ApiKey</code> in the same JSON files is picked up for authenticated dashboard API calls (usage tracking, some advanced flows).
+  </p>
+
+  <h2>2. Desktop startup: staged updates</h2>
+  <p>
+    For WinForms, WPF, or any desktop process, call <code>SdkBootstrap.OnApplicationStartup()</code> once before showing UI.
+    It touches <code>SdkConfiguration.Settings</code> (triggering default file load) and completes any <strong>pending product update</strong> staged on a previous run.
+  </p>
+
+  <pre><code>using LicenPro.SDK.AppHosting;
+
+SdkBootstrap.OnApplicationStartup();</code></pre>
+
+  <h2>3. LicenseClient and validation</h2>
+  <p>
+    <code>LicenseClient</code> is the primary façade. Construct it with <code>LicenseClientOptions</code>: at minimum <code>LicenseFilePath</code>, <code>PublicKey</code> (Base64, no PEM headers), and <code>LicenseKey</code>.
+    Call <code>ValidateAsync()</code> for the full online path (signature, server rules, activation, session wiring). Use <code>ValidateOfflineAsync()</code> when you intentionally skip live server checks after you already trust the file.
+  </p>
+
+  <pre><code>using LicenPro.SDK;
+using LicenPro.SDK.Enums;
+
 var client = new LicenseClient(new LicenseClientOptions {{ '{' }}
-    LicenseFilePath = "license.bin",
-    LicenseKey = "LP-VAL-XXXX",
-    ExpectedType = LicenseType.Perpetual
+    LicenseFilePath = "C:/ProgramData/MyApp/license.bin",
+    PublicKey = publicKeyBase64,
+    LicenseKey = "LP-XXXX-...",
+    ExpectedLicenseType = LicenseType.Perpetual, // optional filter
+    ProductId = "00000000-0000-0000-0000-000000000000", // optional; helps update checks if not in file
+    SubscriptionExpiryWarningDays = 7,          // default; 0 disables
+    IncludeTrialInExpiryWarnings = false          // set true to warn on trial expiry too
 {{ '}' }});
 
 var result = await client.ValidateAsync();
 
-if (result.Status == LicenseStatus.Valid) {{ '{' }}
-    // Access licensed data
-    var userEmail = result.License.IssuedTo;
-    Console.WriteLine($"Welcome back, {{ '{' }}userEmail{{ '}' }}!");
-{{ '}' }}</code></pre>
+if (result.IsValid)
+{{ '{' }}
+    // result.License — strongly typed graph
+    // result.ExpiryNotice — populated for subscription/trial inside warning window
+    client.LicenseExpiringSoon += (_, e) =&gt; {{ '{' }} /* UI prompt */ {{ '}' }};
+{{ '}' }}
+else
+{{ '{' }}
+    // result.Status — LicenseValidationStatus enum
+    // result.ErrorTitle / result.ErrorMessage — user-facing copy
+{{ '}' }}
 
-  <div class="help-callout success">
-    <i class="ki-outline ki-shield-search"></i>
+await client.DisposeAsync();</code></pre>
+
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield-cross"></i>
     <div>
-      <span class="callout-title">Automatic Hardening</span>
-      <p>The SDK includes built-in protection against clock-winding attacks and common debugger attachment detection to ensure your licensing remains secure.</p>
+      <span class="callout-title">Status model</span>
+      <p>Use <code>result.IsValid</code> and <code>result.Status</code> (<code>LicenseValidationStatus</code>: Valid, Expired, Revoked, SignatureMismatch, CredentialsMismatch, WrongLicenseType, DeviceBlocked, InvalidFormat, and others). Older samples that referenced <code>LicenseStatus</code> on the validation result are incorrect for this API surface.</p>
     </div>
   </div>
 
-  <h2>Supported Frameworks</h2>
+  <h2>4. UI-friendly failure presentation</h2>
+  <p>
+    <code>LicenPro.SDK.AppHosting.LicenseValidationFeedback.From(result)</code> maps a failed <code>LicenseValidationResult</code> into titles, body text, and ARGB colors for status strips or message boxes without pulling WinForms-specific types into your view models.
+  </p>
+
+  <h2>5. Offline cache and “next launch”</h2>
+  <p>
+    <code>LicenseClient.ValidateAndCacheAsync(...)</code> reads <code>license.bin</code> (including protected/encrypted payloads decrypted with the license key), validates, and on success persists credentials and bytes for fast startup.
+    On a later run, <code>LicenseClient.TryAutoValidateAsync(licenseKey, publicKey)</code> reloads the cache, re-validates, and returns a <code>CacheValidationResult</code> with <code>Client</code> ready for <code>ConnectSessionAsync</code> if you still need online features.
+    If the cache was written with an older encrypted format, TryAuto may return <code>LicenseKeyRequired</code> until the user enters the key once.
+  </p>
+
+  <h2>6. Subscription expiry notices</h2>
+  <p>
+    Successful validation may set <code>result.ExpiryNotice</code> when the subscription (or trial, if enabled) is inside the configured whole-day warning window.
+    The client also raises <code>LicenseExpiringSoon</code> on the synchronization context captured in the constructor (ideal for WinForms/WPF UI threads).
+  </p>
+
+  <h2>7. License-aware product updates</h2>
+  <p>
+    After validation, the SDK keeps the update manager in sync with license key, hardware id, and product id (from the extended license payload or <code>LicenseClientOptions.ProductId</code>).
+    Use <code>SdkUpdateExtensions</code> on your <code>LicenseClient</code> instance: <code>EnableAutoUpdates(...)</code> for periodic checks, <code>CheckAndApplyUpdateAsync(...)</code> for explicit download-and-stage, and <code>DisableAutoUpdates()</code> to stop timers.
+    Eligibility rules (perpetual vs subscription vs node-locked, release pins, “all versions”) are enforced server-side; the SDK simply supplies identity and version context.
+  </p>
+
+  <h2>8. Sessions and telemetry</h2>
+  <p>
+    Successful online validation attempts activation and session connection inside <code>ValidateAsync</code>. You can still call <code>ConnectSessionAsync</code> later for long-running desktop apps. Subscribe to <code>SessionDisconnected</code> to react to heartbeat loss.
+    Dashboard operators see the data under Sessions / Activations — see <a routerLink="/sessions-activations">Sessions &amp; activations</a>.
+  </p>
+
+  <h2>9. Version string for updates</h2>
+  <p>
+    <code>SdkAssemblyInfo.GetSemanticVersionString(Assembly.GetExecutingAssembly())</code> is a small helper so the update channel receives a semver-style string consistent with packaged releases.
+  </p>
+
+  <h2>10. Related reading</h2>
   <div class="integration-grid">
-    <div class="integration-card">
-       <i class="ki-outline ki-windows"></i>
-       <h4>WPF & WinForms</h4>
-       <p>.NET Framework 4.7.2+ or .NET 6.0+</p>
-    </div>
-    <div class="integration-card">
-       <i class="ki-outline ki-element-11"></i>
-       <h4>Console & CLI</h4>
-       <p>.NET Standard 2.0 compatible apps.</p>
-    </div>
-    <div class="integration-card">
-       <i class="ki-outline ki-microsoft"></i>
-       <h4>ASP.NET Core</h4>
-       <p>For API and Server-side licensing.</p>
-    </div>
+    <a routerLink="/sdk-winforms" class="integration-card">
+      <i class="ki-outline ki-windows"></i>
+      <h4>WinForms</h4>
+      <p>Reference patterns from the sample app</p>
+    </a>
+    <a routerLink="/sdk-wpf" class="integration-card">
+      <i class="ki-outline ki-element-11"></i>
+      <h4>WPF</h4>
+      <p>Same SDK, MVVM-friendly lifecycle</p>
+    </a>
+    <a routerLink="/api-reference" class="integration-card">
+      <i class="ki-outline ki-data"></i>
+      <h4>REST API</h4>
+      <p>Automate licenses outside the client</p>
+    </a>
   </div>
 </div>

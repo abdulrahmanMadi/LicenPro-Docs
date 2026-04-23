@@ -1,47 +1,87 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Trial License</h1>
-    <p class="lead">Allow potential customers to evaluate your software for a limited time before purchasing.</p>
+    <h1>Trial license</h1>
+    <p class="lead">
+      A <strong>trial</strong> license is time-boxed evaluation. The server stores an expiration derived from <code>TrialPeriod</code> / <code>TrialPeriodHours</code> on create;
+      the SDK surfaces <code>LicenseType.Trial</code> and enforces expiry the same way as other types, with optional <strong>expiry warning</strong> hooks for UX.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-timer"></i>
-      <h4>Time-Limited</h4>
-      <p>Hard-expiry based on days or date.</p>
-    </div>
-    <div class="integration-card">
-      <i class="ki-outline ki-fingerprint"></i>
-      <h4>Device Bound</h4>
-      <p>Prevents "trial reloading" on same PC.</p>
+      <h4>Duration</h4>
+      <p>Days + optional hours from issuance.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-chart-line"></i>
-      <h4>Analytics</h4>
-      <p>Track conversion rates in real-time.</p>
+      <h4>Activations</h4>
+      <p>Same activation/session stack as paid types.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-search"></i>
+      <h4>Upgrade path</h4>
+      <p>Replace file + key when customer buys.</p>
     </div>
   </div>
 
-  <h2>Overview</h2>
-  <p>A Trial License is the best way to convert prospects into customers. LicenPro handles secure hardware matching to ensure the same machine cannot easily start multiple trials for the same product.</p>
+  <h2>How it works</h2>
+  <p>
+    On the server, <code>LicenseService.CreateLicenseAsync</code> parses <code>Type</code> as <code>Trial</code> and, when <code>trialPeriod</code> / <code>trialPeriodHours</code> are provided, sets <code>ExpirationDate</code> to <code>UtcNow + duration</code>.
+    The signed SDK model is <code>TrialLicense</code> with <code>TrialPeriod</code> and computed <code>ExpirationDate</code>.
+  </p>
 
+  <h2>Creating a trial license (dashboard)</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Select product and release; open license creation.</li>
+    <li>Set <code>type</code> to <strong>Trial</strong>.</li>
+    <li>Set <strong>Trial period</strong> fields in the API (<code>trialPeriod</code> days, <code>trialPeriodHours</code> 0–23) or equivalent UI fields.</li>
+    <li>Provide <strong>Name</strong>, <strong>IssuedTo</strong>, optional notes and entitlements for feature-limited trials.</li>
+    <li>Generate/download <code>license.bin</code> for the evaluator.</li>
+  </ol>
   <div class="help-callout info">
     <i class="ki-outline ki-information"></i>
     <div>
-      <span class="callout-title">Auto-Revocation</span>
-      <p>Once the trial period expires, the SDK will return an <code>Expired</code> status, allowing you to gracefully block features and show a "Buy Now" prompt.</p>
+      <span class="callout-title">Plans</span>
+      <p>Free-tier accounts may create <strong>Perpetual</strong> and <strong>Trial</strong> only; other types require the appropriate subscription feature flag on the server.</p>
     </div>
   </div>
 
-  <h2>Implementation</h2>
-  <pre><code>// Initialize Trial Client
-var options = new LicenseClientOptions {{ '{' }}
-    LicenseKey = "TRIAL-XXXX",
-    ExpectedType = LicenseType.Trial
-{{ '}' }};
+  <h2>REST API</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Licenses</code> — <code>type: "Trial"</code>, plus <code>trialPeriod</code> / <code>trialPeriodHours</code>, required <code>softwareReleaseId</code>, etc.</li>
+    <li>Same validate/status/download endpoints as other types (see <a routerLink="/api-reference">API reference</a>).</li>
+  </ul>
+
+  <h2>SDK integration</h2>
+  <p>Use <code>ExpectedLicenseType = LicenseType.Trial</code> if you ship a trial-only build; handle <code>LicenseValidationStatus.Expired</code> when the clock passed <code>ExpirationDate</code>.</p>
+  <p>Optional: set <code>IncludeTrialInExpiryWarnings = true</code> on <code>LicenseClientOptions</code> so <code>ExpiryNotice</code> / <code>LicenseExpiringSoon</code> fire before trial end (same mechanism as subscriptions).</p>
+
+  <pre><code>using LicenPro.SDK;
+using LicenPro.SDK.Enums;
+
+await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
+    LicenseFilePath = "license.bin",
+    PublicKey = publicKeyBase64,
+    LicenseKey = trialKey,
+    ExpectedLicenseType = LicenseType.Trial,
+    IncludeTrialInExpiryWarnings = true
+&rbrace;);
 
 var result = await client.ValidateAsync();
-if (result.Status == LicenseStatus.Expired) {{ '{' }}
-    ShowPurchaseDialog();
-{{ '}' }}</code></pre>
+
+if (!result.IsValid &amp;&amp; result.Status == LicenseValidationStatus.Expired)
+&lbrace;
+    // Prompt purchase / enter paid key
+&rbrace;</code></pre>
+
+  <p><strong>Offline</strong> evaluation (no server): <code>ValidateOfflineAsync()</code> when your policy allows cached or air-gapped trials.</p>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a routerLink="/subscription-license" class="integration-card"><i class="ki-outline ki-calendar-tick"></i><h4>Subscription</h4><p>Recurring model</p></a>
+      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>After trial conversion</p></a>
+      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Details</p></a>
+    </div>
+  </section>
 </div>

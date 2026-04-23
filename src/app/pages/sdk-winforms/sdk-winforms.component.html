@@ -1,49 +1,97 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>WinForms Integration</h1>
-    <p class="lead">Add licensing logic to your Windows Forms application using our specialized .NET wrappers.</p>
+    <h1>WinForms integration</h1>
+    <p class="lead">
+      WinForms hosts the same <strong>LicenPro</strong> NuGet package as any other .NET desktop app. There is no separate <code>LicenPro.WinForms</code> package — you wire validation, cache, sessions, and updates with <code>LicenseClient</code>, <code>SdkBootstrap</code>, and optional UI built in your forms.
+      The patterns below mirror the official <strong>Licenses-Test-Winforms-App</strong> sample shipped beside the SDK.
+    </p>
   </header>
 
-  <h2>Getting Started</h2>
-  <p>The WinForms integration builds on the core .NET SDK but adds helper methods for common UI flows like activation dialogs.</p>
+  <h2>1. Program entry</h2>
+  <p>Use <code>STAThread</code>, initialize WinForms configuration, run bootstrap, then show your main form.</p>
 
-  <div class="doc-stepper">
-    <div class="step-item active">
-      <div class="step-number">1</div>
-      <div class="step-content">
-        <h3>Install Packages</h3>
-        <pre><code>dotnet add package LicenPro.WinForms</code></pre>
-      </div>
-    </div>
+  <pre><code>using System.Windows.Forms;
+using LicenPro.SDK.AppHosting;
 
-    <div class="step-item active">
-      <div class="step-number">2</div>
-      <div class="step-content">
-        <h3>Initialize in Main()</h3>
-        <p>Ensure you initialize the SDK before the first <code>Application.Run()</code> call.</p>
-      </div>
-    </div>
-  </div>
-
-  <pre><code>static void Main() {{ '{' }}
-    SdkConfiguration.Initialize("https://api.licenpro.tech");
-    
-    // Check license before showing main form
-    var client = new LicenseClient("license.bin");
-    var res = await client.ValidateAsync();
-
-    if (res.IsValid) {{ '{' }}
+internal static class Program
+{{ '{' }}
+    [STAThread]
+    static void Main()
+    {{ '{' }}
+        ApplicationConfiguration.Initialize();
+        SdkBootstrap.OnApplicationStartup();
         Application.Run(new MainForm());
-    {{ '}' }} else {{ '{' }}
-        Application.Run(new ActivationForm());
     {{ '}' }}
 {{ '}' }}</code></pre>
 
-  <div class="help-callout info">
-    <i class="ki-outline ki-information"></i>
+  <h2>2. Async startup on the UI form</h2>
+  <p>
+    Keep <code>Main</code> synchronous; perform license work on the first <code>Shown</code> event (or a splash controller) with <code>async void</code> handlers or <code>Task</code> orchestration you prefer.
+    Always dispose the active <code>LicenseClient</code> on application exit so session heartbeats release cleanly.
+  </p>
+
+  <pre><code>using LicenPro.SDK;
+
+public partial class MainForm : Form
+{{ '{' }}
+    private LicenseClient? _licenseClient;
+
+    public MainForm()
+    {{ '{' }}
+        Shown += async (_, __) =&gt; await RunStartupLicenseCheckAsync();
+        FormClosing += async (_, __) =&gt;
+        {{ '{' }}
+            if (_licenseClient is not null)
+                await _licenseClient.DisposeAsync();
+        {{ '}' }};
+    {{ '}' }}
+
+    private async Task RunStartupLicenseCheckAsync()
+    {{ '{' }}
+        if (!LicenseCache.Exists()) return;
+
+        var r = await LicenseClient.TryAutoValidateAsync(
+            string.IsNullOrWhiteSpace(txtLicenseKey.Text) ? null : txtLicenseKey.Text,
+            string.IsNullOrWhiteSpace(txtPublicKey.Text) ? null : txtPublicKey.Text);
+
+        if (r.IsSuccess &amp;&amp; r.Client is not null)
+        {{ '{' }}
+            _licenseClient = r.Client;
+            // Update status strip; optionally show ExpiryNotice from r.ValidationResult
+            return;
+        {{ '}' }}
+
+        // Handle LicenseKeyRequired / CacheCorrupted / ValidationFailed with clear UX
+    {{ '}' }}
+{{ '}' }}</code></pre>
+
+  <h2>3. First-time activation (validate + cache)</h2>
+  <p>
+    When the user picks a <code>license.bin</code> and enters their key, call <code>LicenseClient.ValidateAndCacheAsync(path, publicKey, licenseKey, expectedLicenseType: null, productId)</code>.
+    Pass the dashboard <strong>product GUID</strong> when the license file does not embed product id — it improves license-aware update checks.
+    Strip PEM headers from the public key file before passing the string (the sample uses <code>SecurityUtils.StripPemHeaders</code> from the SDK utilities).
+  </p>
+
+  <h2>4. Manual “validate from cache”</h2>
+  <p>Bind a button to the same <code>TryAutoValidateAsync</code> path used at startup so support staff can refresh state without reopening the app.</p>
+
+  <h2>5. Surfacing failures and expiry</h2>
+  <p>
+    For failures, call <code>LicenseValidationFeedback.From(result)</code> to populate dialog text and status strip colors consistently.
+    For subscriptions nearing renewal, read <code>result.ExpiryNotice</code> after validation or listen to <code>LicenseClient.LicenseExpiringSoon</code> for non-blocking reminders on auto-validation.
+  </p>
+
+  <h2>6. Optional: sessions and updates</h2>
+  <p>
+    After a successful validate, you may call <code>await _licenseClient.ConnectSessionAsync()</code> on a background task so UI stays responsive.
+    Enable <code>EnableAutoUpdates</code> from <code>SdkUpdateExtensions</code> once you know the app version string (for example via <code>SdkAssemblyInfo.GetSemanticVersionString</code>).
+  </p>
+
+  <div class="help-callout success">
+    <i class="ki-outline ki-check-circle"></i>
     <div>
-      <span class="callout-title">Pre-built Dialogs</span>
-      <p>The WinForms SDK includes <code>LicenseActivationDialog</code>, a customizable form you can use to let users enter their keys without building your own UI.</p>
+      <span class="callout-title">Next steps</span>
+      <p>Read the <a routerLink="/sdk-dotnet">.NET SDK</a> page for the full option matrix, then map your activation UX (wizard vs single form) on top of the same primitives.</p>
     </div>
   </div>
 </div>

@@ -1,8 +1,9 @@
 import { Component, inject, PLATFORM_ID, signal, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { filter } from 'rxjs/operators';
 
 interface NavItem {
   id: string;
@@ -20,28 +21,12 @@ interface NavItem {
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, CommonModule],
   templateUrl: './docs-layout.component.html',
-  styleUrls: ['./docs-layout.component.scss'],
-  animations: [
-    trigger('slideDown', [
-      state('collapsed', style({
-        height: '0',
-        opacity: '0',
-        overflow: 'hidden'
-      })),
-      state('expanded', style({
-        height: '*',
-        opacity: '1',
-        overflow: 'visible'
-      })),
-      transition('collapsed <=> expanded', [
-        animate('300ms ease-in-out')
-      ])
-    ])
-  ]
+  styleUrls: ['./docs-layout.component.scss']
 })
 export class DocsLayoutComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly router = inject(Router);
 
   isSidebarOpen = true;
   searchQuery = '';
@@ -63,7 +48,22 @@ export class DocsLayoutComponent {
         document.documentElement.classList.remove('light', 'dark');
         document.documentElement.classList.add(theme);
       });
+
+      this.router.events
+        .pipe(
+          filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+          takeUntilDestroyed()
+        )
+        .subscribe(() => {
+          queueMicrotask(() => this.scrollDocsPanesToTop());
+        });
     }
+  }
+
+  /** Main column keeps scroll position between routes; reset so each page starts at the top. */
+  private scrollDocsPanesToTop(): void {
+    document.querySelector('.docs-content')?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    document.querySelector('.docs-toc')?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }
 
   toggleTheme(): void {
@@ -234,7 +234,7 @@ export class DocsLayoutComponent {
     setTimeout(() => {
       const focusedElement = document.querySelector('.docs-nav-link.keyboard-focused');
       if (focusedElement) {
-        focusedElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        focusedElement.scrollIntoView({ behavior: 'auto', block: 'nearest' });
       }
     }, 0);
   }

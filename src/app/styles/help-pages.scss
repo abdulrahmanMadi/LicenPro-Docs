@@ -1,14 +1,5 @@
 /* ===== HELP PAGE COMMON STYLES (Windsurf UI) ===== */
 
-.help-page {
-  animation: fadeInContent 0.5s ease-out;
-}
-
-@keyframes fadeInContent {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* Page Header System */
 .help-page-header {
   margin-bottom: 3rem;

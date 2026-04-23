@@ -8,7 +8,10 @@ import { RouterLink } from '@angular/router';
   template: `
     <div class="doc-page">
       <h1 class="text-accent">LicenPro Documentation</h1>
-      <p class="lead">Everything you need to integrate professional software licensing into your applications.</p>
+      <p class="lead">
+        Guides for the vendor dashboard (products, RSA keys, licenses, sessions) and the
+        <strong>.NET SDK</strong> shipped as the <code>LicenPro</code> NuGet package — validation, cache, expiry notices, and license-aware updates.
+      </p>
       
       <div class="doc-cards">
         <a routerLink="/quick-start" class="doc-card">
@@ -28,8 +31,13 @@ import { RouterLink } from '@angular/router';
         </a>
         <a routerLink="/sdk-dotnet" class="doc-card">
           <i class="ki-outline ki-microsoft"></i>
-          <h3>SDKs</h3>
-          <p>Integrate with your codebase</p>
+          <h3>.NET SDK</h3>
+          <p>LicenseClient, cache, updates</p>
+        </a>
+        <a routerLink="/sessions-activations" class="doc-card">
+          <i class="ki-outline ki-chart-line"></i>
+          <h3>Sessions</h3>
+          <p>Activations in the dashboard</p>
         </a>
       </div>
 
@@ -50,15 +58,6 @@ import { RouterLink } from '@angular/router';
     </div>
   `,
   styles: [`
-    .doc-page {
-      animation: fadeIn 0.4s ease-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .lead {
       font-size: 1.25rem;
       color: var(--muted-foreground);
@@ -81,16 +80,9 @@ import { RouterLink } from '@angular/router';
       border: 1px solid var(--border);
       border-radius: 12px;
       text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       
       &:hover {
         border-color: var(--primary);
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-        
-        [data-bs-theme="dark"] & {
-           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
       }
 
       i {

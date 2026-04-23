@@ -1,49 +1,56 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>WPF Integration</h1>
-    <p class="lead">Implement secure licensing in WPF applications with async support and MVVM-friendly components.</p>
+    <h1>WPF integration</h1>
+    <p class="lead">
+      WPF uses the identical <strong>LicenPro</strong> package and APIs as WinForms. There is no separate WPF-specific SDK or <code>ILicenseService</code> shipped by LicenPro — you wrap <code>LicenseClient</code> in your own service registered in DI, keep it alive for the process lifetime, and marshal events to the UI thread as needed.
+    </p>
   </header>
 
-  <div class="help-callout info">
-    <i class="ki-outline ki-code"></i>
-    <div>
-      <span class="callout-title">MVVM Support</span>
-      <p>The WPF SDK is designed to work seamlessly with Dependency Injection and MVVM patterns. Use the <code>ILicenseService</code> for clean separation.</p>
-    </div>
-  </div>
+  <h2>1. Application startup</h2>
+  <p>Call bootstrap before showing the main window so staged updates and JSON settings load exactly like WinForms.</p>
 
-  <h2>Usage Example</h2>
-  <p>Initialize the service in your <code>App.xaml.cs</code> or DI container initialization.</p>
+  <pre><code>using System.Windows;
+using LicenPro.SDK.AppHosting;
 
-  <pre><code>public partial class App : Application {{ '{' }}
-    protected override async void OnStartup(StartupEventArgs e) {{ '{' }}
-        var settings = new SdkSettings {{ '{' }} ... {{ '}' }};
-        SdkConfiguration.Initialize(settings);
-
-        var licenseManager = new LicenseManager();
-        if(!await licenseManager.CheckLicenseAsync()) {{ '{' }}
-            new ActivationWindow().Show();
-            return;
-        {{ '}' }}
-        
+public partial class App : Application
+{{ '{' }}
+    protected override void OnStartup(StartupEventArgs e)
+    {{ '{' }}
+        SdkBootstrap.OnApplicationStartup();
         base.OnStartup(e);
     {{ '}' }}
 {{ '}' }}</code></pre>
 
-  <h2>Hardware Identification</h2>
-  <p>For WPF apps, we recommend using our advanced HWID provider which combines hardware serials with OS-specific identifiers for maximum reliability.</p>
-  <pre><code>string myId = WpfHardwareProvider.GetUniqueId();</code></pre>
+  <h2>2. Async validation without blocking the UI thread</h2>
+  <p>
+    Construct <code>LicenseClient</code> on a background thread or the UI thread, but always <code>await</code> validation.
+    <code>LicenseClient</code> captures <code>SynchronizationContext.Current</code> when created; expiry warnings (<code>LicenseExpiringSoon</code>) are posted back to that context, so constructing the client on the UI thread keeps dialogs safe.
+  </p>
 
+  <h2>3. MVVM-oriented layering</h2>
+  <p>Recommended shape:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>ILicenseService</strong> (your interface) wraps <code>LicenseClient</code>, exposes <code>Task</code>-based validate / try-auto-validate, and forwards <code>SessionDisconnected</code>.</li>
+    <li><strong>App-level host</strong> owns service lifetime and calls <code>DisposeAsync</code> on shutdown.</li>
+    <li><strong>View models</strong> bind commands to the service; never block the UI thread with synchronous validation APIs.</li>
+  </ul>
+
+  <h2>4. Hardware identity</h2>
+  <p>
+    The SDK computes a composite hardware fingerprint internally for activation and update checks. You normally do not need a separate “WPF hardware provider”; only supply <code>IHardwareIdentifier</code> in advanced test scenarios.
+  </p>
+
+  <h2>5. Further reading</h2>
   <div class="integration-grid">
-    <div class="integration-card">
-      <i class="ki-outline ki-element-11"></i>
-      <h4>Modern UI</h4>
-      <p>Templates for activation screens included.</p>
-    </div>
-    <div class="integration-card">
-      <i class="ki-outline ki-security-user"></i>
-      <h4>Async First</h4>
-      <p>Prevents UI freezing during validation.</p>
-    </div>
+    <a routerLink="/sdk-dotnet" class="integration-card">
+      <i class="ki-outline ki-code"></i>
+      <h4>.NET SDK</h4>
+      <p>Options, cache, updates, sessions</p>
+    </a>
+    <a routerLink="/sdk-winforms" class="integration-card">
+      <i class="ki-outline ki-windows"></i>
+      <h4>WinForms reference</h4>
+      <p>Parallel lifecycle patterns</p>
+    </a>
   </div>
 </div>

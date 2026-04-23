@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   z-index: 100;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: none;
 
   .docs-sidebar-header {
     padding: 24px 20px;
@@ -57,7 +57,7 @@
         padding: 0 12px 0 38px;
         font-size: 0.875rem;
         color: var(--foreground);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: none;
 
         &:focus {
           outline: none;
@@ -105,7 +105,7 @@
       color: var(--muted-foreground);
       text-decoration: none;
       border-radius: 7px; /* Pill shape */
-      transition: all 0.15s ease;
+      transition: none;
       margin-bottom: 4px;
 
       i {
@@ -190,7 +190,7 @@
       background: var(--background);
       color: var(--muted-foreground);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: none;
       text-decoration: none;
 
       &:hover {
@@ -215,7 +215,7 @@
   padding: 48px 64px 80px;
   display: flex;
   justify-content: center;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 
   @media (max-width: 992px) {
     padding: 32px 24px;
@@ -295,7 +295,7 @@
       font-size: 0.875rem; 
       color: var(--muted-foreground);
       text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none;
       border-radius: 6px; /* Pill-like */
 
       &:hover {
@@ -339,7 +339,7 @@
     min-width: 0;
     transform: translateX(-100%);
     z-index: 1000;
-    transition: transform 0.3s ease;
+    transition: none;
     background: var(--sidebar-bg);
     filter: drop-shadow(0 0 10px rgba(0,0,0,0.1));
     &.open { transform: translateX(0); }
@@ -373,11 +373,11 @@
       font-size: 1.25rem;
       cursor: pointer;
       border-radius: 10px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none;
       
       i { 
         color: var(--muted-foreground); 
-        transition: color 0.2s;
+        transition: none;
       }
 
       &:hover, &:active {

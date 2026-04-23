@@ -1,40 +1,88 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Floating License</h1>
-    <p class="lead">Ideal for enterprise environments. Licenses are stored in a pool and "checked out" by users as needed.</p>
+    <h1>Floating license</h1>
+    <p class="lead">
+      <strong>Floating</strong> (and <strong>Concurrent</strong>) licenses represent <em>seats</em>: a maximum number of simultaneous active users/machines enforced through activations and <strong>session heartbeats</strong> to the API.
+      They are inherently <strong>online</strong>-oriented — the pool is authoritative on the server.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-people"></i>
-      <h4>Concurrent Users</h4>
-      <p>Limit the number of simultaneous active sessions.</p>
+      <h4>Max seats</h4>
+      <p><code>MaxActiveUsersCount</code> on create.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-timer"></i>
-      <h4>Heartbeat Sync</h4>
-      <p>Automatic seat release if the application crashes.</p>
+      <i class="ki-outline ki-pulse"></i>
+      <h4>Heartbeat</h4>
+      <p>SDK session keeps seat claimed.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-status"></i>
-      <h4>Live Monitoring</h4>
-      <p>See exactly who is using your software in real-time.</p>
+      <i class="ki-outline ki-chart-line"></i>
+      <h4>Dashboard</h4>
+      <p>See active sessions vs cap.</p>
     </div>
   </div>
 
-  <h2>How it Works</h2>
-  <p>Unlike Perpetual licenses which bind to a specific user or machine, a Floating license represents a "Seat." When User A launches the app, they take 1 seat. When they close it, the seat returns to the pool for User B.</p>
+  <h2>Floating vs Concurrent</h2>
+  <p>
+    Both are modeled in the API enum as distinct values (<code>Floating</code> and <code>Concurrent</code>) and map to SDK types <code>FloatingLicense</code> and <code>ConcurrentLicense</code> with the same seat concept (<code>MaxActiveUsersCount</code>).
+    Product documentation usually treats them as sibling “network seat” models; pick the enum your business rules expect when creating licenses.
+  </p>
 
-  <div class="help-callout info">
+  <h2>How it works</h2>
+  <p>
+    Each checkout occupies capacity until the session ends or the heartbeat times out. The SDK’s <code>LicenseClient.ValidateAsync</code> path participates in activation + session management so the server can reject a seat when the pool is full.
+  </p>
+
+  <h2>Creating a floating license (dashboard / API)</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Licenses</code> with <code>type: "Floating"</code> (or <code>"Concurrent"</code>), <code>maxActiveUsersCount</code> set to the pool size, <code>issuedTo</code> (org or label), <code>softwareReleaseId</code>, optional entitlements.</li>
+    <li>Distribute license key + <code>license.bin</code> to the customer environment.</li>
+    <li>Monitor usage under product <strong>Sessions</strong> / <strong>Activations</strong> in the dashboard.</li>
+  </ol>
+
+  <h2>REST API</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>GET /api/Licenses/&#123;licenseKey&#125;/activations</code> — activation snapshot (anonymous).</li>
+    <li><code>GET /api/Licenses/status/&#123;licenseKey&#125;</code> — includes seat-oriented fields in the returned payload where applicable.</li>
+    <li>Vendor JWT routes for revoke/transfer when you need administrative overrides.</li>
+  </ul>
+
+  <h2>SDK integration</h2>
+  <p>Validate like any other type; keep the client alive for <code>ConnectSessionAsync</code> / heartbeat while the app holds a seat. Heartbeat interval is driven by SDK configuration (<code>SdkSettings.HeartbeatIntervalMinutes</code> / manager defaults), not a fake <code>SessionHeartbeatInterval</code> property on <code>LicenseClientOptions</code>.</p>
+
+  <pre><code>using LicenPro.SDK;
+using LicenPro.SDK.Enums;
+
+await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
+    LicenseFilePath = "license.bin",
+    PublicKey = publicKeyBase64,
+    LicenseKey = floatingKey,
+    ExpectedLicenseType = LicenseType.Floating
+&rbrace;);
+
+var result = await client.ValidateAsync();
+if (!result.IsValid)
+    return;
+
+await client.ConnectSessionAsync();
+// On app exit: await client.DisposeAsync();</code></pre>
+
+  <div class="help-callout warning">
+    <i class="ki-outline ki-wifi"></i>
     <div>
-      <span class="callout-title">Session Heartbeat</span>
-      <p>Floating licenses require an active internet connection. The SDK sends a "heartbeat" every few minutes to maintain the seat. If the server loses connection for more than 10 minutes, the seat is automatically made available again.</p>
+      <span class="callout-title">Offline use</span>
+      <p>Floating/concurrent licensing cannot be truthfully enforced without periodic server contact. Offline-only mode is not a supported primary mode for seat pools; use perpetual or node-locked models if you must work air-gapped.</p>
     </div>
   </div>
 
-  <pre><code>// Initialize as Floating
-var options = new LicenseClientOptions {{ '{' }}
-    ExpectedType = LicenseType.Floating,
-    SessionHeartbeatInterval = 5 // minutes
-{{ '}' }};</code></pre>
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions</h4><p>Operational detail</p></a>
+      <a routerLink="/node-locked-license" class="integration-card"><i class="ki-outline ki-lock"></i><h4>Node-locked</h4><p>Single machine</p></a>
+      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Lifecycle</p></a>
+    </div>
+  </section>
 </div>

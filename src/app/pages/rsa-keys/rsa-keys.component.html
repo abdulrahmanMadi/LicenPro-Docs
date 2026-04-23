@@ -1,42 +1,81 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>RSA Key Management</h1>
-    <p class="lead">LicenPro uses asymmetric cryptography (RSA) to ensure that only you can issue valid licenses for your software.</p>
+    <h1>RSA keys &amp; signing</h1>
+    <p class="lead">
+      LicenPro signs each <code>license.bin</code> with your product’s <strong>RSA private key</strong> stored only on the server.
+      Your distributed applications embed the matching <strong>public key</strong> so the SDK can verify integrity and authenticity <em>without</em> ever receiving the private key.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-lock-2"></i>
-      <h4>Private Key</h4>
-      <p>Stored securely on our servers. Used to "sign" digital license files.</p>
+      <h4>Private key</h4>
+      <p>Server-only; signs license payloads.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-shield-tick"></i>
-      <h4>Public Key</h4>
-      <p>Hardcoded in your application. Used to verify the server's signature.</p>
+      <h4>Public key</h4>
+      <p>Shipped in the client; verifies signatures.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-cloud-download"></i>
+      <h4>Download</h4>
+      <p>REST + dashboard download PEM/JSON.</p>
     </div>
   </div>
 
-  <h2>Security Principles</h2>
-  <div class="help-callout info">
-    <div>
-      <span class="callout-title">Asymmetric Signing</span>
-      <p>Because the Public Key can only <em>verify</em> (not create) a signature, your app can safely check license validity even when disconnected from the internet without exposing your master signing key.</p>
-    </div>
-  </div>
+  <h2>How signing fits validation</h2>
+  <p>
+    When <code>LicenseClient.ValidateAsync</code> runs, it loads your public key into <code>LicenseUtils.LoadLicensingSecrets(...)</code> and verifies the RSA signature over the license payload.
+    If the customer swaps in another product’s file, changes bytes, or you rotated keys without re-issuing, verification fails with <code>LicenseValidationStatus.SignatureMismatch</code> and actionable error text from the SDK.
+  </p>
 
-  <h2>Rotation & Backup</h2>
-  <p>You can regenerate your RSA keys at any time from the Product Settings. However, please be aware:</p>
-  
+  <h2>Dashboard operations</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Open the product → keys / security section.</li>
+    <li><strong>Generate</strong> a new RSA pair when onboarding a product (one-time per environment strategy).</li>
+    <li><strong>Copy / download public key</strong> and embed Base64 (strip PEM headers) into config or code.</li>
+    <li>Never export the private key to customer apps — only LicenPro services use it to sign.</li>
+  </ol>
+
+  <h2>REST API (product owner JWT)</h2>
+  <p>Routes are implemented on <code>ProductsController</code> under <code>/api/Products/&#123;id&#125;/keys/...</code>:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Products/&#123;id&#125;/keys/generate</code> — create/regenerate key material for the product.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/status</code> — whether keys exist / metadata.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public</code> — JSON payload with public key for SDK wiring.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public/download</code> — file download (PEM) for operators.</li>
+  </ul>
+  <p>All of the above require an authorized user with product resource access (see API authorization policies).</p>
+
+  <h2>Related security REST</h2>
+  <p><code>POST /api/security/derive-key</code> (anonymous) derives a key from <code>licenseKey</code> + salt Base64 — used in protected license file flows where the customer key participates in decryption (SDK coordinates this with <code>LicenseFileProtector</code> patterns).</p>
+
+  <h2>SDK embedding</h2>
+  <p>Pass the Base64 public key (no PEM headers) to <code>LicenseClientOptions.PublicKey</code>. The client configures <code>LicenseUtils</code> internally; you normally do not call <code>LoadLicensingSecrets</code> yourself for simple integrations.</p>
+
+  <pre><code>using LicenPro.SDK;
+
+await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
+    LicenseFilePath = "license.bin",
+    PublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...",
+    LicenseKey = "LP-...."
+&rbrace;);</code></pre>
+
   <div class="help-callout warning">
     <i class="ki-outline ki-shield-cross"></i>
     <div>
-      <span class="callout-title">Breaking Changes</span>
-      <p>Rotating keys will invalidate all existing licenses signed with the old key. You must update your application's source code with the new <strong>Public Key</strong> before re-issuing licenses to users.</p>
+      <span class="callout-title">Rotation</span>
+      <p>Regenerating keys invalidates every license file signed with the previous private key. Plan rotation: publish new app builds with the new public key, re-issue bins, and stagger customer upgrades.</p>
     </div>
   </div>
 
-  <pre><code>// Example: Embedding Public Key in C#
-var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AM...";
-LicenseUtils.LoadPublicKey(publicKey);</code></pre>
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a routerLink="/first-product" class="integration-card"><i class="ki-outline ki-abstract-26"></i><h4>First product</h4><p>Where keys live</p></a>
+      <a routerLink="/api-reference" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>Full route list</p></a>
+      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Validation stack</p></a>
+    </div>
+  </section>
 </div>

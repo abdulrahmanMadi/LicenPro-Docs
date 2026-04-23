@@ -1,42 +1,80 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Node-Locked License</h1>
-    <p class="lead">Bind your licenses to specific hardware to prevent unauthorized redistribution and sharing.</p>
+    <h1>Node-locked license</h1>
+    <p class="lead">
+      A <strong>node-locked</strong> license binds entitlement to a specific <strong>hardware id</strong> captured at issuance (or during activation binding flows).
+      Validation compares the machine fingerprint with the payload and server rules, blocking clones and casual sharing.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-lock"></i>
-      <h4>HWID Binding</h4>
-      <p>Uses CPU, BIOS, and Motherboard serials.</p>
+      <h4>HardwareId</h4>
+      <p>Stored on license + in signed file.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-arrows-loop"></i>
-      <h4>Activation Limits</h4>
-      <p>Control the number of unique devices allowed.</p>
+      <h4>Rebind flows</h4>
+      <p>API supports confirm/reject/reset binding.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-shield-search"></i>
-      <h4>Clone Protection</h4>
-      <p>Prevents running in unauthorized VMs.</p>
+      <i class="ki-outline ki-wifi"></i>
+      <h4>Online checks</h4>
+      <p>Hardware mismatch returns 403 on REST validate.</p>
     </div>
   </div>
 
-  <h2>Implementation</h2>
-  <p>Node-locking works by calculating a unique <strong>Hardware ID (HWID)</strong> for the client machine. This ID is sent to the server during activation and stored as a "linked machine."</p>
+  <h2>How it works</h2>
+  <p>
+    The server entity stores <code>HardwareId</code>; the SDK model <code>NodeLockedLicense</code> carries it for offline signature verification and client-side display.
+    When the SDK validates online, mismatch surfaces as <code>LicenseValidationStatus</code> failures or HTTP <code>403</code> with <code>HardwareMismatch</code> / <code>DeviceBlocked</code> from <code>POST /api/Licenses/validate</code> depending on path.
+  </p>
 
-  <div class="help-callout warning">
-    <div>
-      <span class="callout-title">Hardware Changes</span>
-      <p>If a user renovates their PC (e.g., changes the Motherboard), their HWID will change. You can manually reset their activation from the Dashboard to allow them to re-activate on the new hardware.</p>
+  <h2>Creating a node-locked license (dashboard / API)</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Obtain the end user’s hardware id from your onboarding utility (SDK computes a stable fingerprint for the machine).</li>
+    <li><code>POST /api/Licenses</code> with <code>type: "NodeLocked"</code>, <code>hardwareId</code> populated, <code>issuedTo</code>, <code>softwareReleaseId</code>, optional expiration.</li>
+    <li>Generate/download <code>license.bin</code>; deliver alongside the license key.</li>
+    <li>For pending-bind workflows, operators use <code>GET /api/Licenses/pending-bindings</code> and <code>POST .../confirm-binding</code> / <code>reject-binding</code> / <code>reset-binding</code> as implemented in <code>LicensesController</code>.</li>
+  </ol>
+
+  <h2>REST API highlights</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Licenses/validate</code> — include hardware context in <code>validationParams</code> / forms as required by your integration (server evaluates mismatch).</li>
+    <li><code>GET /api/Licenses/validate/&#123;licenseKey&#125;?hardwareId=...</code> — simple query variant.</li>
+    <li><code>POST /api/Licenses/&#123;licenseId&#125;/unbind-device</code> — administrative unbind when hardware changes legitimately.</li>
+  </ul>
+
+  <h2>SDK integration</h2>
+  <p>You do <strong>not</strong> pass HWID as a separate argument to <code>ValidateAsync()</code> — the client uses the configured hardware identifier provider internally. Supply correct <code>LicenseFilePath</code>, <code>PublicKey</code>, and <code>LicenseKey</code>; optional <code>IHardwareIdentifier</code> only for advanced/testing scenarios.</p>
+
+  <pre><code>using LicenPro.SDK;
+using LicenPro.SDK.Enums;
+
+await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
+    LicenseFilePath = "license.bin",
+    PublicKey = publicKeyBase64,
+    LicenseKey = nodeLockedKey,
+    ExpectedLicenseType = LicenseType.NodeLocked
+&rbrace;);
+
+var result = await client.ValidateAsync();
+
+if (!result.IsValid &amp;&amp;
+    (result.Status == LicenseValidationStatus.ValidationFailed
+     || result.Status == LicenseValidationStatus.DeviceBlocked))
+&lbrace;
+    // Hardware mismatch or blocked device
+&rbrace;</code></pre>
+
+  <p><strong>Offline</strong>: <code>ValidateOfflineAsync</code> verifies cryptographic binding in the file; policy may still require periodic online refresh for compliance.</p>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a routerLink="/floating-license" class="integration-card"><i class="ki-outline ki-people"></i><h4>Floating</h4><p>Seat pools</p></a>
+      <a routerLink="/api-reference" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>Binding routes</p></a>
+      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Update context</p></a>
     </div>
-  </div>
-
-  <pre><code>// Example Validation
-var hwid = HardwareIdProvider.Calculate();
-var result = await client.ValidateAsync(hwid);
-
-if (result.Status == LicenseStatus.HardwareMismatch) {{ '{' }}
-    ShowError("This license is not valid for this machine.");
-{{ '}' }}</code></pre>
+  </section>
 </div>

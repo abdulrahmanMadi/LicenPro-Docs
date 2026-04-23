@@ -1,78 +1,106 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Perpetual License</h1>
-    <p class="lead">A multi-user license model that never expires. Ideal for desktop applications where customers pay once and use the software forever.</p>
+    <h1>Perpetual license</h1>
+    <p class="lead">
+      A <strong>perpetual</strong> license grants ongoing rights to use the software under the entitlements you attach.
+      The signed <code>license.bin</code> can be validated offline (RSA signature + local checks) while optional <strong>online validation</strong> enables sessions, revocation awareness, and usage tied to the dashboard.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
-      <i class="ki-outline ki-time"></i>
-      <h4>Never Expires</h4>
-      <p>Permanent access once issued.</p>
-    </div>
-    <div class="integration-card">
-      <i class="ki-outline ki-users"></i>
-      <h4>Multi-User</h4>
-      <p>Configurable seat/activation limits.</p>
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>RSA signed</h4>
+      <p>Tampering with the file breaks the signature.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-wifi"></i>
-      <h4>Offline First</h4>
-      <p>No internet required for validation.</p>
+      <h4>Online or offline</h4>
+      <p>SDK defaults to online validation; offline path available.</p>
     </div>
-  </div>
-
-  <h2>Overview</h2>
-  <p>The Perpetual License model grants a customer permanent rights to use a specific version of your software. It is the gold standard for professional tools and "buy-it-once" software products.</p>
-
-  <div class="help-callout info">
-    <i class="ki-outline ki-information"></i>
-    <div>
-      <span class="callout-title">Hybrid Validation Strategy</span>
-      <p>While perpetual licenses work offline via RSA signatures, you can enable <strong>Online Validation</strong> for heartbeat monitoring, usage tracking, and remote revocation.</p>
+    <div class="integration-card">
+      <i class="ki-outline ki-user"></i>
+      <h4>Issued to</h4>
+      <p>Customer or org identifier stored on the license.</p>
     </div>
   </div>
 
   <h2>How it works</h2>
-  <div class="doc-stepper">
-    <div class="step-item active">
-      <div class="step-number">1</div>
-      <div class="step-content">
-        <h3>Create License</h3>
-        <p>In the dashboard, select <strong>Perpetual</strong>. Fill in the customer email and optional expiration (e.g., for maintenance coverage).</p>
-      </div>
-    </div>
-    <div class="step-item active">
-      <div class="step-number">2</div>
-      <div class="step-content">
-        <h3>Download Payload</h3>
-        <p>Download the <code>license.bin</code> file. This encrypted payload contains the signed license data.</p>
-      </div>
-    </div>
-    <div class="step-item active">
-      <div class="step-number">3</div>
-      <div class="step-content">
-        <h3>SDK Validation</h3>
-        <p>Your app validates the payload locally using your product's <strong>Public Key</strong>. No backend request is required unless you force online mode.</p>
-      </div>
-    </div>
-  </div>
+  <p>
+    When you create a perpetual license, the server stores a <code>License</code> row, assigns a <strong>license key</strong>, and can generate a <strong>binary license file</strong> signed with the product’s <strong>RSA private key</strong> (never leaves LicenPro).
+    The SDK loads <code>license.bin</code>, verifies the signature with your embedded <strong>public key</strong>, and checks that the <strong>license key</strong> in options matches the payload.
+  </p>
+  <p>
+    The payload model includes <code>RequiresOnlineValidation</code> on <code>PerpetualLicense</code>: when the issued file marks the license as requiring online checks, the SDK’s online flows enforce that policy (see <code>LicenseManager</code> perpetual handling).
+    Most perpetual files are issued for offline-friendly use; your product settings and issuance pipeline determine the flag.
+  </p>
 
-  <h2>SDK Integration</h2>
-  <pre><code>// Simple Perpetual Validation
-var client = new LicenseClient(new LicenseClientOptions {{ '{' }}
-    LicenseFilePath = "license.bin",
-    PublicKey = "MIIB...",
-    ExpectedType = LicenseType.Perpetual
-{{ '}' }});
+  <h2>Creating a perpetual license (dashboard)</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Open <strong>Products</strong>, select the product, ensure <a routerLink="/rsa-keys">RSA keys</a> exist.</li>
+    <li>Create or pick a <strong>software release</strong> (required on create in the API).</li>
+    <li>Open <strong>Licenses</strong> → create license; set <code>Type</code> to <strong>Perpetual</strong> (case-insensitive enum string).</li>
+    <li>Fill <strong>Name</strong>, <strong>IssuedTo</strong> (customer / org), optional <strong>ExpirationDate</strong> (e.g. maintenance window), <strong>Issuer</strong>, <strong>Notes</strong>.</li>
+    <li>Optional: attach <strong>entitlement sets</strong> so features appear in the signed payload.</li>
+    <li>After save, use <strong>Download</strong> / generate file actions in the dashboard to obtain <code>license.bin</code> for the customer.</li>
+  </ol>
 
-var result = await client.ValidateAsync();</code></pre>
+  <h2>REST API (vendor-authenticated)</h2>
+  <p>These routes live under your API base (e.g. <code>https://your-host/api</code>). License list/create/update require a <strong>logged-in user</strong> JWT unless you build a separate integration.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Licenses</code> — body uses <code>CreateLicenseDto</code>: <code>type: "Perpetual"</code>, <code>name</code>, <code>issuedTo</code>, <code>softwareReleaseId</code> (required), optional dates and <code>entitlementSetIds</code>.</li>
+    <li><code>GET /api/Licenses/&#123;id&#125;/download</code> — download signed license file bytes.</li>
+    <li><code>POST /api/Licenses/&#123;id&#125;/generate-file</code> — (re)generate file payload when permitted.</li>
+  </ul>
 
-  <div class="help-callout warning">
-    <i class="ki-outline ki-shield"></i>
+  <h2>REST API (anonymous + product API key)</h2>
+  <p>Server-side validation without the bin file uses the product <strong>API key</strong> header <code>X-API-KEY</code> (see <code>ApiKeyAuthFilter</code>):</p>
+  <ul style="margin: 0.5rem 0 1.25rem;">
+    <li><code>POST /api/Licenses/validate</code> — <code>multipart/form-data</code>: <code>licenseKey</code>, <code>validationParams</code> (JSON string), optional <code>licenseFile</code>.</li>
+    <li><code>GET /api/Licenses/validate/&#123;licenseKey&#125;?hardwareId=...</code> — lightweight check.</li>
+    <li><code>GET /api/Licenses/status/&#123;licenseKey&#125;?hardwareId=...</code> — status payload for SDK-style clients.</li>
+  </ul>
+
+  <h2>SDK integration</h2>
+  <p>Use <code>LicenseClient</code> with <code>ExpectedLicenseType = LicenseType.Perpetual</code> when you want a hard type guard.</p>
+
+  <pre><code>using LicenPro.SDK;
+using LicenPro.SDK.Enums;
+
+await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
+    LicenseFilePath = "C:/ProgramData/MyApp/license.bin",
+    PublicKey = publicKeyBase64NoPemHeaders,
+    LicenseKey = "LP-....",
+    ExpectedLicenseType = LicenseType.Perpetual
+&rbrace;);
+
+var result = await client.ValidateAsync();
+
+if (result.IsValid)
+&lbrace;
+    // result.License — inspect type / features
+&rbrace;
+else
+&lbrace;
+    // result.Status: Expired, Revoked, SignatureMismatch, ...
+&rbrace;</code></pre>
+
+  <p><strong>Offline-only validation</strong> after you already trust the file: <code>await client.ValidateOfflineAsync()</code> (no live server round-trip for the load path defined in the SDK).</p>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-route"></i>
     <div>
-      <span class="callout-title">Signature Security</span>
-      <p>The LicenPro SDK uses RSA-SHA256 signatures. If a user tries to modify the license file (e.g., changing the expiration date), the signature verification will fail immediately.</p>
+      <span class="callout-title">Online vs offline (summary)</span>
+      <p><strong>Online</strong> (<code>ValidateAsync</code>): signature + credential checks, server revocation / device block, activation, optional session heartbeat. <strong>Offline</strong> (<code>ValidateOfflineAsync</code>): cryptographic and local checks only — suitable air-gapped or fallback when policy allows.</p>
     </div>
   </div>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
+    <div class="integration-grid">
+      <a routerLink="/rsa-keys" class="integration-card"><i class="ki-outline ki-key"></i><h4>RSA keys</h4><p>Signing chain</p></a>
+      <a routerLink="/api-reference" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>REST index</p></a>
+      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>.NET SDK</h4><p>Cache &amp; updates</p></a>
+    </div>
+  </section>
 </div>
