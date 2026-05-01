@@ -186,10 +186,21 @@ export class DocsLayoutComponent {
   }
 
   highlightMatch(text: string, query: string): string {
-    if (!query) return text;
+    const safe = this.escapeHtml(text);
+    if (!query) return safe;
 
     const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
+    return safe.replace(regex, '<mark>$1</mark>');
+  }
+
+  private escapeHtml(value: string): string {
+    if (!value) return '';
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   escapeRegex(str: string): string {
