@@ -9,8 +9,9 @@ import { RouterLink } from '@angular/router';
     <div class="doc-page">
       <h1 class="text-accent">LicenPro Documentation</h1>
       <p class="lead">
-        Guides for the vendor dashboard (products, RSA keys, licenses, sessions) and the
-        <strong>.NET SDK</strong> shipped as the <code>LicenPro</code> NuGet package — validation, cache, expiry notices, and license-aware updates.
+        LicenPro helps software vendors issue <strong>cryptographically signed licenses</strong>, track <strong>activations and sessions</strong>,
+        and validate entitlements inside <strong>.NET desktop and server apps</strong> via the official SDK and REST API.
+        Use the guides below in order — from tenant setup through RSA keys, license models, integration, and automation.
       </p>
       
       <div class="doc-cards">
@@ -33,6 +34,16 @@ import { RouterLink } from '@angular/router';
           <i class="ki-outline ki-microsoft"></i>
           <h3>.NET SDK</h3>
           <p>LicenseClient, cache, updates</p>
+        </a>
+        <a routerLink="/changelog" class="doc-card">
+          <i class="ki-outline ki-notepad-edit"></i>
+          <h3>Changelog</h3>
+          <p>Release notes and product updates</p>
+        </a>
+        <a routerLink="/quick-start" fragment="vendor-workflow" class="doc-card">
+          <i class="ki-outline ki-route"></i>
+          <h3>Vendor workflow</h3>
+          <p>Products, releases, keys, licenses, SDK</p>
         </a>
         <a routerLink="/sessions-activations" class="doc-card">
           <i class="ki-outline ki-chart-line"></i>

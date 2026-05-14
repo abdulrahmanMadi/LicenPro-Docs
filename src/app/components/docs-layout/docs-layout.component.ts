@@ -10,6 +10,7 @@ interface NavItem {
   label: string;
   icon: string;
   route?: string;
+  fragment?: string;
   children?: NavItem[];
   expanded?: boolean;
   visible?: boolean;
@@ -82,6 +83,7 @@ export class DocsLayoutComponent {
       expanded: true,
       children: [
         { id: 'quick-start', label: 'Quick Start', icon: 'ki-outline ki-flag', route: '/quick-start' },
+        { id: 'vendor-workflow', label: 'Dashboard workflow', icon: 'ki-outline ki-route', route: '/quick-start', fragment: 'vendor-workflow' },
         { id: 'first-product', label: 'Create your first product', icon: 'ki-outline ki-abstract-26', route: '/first-product' },
         { id: 'first-license', label: 'Generate your first license', icon: 'ki-outline ki-key', route: '/first-license' },
         { id: 'rsa-keys', label: 'RSA keys', icon: 'ki-outline ki-shield-tick', route: '/rsa-keys' }

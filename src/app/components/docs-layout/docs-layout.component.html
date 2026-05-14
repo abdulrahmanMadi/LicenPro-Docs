@@ -50,6 +50,7 @@
             <li *ngFor="let child of item.children" class="docs-nav-item" [class.hidden]="child.visible === false">
               <a
                 [routerLink]="child.route"
+                [fragment]="child.fragment || undefined"
                 routerLinkActive="active"
                 class="docs-nav-link"
                 (click)="onNavItemClick()">

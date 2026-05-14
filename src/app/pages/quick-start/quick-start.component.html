@@ -20,6 +20,24 @@
     </div>
   </div>
 
+  <h2 id="vendor-workflow">Dashboard workflow (vendor side)</h2>
+  <p>
+    Think of LicenPro as a closed loop: you <strong>define what you sell</strong> in the dashboard, you <strong>ship signed artifacts</strong> to customers,
+    and the <strong>.NET SDK</strong> in your app proves those artifacts against your public key and (optionally) your hosted API.
+    The usual sequence is:
+  </p>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Organization &amp; product</strong> — create a product under your tenant; everything else hangs off that product.</li>
+    <li><strong>Releases &amp; files</strong> — attach versions, binaries, or metadata so licenses and updates can target a specific release line.</li>
+    <li><strong>RSA keys</strong> — generate a key pair per product before issuing licenses; only the public key ever leaves LicenPro toward your application.</li>
+    <li><strong>Licenses</strong> — choose a model (perpetual, trial, subscription, floating, node-locked), set limits and entitlements, then export <code>license.bin</code> and the license key.</li>
+    <li><strong>Sessions &amp; activations</strong> — optional but recommended for floating seats, compliance, and support; the SDK can register sessions while validating.</li>
+    <li><strong>Automation</strong> — use the REST API or webhooks when provisioning or billing systems should create or retire licenses without manual clicks.</li>
+  </ol>
+  <p>
+    The sections below walk the same path in more detail, ending with SDK bootstrap so your shipped binaries stay aligned with what you configured online.
+  </p>
+
   <h2>1. Account and organization</h2>
   <p>
     Sign in or register at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>.
