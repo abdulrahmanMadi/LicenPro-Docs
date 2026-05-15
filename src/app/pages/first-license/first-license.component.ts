@@ -5,6 +5,5 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './first-license.component.html',
-  styleUrls: ['../../styles/help-pages.scss']
 })
 export class FirstLicenseComponent {}

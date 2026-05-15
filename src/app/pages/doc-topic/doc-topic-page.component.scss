@@ -1,0 +1,93 @@
+/* Full-screen image lightbox (same pattern as LicenPro-Angular landing). */
+.doc-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: docLightboxFadeIn 0.2s ease forwards;
+}
+
+.doc-lightbox-inner {
+  position: relative;
+  max-width: min(92vw, 1200px);
+  max-height: 90vh;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: docLightboxZoomIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.doc-lightbox-inner img {
+  max-width: 100%;
+  max-height: calc(90vh - 48px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.doc-lightbox-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  background: var(--background, #fff);
+  color: var(--foreground, #0f172a);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--primary, #3b82f6);
+    color: var(--primary, #3b82f6);
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+:host-context([data-bs-theme='light']) .doc-lightbox-overlay {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+:host-context([data-bs-theme='light']) .doc-lightbox-inner img {
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+}
+
+@keyframes docLightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes docLightboxZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

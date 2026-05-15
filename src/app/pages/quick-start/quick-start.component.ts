@@ -7,7 +7,6 @@ import { MermaidChartComponent } from '../../components/mermaid-chart/mermaid-ch
   standalone: true,
   imports: [RouterLink, MermaidChartComponent],
   templateUrl: './quick-start.component.html',
-  styleUrls: ['../../styles/help-pages.scss'],
 })
 export class QuickStartComponent {
   readonly activationSessionDef = `flowchart TB

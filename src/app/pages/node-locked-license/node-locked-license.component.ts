@@ -6,6 +6,5 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './node-locked-license.component.html',
-  styleUrls: ['../../styles/help-pages.scss']
 })
 export class NodeLockedLicenseComponent {}

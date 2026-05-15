@@ -55,7 +55,7 @@ export const DOCS_NAV: NavSection[] = [
   {
     id: 'platform',
     label: 'Platform (dashboard)',
-    icon: 'ki-outline ki-monitor-mobile',
+    icon: 'ki-outline ki-screen',
     expanded: false,
     items: [
       { id: 'gp-orgs', label: 'Organizations', icon: 'ki-outline ki-briefcase', route: '/guides/platform/organizations' },
@@ -95,7 +95,7 @@ export const DOCS_NAV: NavSection[] = [
     expanded: false,
     items: [
       { id: 'sdk-overview', label: 'SDK overview', icon: 'ki-outline ki-abstract-26', route: '/sdk/overview' },
-      { id: 'sdk-config', label: 'Configuration & bootstrap', icon: 'ki-outline ki-gear', route: '/sdk/configuration' },
+      { id: 'sdk-config', label: 'Configuration & bootstrap', icon: 'ki-outline ki-setting', route: '/sdk/configuration' },
       { id: 'sdk-client', label: 'LicenseClient lifecycle', icon: 'ki-outline ki-code', route: '/sdk/license-client' },
       {
         id: 'sdk-activation',
@@ -107,7 +107,7 @@ export const DOCS_NAV: NavSection[] = [
       { id: 'sdk-offline', label: 'Offline & grace', icon: 'ki-outline ki-wifi-square', route: '/sdk/offline-grace' },
       { id: 'sdk-updates', label: 'Updates & logging', icon: 'ki-outline ki-cloud-download', route: '/sdk/updates-logging' },
       { id: 'sdk-dotnet', label: '.NET integration', icon: 'ki-outline ki-code', route: '/sdk/dotnet' },
-      { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-outline ki-windows', route: '/sdk/winforms' },
+      { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-outline ki-mouse', route: '/sdk/winforms' },
       { id: 'sdk-wpf', label: 'WPF', icon: 'ki-outline ki-element-11', route: '/sdk/wpf' },
     ],
   },
@@ -115,15 +115,15 @@ export const DOCS_NAV: NavSection[] = [
     id: 'rest-api',
     label: 'REST API',
     icon: 'ki-outline ki-data',
-    expanded: false,
+    expanded: true,
     items: [
-      { id: 'api-hub', label: 'Overview & OpenAPI', icon: 'ki-outline ki-book', route: '/api/overview' },
+      { id: 'api-hub', label: 'REST API overview', icon: 'ki-outline ki-book', route: '/api/overview' },
       {
         id: 'api-auth',
         label: 'Auth & identity',
         icon: 'ki-outline ki-shield-tick',
         children: [
-          { id: 'api-auth-users', label: 'Users & roles', icon: 'ki-outline ki-profile-user', route: '/api/auth-users' },
+          { id: 'api-auth-users', label: 'Users & roles', icon: 'ki-outline ki-users', route: '/api/auth-users' },
           { id: 'api-security', label: 'Security utilities', icon: 'ki-outline ki-lock', route: '/api/security' },
         ],
       },
@@ -187,5 +187,5 @@ export const DOCS_NAV: NavSection[] = [
 /** Sidebar for Guides tab (product docs, SDK, integration — everything except REST API tree). */
 export const GUIDES_NAV: NavSection[] = DOCS_NAV.filter((s) => s.id !== 'rest-api');
 
-/** Sidebar for API Reference tab (REST topics + OpenAPI hub only). */
+/** Sidebar for API Reference tab (REST topics + overview hub only). */
 export const API_NAV: NavSection[] = DOCS_NAV.filter((s) => s.id === 'rest-api');

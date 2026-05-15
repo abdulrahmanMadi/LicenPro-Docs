@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  openApiSpecUrl: 'https://licenpro.runasp.net/swagger/v1/swagger.json',
-  swaggerUiUrl: 'https://licenpro.runasp.net/swagger',
+  /** LicenPro API root used in docs examples (must include the /api segment). */
+  apiBaseUrl: 'https://licenpro.runasp.net/api',
 };

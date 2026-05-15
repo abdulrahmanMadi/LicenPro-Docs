@@ -25,7 +25,7 @@ const STATIC_PAGE_TITLES: Record<string, string> = {
   '/sdk/dotnet': '.NET integration',
   '/sdk/winforms': 'WinForms',
   '/sdk/wpf': 'WPF',
-  '/api/overview': 'Overview & OpenAPI',
+  '/api/overview': 'REST API overview',
 };
 
 function humanizeSlug(slug: string): string {
@@ -59,7 +59,7 @@ export function buildBreadcrumbSegments(url: string): BreadcrumbSegment[] {
   }
 
   if (path === '/api/overview') {
-    return [...base, { label: 'REST API' }, { label: 'Overview & OpenAPI', current: true }];
+    return [...base, { label: 'REST API' }, { label: 'REST API overview', current: true }];
   }
 
   const sdkTopicMatch = /^\/sdk\/([^/]+)$/.exec(path);

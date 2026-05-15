@@ -1,7 +1,7 @@
 <div class="docs-layout">
   <div class="docs-mobile-header">
     <div class="docs-mobile-header-row">
-      <div style="display: flex; align-items: center; gap: 8px;">
+      <div class="docs-mobile-header-brand">
         <button type="button" class="docs-mobile-menu-btn" (click)="toggleSidebar()" aria-label="Open menu">
           <i class="ki-outline ki-menu"></i>
         </button>
@@ -71,63 +71,113 @@
       <div class="docs-search-wrapper">
         <i class="ki-outline ki-magnifier docs-search-icon"></i>
         <input
-          type="text"
+          type="search"
           class="docs-search-input"
+          [class.has-clear]="searchQuery.trim().length > 0"
           [placeholder]="searchPlaceholder"
           [(ngModel)]="searchQuery"
           (input)="onSearchChange()"
           (keydown)="onSearchKeydown($event)"
+          autocomplete="off"
           [attr.aria-label]="searchPlaceholder">
+        @if (searchQuery.trim()) {
+          <button
+            type="button"
+            class="docs-search-clear"
+            (click)="clearSearch()"
+            aria-label="Clear search">
+            <i class="ki-outline ki-cross"></i>
+          </button>
+        }
       </div>
-      @if (navMode() === 'api' && searchQuery.trim()) {
-        <p class="docs-search-hint">Filtering API sidebar only.</p>
-      }
+      @if (searchQuery.trim()) {
+        <p class="docs-search-meta">
+          {{ searchHitCount }} match{{ searchHitCount !== 1 ? 'es' : '' }}
+          <span class="docs-search-meta-sep">·</span>
+          <span class="docs-search-meta-hint">Use arrow keys and Enter</span>
+        </p>
+      } 
     </div>
 
-    <nav class="docs-nav">
+    <nav class="docs-nav docs-nav-tree">
       <ul class="docs-nav-list">
         <li *ngFor="let section of displayNavSections" class="docs-nav-group" [class.hidden]="section.visible === false">
-          <div class="docs-nav-group-title">
-            <span [innerHTML]="section.matchedText || section.label"></span>
+          <div class="docs-nav-group-track" [class.collapsed]="isSectionCollapsed(section.id)">
+            <button
+              type="button"
+              class="docs-nav-section-head"
+              (click)="toggleSectionCollapse(section.id, $event)"
+              [attr.aria-expanded]="!isSectionCollapsed(section.id)"
+              [attr.aria-label]="'Toggle section ' + section.label">
+              <span class="docs-nav-section-icon" aria-hidden="true">
+                <i class="ki-outline" [ngClass]="section.icon"></i>
+              </span>
+              <span class="docs-nav-section-label" [innerHTML]="section.matchedText || section.label"></span>
+              <span class="docs-nav-section-chevron" aria-hidden="true">
+                @if (isSectionCollapsed(section.id)) {
+                  <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
+                } @else {
+                  <i class="ki-outline ki-up docs-nav-chevron-icon"></i>
+                }
+              </span>
+            </button>
+
+            <ul class="docs-nav-items">
+              <ng-container *ngFor="let item of section.items">
+                <li
+                  *ngIf="item.children?.length"
+                  class="docs-nav-item docs-nav-subgroup docs-nav-tree-branch"
+                  [class.collapsed]="isNavBranchCollapsed(item.id)"
+                  [class.hidden]="item.visible === false">
+                  <button
+                    type="button"
+                    class="docs-nav-branch-row"
+                    (click)="toggleNavBranch(item.id, $event)"
+                    [attr.aria-expanded]="!isNavBranchCollapsed(item.id)"
+                    [attr.aria-label]="'Toggle ' + item.label">
+                    <div class="docs-nav-sublabel">
+                      <i class="ki-outline" [ngClass]="item.icon"></i>
+                      <span [innerHTML]="item.matchedText || item.label"></span>
+                    </div>
+                    <span class="docs-nav-branch-chevron" aria-hidden="true">
+                      @if (isNavBranchCollapsed(item.id)) {
+                        <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
+                      } @else {
+                        <i class="ki-outline ki-up docs-nav-chevron-icon"></i>
+                      }
+                    </span>
+                  </button>
+                  <ul class="docs-nav-sublist">
+                    <li *ngFor="let sub of item.children" class="docs-nav-item docs-nav-tree-leaf docs-nav-tree-leaf--nested" [class.hidden]="sub.visible === false">
+                      <a
+                        [routerLink]="sub.route"
+                        [fragment]="sub.fragment || undefined"
+                        [class.active]="isNavLeafActive(sub)"
+                        class="docs-nav-link"
+                        [class.keyboard-focused]="isItemFocused(sub)"
+                        (click)="onNavItemClick()">
+                        <i class="ki-outline" [ngClass]="sub.icon"></i>
+                        <span [innerHTML]="sub.matchedText || sub.label"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li *ngIf="!item.children?.length" class="docs-nav-item docs-nav-tree-leaf" [class.hidden]="item.visible === false">
+                  <a
+                    [routerLink]="item.route"
+                    [fragment]="item.fragment || undefined"
+                    [class.active]="isNavLeafActive(item)"
+                    class="docs-nav-link"
+                    [class.keyboard-focused]="isItemFocused(item)"
+                    (click)="onNavItemClick()">
+                    <i class="ki-outline" [ngClass]="item.icon"></i>
+                    <span [innerHTML]="item.matchedText || item.label"></span>
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
           </div>
-
-          <ul class="docs-nav-items">
-            <ng-container *ngFor="let item of section.items">
-              <li *ngIf="item.children?.length" class="docs-nav-item docs-nav-subgroup" [class.hidden]="item.visible === false">
-                <div class="docs-nav-sublabel">
-                  <i class="ki-outline" [ngClass]="item.icon"></i>
-                  <span [innerHTML]="item.matchedText || item.label"></span>
-                </div>
-                <ul class="docs-nav-sublist">
-                  <li *ngFor="let sub of item.children" class="docs-nav-item" [class.hidden]="sub.visible === false">
-                    <a
-                      [routerLink]="sub.route"
-                      [fragment]="sub.fragment || undefined"
-                      routerLinkActive="active"
-                      class="docs-nav-link"
-                      [class.keyboard-focused]="isItemFocused(sub)"
-                      (click)="onNavItemClick()">
-                      <i class="ki-outline" [ngClass]="sub.icon"></i>
-                      <span [innerHTML]="sub.matchedText || sub.label"></span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-
-              <li *ngIf="!item.children?.length" class="docs-nav-item" [class.hidden]="item.visible === false">
-                <a
-                  [routerLink]="item.route"
-                  [fragment]="item.fragment || undefined"
-                  routerLinkActive="active"
-                  class="docs-nav-link"
-                  [class.keyboard-focused]="isItemFocused(item)"
-                  (click)="onNavItemClick()">
-                  <i class="ki-outline" [ngClass]="item.icon"></i>
-                  <span [innerHTML]="item.matchedText || item.label"></span>
-                </a>
-              </li>
-            </ng-container>
-          </ul>
         </li>
       </ul>
     </nav>
@@ -161,9 +211,9 @@
     </header>
 
     <div class="docs-layout-content">
-      <main class="docs-content">
-        <div class="docs-content-inner">
-          <router-outlet></router-outlet>
+      <main #docsScrollRoot class="docs-content">
+        <div class="docs-content-inner" id="doc-top">
+          <router-outlet (activate)="onDocsOutletActivate()"></router-outlet>
 
           <footer class="docs-content-footer">
             <div class="docs-footer-line"></div>
@@ -177,11 +227,31 @@
         </div>
       </main>
 
-      <aside class="docs-toc">
+      <aside class="docs-toc" aria-label="On this page">
         <div class="docs-toc-title">On this page</div>
         <nav class="docs-toc-nav">
           <ul>
-            <li><a href="#top" class="active">Top</a></li>
+            <li>
+              <a
+                href="#doc-top"
+                class="docs-toc-link"
+                [class.active]="activeTocId() === 'top'"
+                (click)="scrollDocTop($event)">
+                Top
+              </a>
+            </li>
+            @for (h of tocEntries(); track h.id) {
+              <li>
+                <a
+                  [href]="'#' + h.id"
+                  class="docs-toc-link"
+                  [class.toc-lvl3]="h.level === 3"
+                  [class.active]="activeTocId() === h.id"
+                  (click)="scrollToHeading($event, h.id)">
+                  {{ h.label }}
+                </a>
+              </li>
+            }
           </ul>
         </nav>
       </aside>

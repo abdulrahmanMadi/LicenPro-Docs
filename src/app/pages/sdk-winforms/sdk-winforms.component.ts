@@ -6,6 +6,5 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './sdk-winforms.component.html',
-  styleUrls: ['../../styles/help-pages.scss']
 })
 export class SdkWinformsComponent {}

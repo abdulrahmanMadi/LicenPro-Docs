@@ -36,7 +36,7 @@
     <li>Obtain the end user’s hardware id from your onboarding utility (SDK computes a stable fingerprint for the machine).</li>
     <li><code>POST /api/Licenses</code> with <code>type: "NodeLocked"</code>, <code>hardwareId</code> populated, <code>issuedTo</code>, <code>softwareReleaseId</code>, optional expiration.</li>
     <li>Generate/download <code>license.bin</code>; deliver alongside the license key.</li>
-    <li>For pending-bind workflows, operators use <code>GET /api/Licenses/pending-bindings</code> and <code>POST .../confirm-binding</code> / <code>reject-binding</code> / <code>reset-binding</code> as implemented in <code>LicensesController</code>.</li>
+    <li>For pending-bind workflows, operators use <code>GET /api/Licenses/pending-bindings</code> and <code>POST .../confirm-binding</code> / <code>reject-binding</code> / <code>reset-binding</code> as exposed on your host under <code>/api/Licenses/...</code>.</li>
   </ol>
 
   <h2>REST API highlights</h2>

@@ -16,7 +16,7 @@ interface ChangelogEntry {
   standalone: true,
   imports: [],
   templateUrl: './changelog.component.html',
-  styleUrls: ['../../styles/help-pages.scss', './changelog.component.css']
+  styleUrls: ['./changelog.component.css']
 })
 export class ChangelogComponent {
   changelog: ChangelogEntry[] = [

@@ -7,7 +7,7 @@
     <p><a class="doc-inline-link" href="/" (click)="goHome($event)">Return home</a></p>
   </div>
 } @else {
-  <article class="help-page doc-topic-page" (click)="onAnchorClick($event)">
+  <article class="help-page doc-topic-page" (click)="onArticleClick($event)">
     <header class="help-page-header">
       <h1>{{ title() }}</h1>
       @if (leadSafe()) {
@@ -16,4 +16,27 @@
     </header>
     <div class="doc-topic-body" [innerHTML]="bodySafe()"></div>
   </article>
+
+  @if (imageLightboxOpen()) {
+    <div
+      class="doc-lightbox-overlay"
+      role="presentation"
+      (click)="closeImageLightbox()">
+      <div
+        class="doc-lightbox-inner"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="imageLightboxAlt() || 'Image preview'"
+        (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          class="doc-lightbox-close"
+          (click)="closeImageLightbox()"
+          aria-label="Close image preview">
+          <i class="ki-outline ki-cross" aria-hidden="true"></i>
+        </button>
+        <img [src]="imageLightboxSrc()" [alt]="imageLightboxAlt()" />
+      </div>
+    </div>
+  }
 }

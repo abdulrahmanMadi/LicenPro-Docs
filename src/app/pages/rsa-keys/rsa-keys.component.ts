@@ -6,6 +6,5 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './rsa-keys.component.html',
-  styleUrls: ['../../styles/help-pages.scss']
 })
 export class RsaKeysComponent {}

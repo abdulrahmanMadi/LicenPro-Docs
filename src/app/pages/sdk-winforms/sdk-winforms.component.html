@@ -26,7 +26,7 @@ internal static class Program
 
   <h2>2. Async startup on the UI form</h2>
   <p>
-    Keep <code>Main</code> synchronous; perform license work on the first <code>Shown</code> event (or a splash controller) with <code>async void</code> handlers or <code>Task</code> orchestration you prefer.
+    Keep <code>Main</code> synchronous; perform license work on the first <code>Shown</code> event (or a small splash/bootstrap flow) with <code>async void</code> handlers or <code>Task</code> orchestration you prefer.
     Always dispose the active <code>LicenseClient</code> on application exit so session heartbeats release cleanly.
   </p>
 

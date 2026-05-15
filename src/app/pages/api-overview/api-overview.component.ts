@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MermaidChartComponent } from '../../components/mermaid-chart/mermaid-chart.component';
-import { OpenapiEmbedComponent } from '../../components/openapi-embed/openapi-embed.component';
 
 @Component({
   selector: 'app-api-overview',
   standalone: true,
-  imports: [MermaidChartComponent, OpenapiEmbedComponent, RouterLink],
+  imports: [MermaidChartComponent, RouterLink],
   templateUrl: './api-overview.component.html',
-  styleUrls: ['../../styles/help-pages.scss'],
 })
 export class ApiOverviewComponent {
   readonly systemContextDef = `flowchart LR

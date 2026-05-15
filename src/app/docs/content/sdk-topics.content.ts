@@ -43,8 +43,8 @@ export const SDK_TOPICS: Record<string, DocTopic> = {
     title: 'Activation & sessions in the SDK',
     lead: 'Managers that talk to Activations and Sessions APIs.',
     body: `
-      <p><code>ActivationManager</code> coordinates device binding and seat consumption against ${L('/api/activations-sessions', 'ActivationsController')} routes.</p>
-      <p><code>SessionManager</code> maintains heartbeat intervals against ${L('/api/activations-sessions', 'SessionsController')} when your license policy requires concurrent or online enforcement.</p>
+      <p><code>ActivationManager</code> coordinates device binding and seat consumption against ${L('/api/activations-sessions', 'activation routes')} on <code>${HOST}/api</code>.</p>
+      <p><code>SessionManager</code> maintains heartbeat intervals against ${L('/api/activations-sessions', 'session routes')} when your license policy requires concurrent or online enforcement.</p>
       <p>${L('/sessions-activations', 'Dashboard narrative')} · ${L('/guides/platform/activations', 'Activations platform guide')}</p>
     `,
   },
@@ -53,7 +53,7 @@ export const SDK_TOPICS: Record<string, DocTopic> = {
     lead: 'FeatureManager and optional telemetry.',
     body: `
       <p><code>FeatureManager</code> evaluates entitlements deserialized from the signed license. <code>FeatureUsageTracker</code> can POST usage counters to telemetry endpoints when your integration enables analytics.</p>
-      <p>Feature definitions are authored in the dashboard and exposed over REST via <code>FeaturesController</code> / <code>EntitlementSetsController</code> — see ${L('/api/catalog', 'Catalog API topic')}.</p>
+      <p>Feature definitions are authored in the dashboard and exposed over REST (catalog routes on <code>${HOST}/api</code>) — see ${L('/api/catalog', 'Catalog API topic')}.</p>
     `,
   },
   'offline-grace': {
@@ -69,8 +69,8 @@ export const SDK_TOPICS: Record<string, DocTopic> = {
     title: 'Updates & logging',
     lead: 'SdkUpdateManager and ILicenseLogger implementations.',
     body: `
-      <p><code>SdkUpdateManager</code> calls <code>UpdatesController</code> with the current release id and license context so only eligible builds are offered.</p>
-      <p>Implement <code>ILicenseLogger</code> for structured logs — file, HTTP to <code>SdkLogsController</code>, or composite sinks — depending on compliance needs.</p>
+      <p><code>SdkUpdateManager</code> calls <code>/api/Updates/...</code> with the current release id and license context so only eligible builds are offered.</p>
+      <p>Implement <code>ILicenseLogger</code> for structured logs — file, HTTP to <code>/api/SdkLogs/...</code>, or composite sinks — depending on compliance needs.</p>
       <p>${L('/api/sdk-host', 'SDK host APIs')} · ${L('/api/telemetry', 'Telemetry topic')}</p>
     `,
   },

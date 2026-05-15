@@ -1,23 +1,122 @@
 /* ===== HELP PAGE COMMON STYLES (Windsurf UI) ===== */
 
+.help-page,
+article.help-page {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 48rem;
+  width: 100%;
+  min-width: 0;
+}
+
+/** Doc-topic pages: use full width of `.docs-content-inner` so diagrams and wide tables aren’t capped at 48rem. */
+article.help-page.doc-topic-page {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+article.help-page.doc-topic-page .doc-topic-body {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+article.help-page.doc-topic-page .doc-topic-body figure {
+  max-width: 100%;
+  min-width: 0;
+}
+
+article.help-page.doc-topic-page .doc-topic-body img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Page Header System */
 .help-page-header {
-  margin-bottom: 3rem;
+  margin-bottom: 2.25rem;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.875rem, 2.2vw + 0.75rem, 2.375rem);
     font-weight: 700;
-    margin-bottom: 1rem;
+    line-height: 1.15;
+    margin: 0 0 0.875rem;
     color: var(--foreground);
     letter-spacing: -0.03em;
   }
 
   p.lead {
-    font-size: 1.125rem;
-    line-height: 1.6;
+    font-size: 1.0625rem;
+    line-height: 1.65;
     color: var(--muted-foreground);
-    max-width: 800px;
+    max-width: 42rem;
+    margin: 0;
   }
+}
+
+/* In-page headings (content after header + injected topic HTML) */
+.help-page h2,
+.doc-topic-body h2 {
+  font-size: clamp(1.125rem, 0.5vw + 1.05rem, 1.3125rem);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+  scroll-margin-top: 6.5rem;
+}
+
+.help-page h3,
+.doc-topic-body h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1.625rem 0 0.5rem;
+  color: var(--foreground);
+  border-bottom: none;
+  padding-bottom: 0;
+  scroll-margin-top: 6.25rem;
+}
+
+.help-page h4,
+.doc-topic-body h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 1.375rem 0 0.5rem;
+  color: var(--foreground);
+}
+
+.doc-topic-body p,
+.doc-topic-body ul,
+.doc-topic-body ol {
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.help-page li,
+.doc-topic-body li {
+  margin-bottom: 0.35rem;
+}
+
+.doc-topic-body {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.help-page pre,
+.doc-topic-body pre {
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.help-page pre code,
+.doc-topic-body pre code {
+  font-size: inherit;
 }
 
 /* Callout Boxes (Alerts - Uniform Border Style) */
@@ -61,6 +160,53 @@
     display: block;
     color: var(--foreground);
     font-size: 1rem;
+  }
+}
+
+/** No tinted “card”: same titles/copy structure as `.help-callout`, reads like normal topic body. */
+.help-callout.help-callout--plain {
+  display: block;
+  padding: 0;
+  margin: 1.75rem 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1.65;
+
+  &.info,
+  &.warning,
+  &.success {
+    background: transparent;
+    border: none;
+  }
+
+  > i {
+    display: none;
+  }
+
+  > div {
+    min-width: 0;
+  }
+
+  .callout-title {
+    font-size: clamp(1.0625rem, 0.4vw + 1rem, 1.125rem);
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.65;
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -116,7 +262,12 @@
 
   .step-content {
     padding-top: 6px;
-    h3 { margin: 0 0 12px 0; font-size: 1.25rem; border: none; padding: 0; }
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.125rem;
+      border: none;
+      padding: 0;
+    }
   }
 }
 
@@ -146,47 +297,83 @@
 
 .integration-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-top: 2.5rem;
 
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
   .integration-card {
-    padding: 2rem;
+    padding: 1.25rem 1.35rem;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 14px;
     background: var(--card);
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    
-    &:hover {
-      border-color: var(--primary);
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
-      
-      [data-bs-theme="dark"] & {
-        box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    grid-template-rows: auto 1fr;
+    column-gap: 1rem;
+    row-gap: 0.35rem;
+    align-items: start;
+    min-width: 0;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.12);
+
+        [data-bs-theme="dark"] & {
+          box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.55);
+        }
       }
     }
 
-    i { 
-      font-size: 2.25rem; 
-      color: var(--primary); 
-      margin-bottom: 16px; 
-      display: block; 
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
     }
-    
-    h4 { 
-      margin: 0 0 10px 0; 
-      font-size: 1.125rem; 
+
+    > i:first-of-type {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      justify-self: center;
+      width: 52px;
+      height: 52px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      line-height: 1;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--primary) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--border));
+      color: var(--primary);
+    }
+
+    > h4 {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 0;
+      padding-top: 2px;
+      font-size: 1rem;
+      font-weight: 600;
       color: var(--foreground);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
     }
-    
-    p { 
-      font-size: 0.9375rem; 
-      color: var(--text-secondary); 
-      margin: 0; 
+
+    > p {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
       line-height: 1.5;
     }
   }
@@ -267,10 +454,14 @@ a.doc-inline-link {
 .doc-figure {
   margin: 2rem 0;
   text-align: center;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .doc-figure img {
   max-width: 100%;
+  min-width: 0;
   height: auto;
   border-radius: 12px;
   border: 1px solid var(--border);
@@ -279,5 +470,127 @@ a.doc-inline-link {
 .doc-figure figcaption {
   margin-top: 0.5rem;
   font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/** Hero workflow: outer card is responsive (min-width 0); inner button opens doc-topic lightbox. */
+.doc-figure--hero.doc-figure-card {
+  margin: 2rem 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--muted) 50%, var(--background));
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--foreground) 6%, transparent),
+    0 6px 28px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+.doc-figure--hero.doc-figure-card .doc-figure-view-link {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  border-radius: 14px;
+  overflow: hidden;
+  line-height: 0;
+  background: color-mix(in srgb, var(--background) 88%, var(--muted));
+  cursor: zoom-in;
+  transition: box-shadow 0.15s ease, outline-color 0.15s ease;
+}
+
+.doc-figure--hero.doc-figure-card .doc-figure-view-link:hover {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.doc-figure--hero.doc-figure-card .doc-figure-view-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.doc-figure--hero.doc-figure-card .doc-figure-view-link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.doc-figure--hero.doc-figure-card img {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  vertical-align: top;
+}
+
+/** Legacy: standalone hero without card (if used elsewhere). */
+.doc-figure--hero:not(.doc-figure-card) {
+  margin: 2rem 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.doc-figure--hero:not(.doc-figure-card) .doc-figure-view-link {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  line-height: 0;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--muted) 55%, var(--background));
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--foreground) 6%, transparent),
+    0 4px 24px color-mix(in srgb, var(--foreground) 4%, transparent);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  cursor: zoom-in;
+}
+
+.doc-figure--hero:not(.doc-figure-card) .doc-figure-view-link:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  box-shadow:
+    0 2px 6px color-mix(in srgb, var(--foreground) 8%, transparent),
+    0 8px 28px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.doc-figure--hero:not(.doc-figure-card) .doc-figure-view-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.doc-figure--hero:not(.doc-figure-card) img {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  vertical-align: top;
+}
+
+.doc-figure-hint {
+  display: inline;
+  margin-left: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--muted-foreground);
 }

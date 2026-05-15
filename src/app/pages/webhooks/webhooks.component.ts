@@ -5,6 +5,5 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './webhooks.component.html',
-  styleUrls: ['../../styles/help-pages.scss']
 })
 export class WebhooksComponent {}

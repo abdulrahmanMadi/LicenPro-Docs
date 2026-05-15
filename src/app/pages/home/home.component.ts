@@ -39,7 +39,7 @@ import { RouterLink } from '@angular/router';
         <a routerLink="/api/overview" class="doc-card">
           <i class="ki-outline ki-data"></i>
           <h3>REST API</h3>
-          <p>OpenAPI, auth, and route map</p>
+          <p>Auth, route topics, and hosted base URL</p>
         </a>
         <a routerLink="/guides/platform/overview" class="doc-card">
           <i class="ki-outline ki-element-11"></i>
@@ -80,51 +80,85 @@ import { RouterLink } from '@angular/router';
     </div>
   `,
   styles: [`
-    .lead {
-      font-size: 1.25rem;
-      color: var(--muted-foreground);
-      margin-bottom: 3rem;
-      max-width: 600px;
-    }
-
     .doc-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
       margin-bottom: 4rem;
     }
 
+    @media (max-width: 480px) {
+      .doc-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .doc-card {
-      display: flex;
-      flex-direction: column;
-      padding: 1.5rem;
-      background: var(--background);
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      grid-template-rows: auto 1fr;
+      column-gap: 1rem;
+      row-gap: 0.3rem;
+      align-items: start;
+      min-width: 0;
+      padding: 1.25rem 1.3rem;
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       text-decoration: none;
-      
-      &:hover {
-        border-color: var(--primary);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          border-color: var(--primary);
+          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+          transform: translateY(-2px);
+        }
       }
 
-      i {
-        font-size: 1.75rem;
+      &:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      > i:first-of-type {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        align-self: center;
+        justify-self: center;
+        width: 48px;
+        height: 48px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        line-height: 1;
+        border-radius: 11px;
+        background: color-mix(in srgb, var(--primary) 14%, transparent);
+        border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--border));
         color: var(--primary);
-        margin-bottom: 1rem;
       }
 
       h3 {
+        grid-column: 2;
+        grid-row: 1;
         font-size: 1rem;
         font-weight: 600;
-        margin: 0 0 0.5rem 0;
+        margin: 0;
+        padding-top: 2px;
         color: var(--foreground);
+        letter-spacing: -0.02em;
+        line-height: 1.3;
       }
 
       p {
+        grid-column: 2;
+        grid-row: 2;
         font-size: 0.875rem;
-        color: var(--muted-foreground);
+        color: var(--text-secondary);
         margin: 0;
-        line-height: 1.4;
+        line-height: 1.5;
       }
     }
 
@@ -134,11 +168,25 @@ import { RouterLink } from '@angular/router';
       border-radius: 12px;
       border: 1px solid var(--border);
 
-      h2 { margin-top: 0; }
-      
+      h2 {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+        font-size: 1.1875rem;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      p {
+        margin: 0 0 0.5rem;
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
       .help-links {
         display: flex;
-        gap: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
         margin-top: 1.5rem;
       }
 

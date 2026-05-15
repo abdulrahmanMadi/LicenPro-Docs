@@ -40,7 +40,7 @@
   </ol>
 
   <h2>REST API (product owner JWT)</h2>
-  <p>Routes are implemented on <code>ProductsController</code> under <code>/api/Products/&#123;id&#125;/keys/...</code>:</p>
+  <p>Routes under <code>/api/Products/&#123;id&#125;/keys/...</code> (authorized product access):</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
     <li><code>POST /api/Products/&#123;id&#125;/keys/generate</code> — create/regenerate key material for the product.</li>
     <li><code>GET /api/Products/&#123;id&#125;/keys/status</code> — whether keys exist / metadata.</li>
