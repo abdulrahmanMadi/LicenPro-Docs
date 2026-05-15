@@ -214,3 +214,70 @@
 
   tr:last-child td { border-bottom: none; }
 }
+
+/* API endpoint cards (injected topic HTML) */
+.doc-topic-body .api-endpoint,
+.help-page .api-endpoint {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.doc-topic-body .endpoint-header,
+.help-page .endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.doc-topic-body .method,
+.help-page .method {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: white;
+}
+
+.doc-topic-body .method.get,
+.help-page .method.get { background: #10b981; }
+
+.doc-topic-body .method.post,
+.help-page .method.post { background: #3b82f6; }
+
+.doc-topic-body .path,
+.help-page .path {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  background: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+a.doc-inline-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.doc-figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.doc-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.doc-figure figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}

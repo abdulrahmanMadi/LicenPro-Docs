@@ -1,0 +1,74 @@
+<article class="help-page">
+  <header class="help-page-header">
+    <h1>REST API overview</h1>
+    <p class="lead">
+      LicenPro exposes an ASP.NET Core API under <code>/api/...</code> on your deployment (cloud:
+      <code>https://licenpro.runasp.net/api</code>). Most management routes require a
+      <strong>Bearer JWT</strong> (dashboard users). Anonymous SDK and server integrations use
+      <strong><code>X-API-KEY</code></strong> on selected routes such as <code>POST /api/Licenses/validate</code>.
+    </p>
+  </header>
+
+  <app-mermaid-chart chartId="system-context" [definition]="systemContextDef" />
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-key"></i>
+    <div>
+      <span class="callout-title">Product API key</span>
+      <p>
+        Send <code>X-API-KEY: &lt;your product key&gt;</code> (or legacy <code>Authorization: X-API-KEY &lt;key&gt;</code>).
+        Keys are hashed server-side; store plaintext only on integrator servers.
+      </p>
+    </div>
+  </div>
+
+  <app-mermaid-chart chartId="license-lifecycle" [definition]="licenseLifecycleDef" />
+
+  <h2>Explore by area</h2>
+  <div class="integration-grid">
+    <a class="integration-card" routerLink="/api/auth-users">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>Auth &amp; users</h4>
+      <p>JWT, users, roles</p>
+    </a>
+    <a class="integration-card" routerLink="/api/catalog">
+      <i class="ki-outline ki-package"></i>
+      <h4>Catalog</h4>
+      <p>Products, releases, features</p>
+    </a>
+    <a class="integration-card" routerLink="/api/licenses">
+      <i class="ki-outline ki-key"></i>
+      <h4>Licenses</h4>
+      <p>CRUD &amp; validation</p>
+    </a>
+    <a class="integration-card" routerLink="/api/activations-sessions">
+      <i class="ki-outline ki-chart-line"></i>
+      <h4>Activations &amp; sessions</h4>
+      <p>Runtime enforcement</p>
+    </a>
+  </div>
+
+  <h2>Interactive OpenAPI</h2>
+  <p>
+    The canonical request and response schemas live in the OpenAPI document at
+    <a href="https://licenpro.runasp.net/swagger/v1/swagger.json" target="_blank" rel="noopener">swagger/v1/swagger.json</a>.
+    Use Swagger UI for try-it-out flows, or download the JSON for codegen. In the docs sidebar, use <strong>API reference</strong>
+    to focus the nav on HTTP topics only.
+  </p>
+  <app-openapi-embed />
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <div class="integration-grid">
+      <a class="integration-card" routerLink="/sdk/dotnet">
+        <i class="ki-outline ki-microsoft"></i>
+        <h4>.NET SDK</h4>
+        <p>Client integration</p>
+      </a>
+      <a class="integration-card" routerLink="/webhooks">
+        <i class="ki-outline ki-arrow-mix"></i>
+        <h4>Webhooks</h4>
+        <p>Automation events</p>
+      </a>
+    </div>
+  </section>
+</article>

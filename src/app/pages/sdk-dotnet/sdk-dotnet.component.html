@@ -17,8 +17,8 @@
 
   <h2>1. Configuration and API base URL</h2>
   <p>
-    Almost every call goes to your LicenPro API. The base URL must be absolute and end with <code>/api</code>
-    (for example <code>https://licenpro.runasp.net/api</code> for the shared cloud, or <code>https://localhost:7138/api</code> when developing against a local API).
+    Almost every call goes to your LicenPro API. The base URL must be absolute and end with <code>/api</code>.
+    The shared cloud host is <code>https://licenpro.runasp.net/api</code>. If you self-host the API, replace the host with your deployment (same <code>/api</code> suffix).
   </p>
   <p>Settings resolution order:</p>
   <ol style="margin: 0.5rem 0 1rem 1.25rem;">
@@ -133,17 +133,17 @@ await client.DisposeAsync();</code></pre>
 
   <h2>10. Related reading</h2>
   <div class="integration-grid">
-    <a routerLink="/sdk-winforms" class="integration-card">
+    <a routerLink="/sdk/winforms" class="integration-card">
       <i class="ki-outline ki-windows"></i>
       <h4>WinForms</h4>
       <p>Reference patterns from the sample app</p>
     </a>
-    <a routerLink="/sdk-wpf" class="integration-card">
+    <a routerLink="/sdk/wpf" class="integration-card">
       <i class="ki-outline ki-element-11"></i>
       <h4>WPF</h4>
       <p>Same SDK, MVVM-friendly lifecycle</p>
     </a>
-    <a routerLink="/api-reference" class="integration-card">
+    <a routerLink="/api/overview" class="integration-card">
       <i class="ki-outline ki-data"></i>
       <h4>REST API</h4>
       <p>Automate licenses outside the client</p>

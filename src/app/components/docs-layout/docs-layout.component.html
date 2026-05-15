@@ -1,24 +1,44 @@
 <div class="docs-layout">
-  <!-- Mobile Header -->
   <div class="docs-mobile-header">
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <button class="docs-mobile-menu-btn" (click)="toggleSidebar()">
-        <i class="ki-outline ki-menu"></i>
-      </button>
-      <a routerLink="/" class="docs-mobile-brand">
-        <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
-      </a>
+    <div class="docs-mobile-header-row">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="docs-mobile-menu-btn" (click)="toggleSidebar()" aria-label="Open menu">
+          <i class="ki-outline ki-menu"></i>
+        </button>
+        <a routerLink="/" class="docs-mobile-brand">
+          <img src="assets/Logos/Logo5.png" alt="LicenPro" class="docs-logo-img">
+        </a>
+      </div>
+
+      <div class="docs-mobile-actions">
+        <button type="button" class="mobile-action-btn" (click)="toggleTheme()" aria-label="Toggle theme">
+          <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
+        </button>
+      </div>
     </div>
-    
-    <div class="docs-mobile-actions">
-      <button class="mobile-action-btn" (click)="toggleTheme()" aria-label="Toggle Theme">
-        <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
+
+    <div class="docs-nav-tabs docs-nav-tabs--mobile" role="tablist" aria-label="Documentation scope">
+      <button
+        type="button"
+        role="tab"
+        class="docs-nav-tab"
+        [class.active]="navMode() === 'guides'"
+        [attr.aria-selected]="navMode() === 'guides'"
+        (click)="selectGuidesTab()">
+        Guides
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="docs-nav-tab"
+        [class.active]="navMode() === 'api'"
+        [attr.aria-selected]="navMode() === 'api'"
+        (click)="selectApiTab()">
+        API reference
       </button>
     </div>
   </div>
 
-
-  <!-- Left Sidebar (Navigation) -->
   <aside class="docs-sidebar" [class.open]="isSidebarOpen">
     <div class="docs-sidebar-header">
       <a routerLink="/" class="docs-brand">
@@ -26,98 +46,142 @@
       </a>
     </div>
 
-    <!-- Search -->
+    <div class="docs-nav-tabs" role="tablist" aria-label="Documentation scope">
+      <button
+        type="button"
+        role="tab"
+        class="docs-nav-tab"
+        [class.active]="navMode() === 'guides'"
+        [attr.aria-selected]="navMode() === 'guides'"
+        (click)="selectGuidesTab(); onNavItemClick()">
+        Guides
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="docs-nav-tab"
+        [class.active]="navMode() === 'api'"
+        [attr.aria-selected]="navMode() === 'api'"
+        (click)="selectApiTab(); onNavItemClick()">
+        API reference
+      </button>
+    </div>
+
     <div class="docs-search">
       <div class="docs-search-wrapper">
         <i class="ki-outline ki-magnifier docs-search-icon"></i>
         <input
           type="text"
           class="docs-search-input"
-          placeholder="Search documentation..."
+          [placeholder]="searchPlaceholder"
           [(ngModel)]="searchQuery"
           (input)="onSearchChange()"
-          aria-label="Search">
+          (keydown)="onSearchKeydown($event)"
+          [attr.aria-label]="searchPlaceholder">
       </div>
+      @if (navMode() === 'api' && searchQuery.trim()) {
+        <p class="docs-search-hint">Filtering API sidebar only.</p>
+      }
     </div>
 
-    <!-- Navigation -->
     <nav class="docs-nav">
       <ul class="docs-nav-list">
-        <li *ngFor="let item of navItems" class="docs-nav-group" [class.hidden]="item.visible === false">
-          <div class="docs-nav-group-title">{{ item.label }}</div>
-          
+        <li *ngFor="let section of displayNavSections" class="docs-nav-group" [class.hidden]="section.visible === false">
+          <div class="docs-nav-group-title">
+            <span [innerHTML]="section.matchedText || section.label"></span>
+          </div>
+
           <ul class="docs-nav-items">
-            <li *ngFor="let child of item.children" class="docs-nav-item" [class.hidden]="child.visible === false">
-              <a
-                [routerLink]="child.route"
-                [fragment]="child.fragment || undefined"
-                routerLinkActive="active"
-                class="docs-nav-link"
-                (click)="onNavItemClick()">
-                <i class="ki-outline" [ngClass]="child.icon"></i>
-                <span [innerHTML]="child.matchedText || child.label"></span>
-              </a>
-            </li>
+            <ng-container *ngFor="let item of section.items">
+              <li *ngIf="item.children?.length" class="docs-nav-item docs-nav-subgroup" [class.hidden]="item.visible === false">
+                <div class="docs-nav-sublabel">
+                  <i class="ki-outline" [ngClass]="item.icon"></i>
+                  <span [innerHTML]="item.matchedText || item.label"></span>
+                </div>
+                <ul class="docs-nav-sublist">
+                  <li *ngFor="let sub of item.children" class="docs-nav-item" [class.hidden]="sub.visible === false">
+                    <a
+                      [routerLink]="sub.route"
+                      [fragment]="sub.fragment || undefined"
+                      routerLinkActive="active"
+                      class="docs-nav-link"
+                      [class.keyboard-focused]="isItemFocused(sub)"
+                      (click)="onNavItemClick()">
+                      <i class="ki-outline" [ngClass]="sub.icon"></i>
+                      <span [innerHTML]="sub.matchedText || sub.label"></span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li *ngIf="!item.children?.length" class="docs-nav-item" [class.hidden]="item.visible === false">
+                <a
+                  [routerLink]="item.route"
+                  [fragment]="item.fragment || undefined"
+                  routerLinkActive="active"
+                  class="docs-nav-link"
+                  [class.keyboard-focused]="isItemFocused(item)"
+                  (click)="onNavItemClick()">
+                  <i class="ki-outline" [ngClass]="item.icon"></i>
+                  <span [innerHTML]="item.matchedText || item.label"></span>
+                </a>
+              </li>
+            </ng-container>
           </ul>
         </li>
       </ul>
     </nav>
 
     <div class="docs-sidebar-footer">
-       <div class="docs-footer-ver">v2.4.0</div>
+      <div class="docs-footer-ver">v2.4.0</div>
     </div>
   </aside>
 
-  <!-- Overlay for Mobile -->
   <div class="docs-overlay" [class.visible]="isSidebarOpen" (click)="toggleSidebar()"></div>
 
-  <!-- Main Content Wrapper -->
   <div class="docs-main-wrapper">
-    <!-- Topbar -->
     <header class="docs-topbar">
       <div class="docs-topbar-breadcrumb">
-        <span>Documentation</span>
-        <i class="ki-outline ki-right"></i>
-        <span class="active">Guides</span>
+        @for (seg of breadcrumbSegments(); track $index; let i = $index) {
+          @if (i > 0) {
+            <i class="ki-outline ki-right" aria-hidden="true"></i>
+          }
+          <span [class.active]="seg.current">{{ seg.label }}</span>
+        }
       </div>
-      
+
       <div class="docs-topbar-actions">
-        <a href="https://github.com/LicenPro" target="_blank" class="topbar-btn">
+        <a href="https://github.com/LicenPro" target="_blank" rel="noopener noreferrer" class="topbar-btn" aria-label="GitHub">
           <i class="ki-outline ki-github"></i>
         </a>
-        <button class="docs-theme-toggle-btn" (click)="toggleTheme()">
+        <button type="button" class="docs-theme-toggle-btn" (click)="toggleTheme()" aria-label="Toggle theme">
           <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
         </button>
       </div>
     </header>
 
     <div class="docs-layout-content">
-      <!-- Main Content Area -->
       <main class="docs-content">
         <div class="docs-content-inner">
           <router-outlet></router-outlet>
-          
-          <!-- Footer Navigation -->
+
           <footer class="docs-content-footer">
             <div class="docs-footer-line"></div>
             <div class="docs-footer-meta">
-              <span>Last updated 2 days ago</span>
-              <a href="#" class="edit-link"><i class="ki-outline ki-pencil"></i> Edit this page</a>
+              <span>LicenPro documentation</span>
+              <a href="https://github.com/LicenPro" target="_blank" rel="noopener noreferrer" class="edit-link">
+                <i class="ki-outline ki-github"></i> GitHub
+              </a>
             </div>
           </footer>
         </div>
       </main>
 
-      <!-- Right Sidebar (Table of Contents) -->
       <aside class="docs-toc">
         <div class="docs-toc-title">On this page</div>
         <nav class="docs-toc-nav">
           <ul>
-            <!-- Dynamic TOC would go here, placeholders for now -->
-            <li><a href="#overview" class="active">Overview</a></li>
-            <li><a href="#features">Key Features</a></li>
-            <li><a href="#setup">Setup Guide</a></li>
-            <li><a href="#best-practices">Best Practices</a></li>
+            <li><a href="#top" class="active">Top</a></li>
           </ul>
         </nav>
       </aside>

@@ -22,7 +22,7 @@
   transition: none;
 
   .docs-sidebar-header {
-    padding: 24px 20px;
+    padding: 24px 20px 12px;
     display: flex;
     align-items: center;
     
@@ -33,8 +33,46 @@
     }
   }
 
+  .docs-nav-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 16px 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  .docs-nav-tab {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    background: transparent;
+    transition: background 0.12s ease, color 0.12s ease;
+
+    &:hover {
+      color: var(--foreground);
+      background: var(--muted);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    &.active {
+      color: var(--primary);
+      background: var(--accent);
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.25);
+    }
+  }
+
   .docs-search {
-    padding: 0 20px 20px;
+    padding: 12px 20px 16px;
 
     .docs-search-wrapper {
       position: relative;
@@ -46,6 +84,13 @@
         left: 12px;
         font-size: 1.1rem;
         color: var(--muted-foreground);
+      }
+
+      .docs-search-hint {
+        margin: 6px 0 0;
+        font-size: 0.72rem;
+        color: var(--muted-foreground);
+        line-height: 1.35;
       }
 
       .docs-search-input {
@@ -166,12 +211,20 @@
   .docs-topbar-breadcrumb {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     font-size: 0.875rem;
     color: var(--muted-foreground);
 
-    i { font-size: 0.8rem; }
-    .active { color: var(--foreground); font-weight: 500; }
+    i.ki-right {
+      font-size: 0.65rem;
+      opacity: 0.65;
+    }
+
+    span.active {
+      color: var(--foreground);
+      font-weight: 600;
+    }
   }
 
   .docs-topbar-actions {
@@ -316,6 +369,10 @@
   display: none;
 }
 
+.docs-nav-tabs--mobile {
+  display: none;
+}
+
 /* --- Responsive Design (Unified) --- */
 @media (max-width: 1200px) {
   .docs-toc { display: none; }
@@ -332,7 +389,7 @@
 
   .docs-sidebar {
     position: fixed;
-    top: 60px;
+    top: 104px;
     left: 0;
     bottom: 0;
     width: 280px;
@@ -347,10 +404,13 @@
 
   .docs-mobile-header {
     display: flex;
-    height: 60px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+    min-height: 60px;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 8px 12px 10px;
     border-bottom: 1px solid var(--border);
     background: var(--background);
     z-index: 1100;
@@ -359,7 +419,27 @@
     left: 0;
     width: 100%;
 
+    .docs-mobile-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
     .docs-logo-img { height: 28px; }
+
+    .docs-nav-tabs--mobile {
+      display: flex;
+      padding: 6px 0 0;
+      border-bottom: none;
+      margin-bottom: 0;
+      gap: 6px;
+    }
+
+    .docs-nav-tabs--mobile .docs-nav-tab {
+      padding: 7px 8px;
+      font-size: 0.72rem;
+    }
 
     .docs-mobile-menu-btn {
       width: 40px;
@@ -411,7 +491,7 @@
   }
 
   .docs-main-wrapper {
-    margin-top: 60px;
+    margin-top: 104px;
     width: 100vw !important;
     min-width: 100vw;
     margin-left: 0 !important;
@@ -435,4 +515,36 @@
     display: none;
     &.visible { display: block; }
   }
+}
+
+/* Nested nav (REST API groups) */
+.docs-nav-subgroup {
+  margin-bottom: 8px;
+}
+
+.docs-nav-sublabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+.docs-nav-sublist {
+  list-style: none !important;
+  padding: 0 0 0 4px;
+  margin: 0;
+}
+
+.docs-nav-link.keyboard-focused {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.hidden {
+  display: none !important;
 }

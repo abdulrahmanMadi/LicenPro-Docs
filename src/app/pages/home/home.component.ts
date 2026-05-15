@@ -11,7 +11,8 @@ import { RouterLink } from '@angular/router';
       <p class="lead">
         LicenPro helps software vendors issue <strong>cryptographically signed licenses</strong>, track <strong>activations and sessions</strong>,
         and validate entitlements inside <strong>.NET desktop and server apps</strong> via the official SDK and REST API.
-        Use the guides below in order — from tenant setup through RSA keys, license models, integration, and automation.
+        Use the sidebar <strong>Guides</strong> tab for onboarding and platform walkthroughs; switch to <strong>API reference</strong> when you are wiring HTTP calls.
+        Cards below jump to the most common destinations.
       </p>
       
       <div class="doc-cards">
@@ -30,10 +31,20 @@ import { RouterLink } from '@angular/router';
           <h3>Models</h3>
           <p>Explore licensing strategies</p>
         </a>
-        <a routerLink="/sdk-dotnet" class="doc-card">
+        <a routerLink="/sdk/dotnet" class="doc-card">
           <i class="ki-outline ki-microsoft"></i>
           <h3>.NET SDK</h3>
           <p>LicenseClient, cache, updates</p>
+        </a>
+        <a routerLink="/api/overview" class="doc-card">
+          <i class="ki-outline ki-data"></i>
+          <h3>REST API</h3>
+          <p>OpenAPI, auth, and route map</p>
+        </a>
+        <a routerLink="/guides/platform/overview" class="doc-card">
+          <i class="ki-outline ki-element-11"></i>
+          <h3>System overview</h3>
+          <p>Dashboard, API, and SDK roles</p>
         </a>
         <a routerLink="/changelog" class="doc-card">
           <i class="ki-outline ki-notepad-edit"></i>

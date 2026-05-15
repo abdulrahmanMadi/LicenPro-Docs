@@ -39,7 +39,7 @@
   </ol>
 
   <h2>REST API</h2>
-  <p>Same family as other licenses: <code>GET/POST /api/Licenses/...</code> for CRUD, <code>POST /api/Licenses/refresh/&#123;licenseKey&#125;</code> for refresh flows, validate endpoints for server checks. See <a routerLink="/api-reference">API reference</a>.</p>
+  <p>Same family as other licenses: <code>GET/POST /api/Licenses/...</code> for CRUD, <code>POST /api/Licenses/refresh/&#123;licenseKey&#125;</code> for refresh flows, validate endpoints for server checks. See <a routerLink="/api/overview">API reference</a>.</p>
 
   <h2>SDK integration</h2>
   <p>After successful <code>ValidateAsync</code>, read <code>result.ExpiryNotice</code> or subscribe to <code>client.LicenseExpiringSoon</code>. Tune warning lead time with <code>SubscriptionExpiryWarningDays</code> (set <code>0</code> to disable).</p>
@@ -78,7 +78,7 @@ if (result.IsValid &amp;&amp; result.ExpiryNotice != null)
     <div class="integration-grid">
       <a routerLink="/trial-license" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trial</h4><p>Evaluation</p></a>
       <a routerLink="/webhooks" class="integration-card"><i class="ki-outline ki-arrow-mix"></i><h4>Webhooks</h4><p>Lifecycle automation</p></a>
-      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Updates + cache</p></a>
+      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Updates + cache</p></a>
     </div>
   </section>
 </div>

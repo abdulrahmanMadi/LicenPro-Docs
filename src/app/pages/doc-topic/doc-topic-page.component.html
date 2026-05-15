@@ -1,0 +1,19 @@
+@if (notFound()) {
+  <div class="help-page">
+    <header class="help-page-header">
+      <h1>Page not found</h1>
+      <p class="lead">No documentation is registered for this path.</p>
+    </header>
+    <p><a class="doc-inline-link" href="/" (click)="goHome($event)">Return home</a></p>
+  </div>
+} @else {
+  <article class="help-page doc-topic-page" (click)="onAnchorClick($event)">
+    <header class="help-page-header">
+      <h1>{{ title() }}</h1>
+      @if (leadSafe()) {
+        <p class="lead" [innerHTML]="leadSafe()"></p>
+      }
+    </header>
+    <div class="doc-topic-body" [innerHTML]="bodySafe()"></div>
+  </article>
+}

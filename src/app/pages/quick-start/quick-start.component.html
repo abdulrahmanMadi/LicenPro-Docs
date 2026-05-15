@@ -38,6 +38,8 @@
     The sections below walk the same path in more detail, ending with SDK bootstrap so your shipped binaries stay aligned with what you configured online.
   </p>
 
+  <app-mermaid-chart chartId="activation-vs-session" [definition]="activationSessionDef" />
+
   <h2>1. Account and organization</h2>
   <p>
     Sign in or register at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>.
@@ -111,7 +113,7 @@ Application.Run(new MainForm());</code></pre>
     The primary integration surface is <code>LicenseClient</code> with <code>LicenseClientOptions</code>: paths to <code>license.bin</code>, public key, license key, optional expected type, optional product id for update eligibility, and optional expiry-warning tuning.
     Successful validation can populate an on-disk <strong>license cache</strong> so the next launch can use <code>LicenseClient.TryAutoValidateAsync</code> without re-reading the bin from UI.
   </p>
-  <p>Authoritative API details, status codes, cache helpers, subscription expiry notices, and license-aware updates: <a routerLink="/sdk-dotnet">.NET SDK</a>.</p>
+  <p>Authoritative API details, status codes, cache helpers, subscription expiry notices, and license-aware updates: <a routerLink="/sdk/dotnet">.NET SDK</a>.</p>
 
   <h2>8. Optional: sessions, activations, webhooks</h2>
   <p>
@@ -121,7 +123,8 @@ Application.Run(new MainForm());</code></pre>
   <p>
     <a routerLink="/sessions-activations">Sessions &amp; activations</a> ·
     <a routerLink="/webhooks">Webhooks</a> ·
-    <a routerLink="/api-reference">REST API reference</a>
+    <a routerLink="/api/overview">REST API reference</a> ·
+    <a href="https://licenpro.runasp.net/swagger/v1/swagger.json" target="_blank" rel="noopener">OpenAPI JSON</a> (every path, verb, and DTO)
   </p>
 
   <section class="next-steps-section" style="margin-top: 3rem;">
@@ -132,12 +135,12 @@ Application.Run(new MainForm());</code></pre>
         <h4>First product</h4>
         <p>Dashboard setup in depth</p>
       </a>
-      <a routerLink="/sdk-winforms" class="integration-card">
+      <a routerLink="/sdk/winforms" class="integration-card">
         <i class="ki-outline ki-windows"></i>
         <h4>WinForms sample</h4>
         <p>Startup, cache, UI feedback</p>
       </a>
-      <a routerLink="/sdk-dotnet" class="integration-card">
+      <a routerLink="/sdk/dotnet" class="integration-card">
         <i class="ki-outline ki-code"></i>
         <h4>.NET SDK</h4>
         <p>Validation, cache, updates</p>

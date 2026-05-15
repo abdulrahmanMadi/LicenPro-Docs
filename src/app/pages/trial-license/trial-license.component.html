@@ -50,7 +50,7 @@
   <h2>REST API</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
     <li><code>POST /api/Licenses</code> — <code>type: "Trial"</code>, plus <code>trialPeriod</code> / <code>trialPeriodHours</code>, required <code>softwareReleaseId</code>, etc.</li>
-    <li>Same validate/status/download endpoints as other types (see <a routerLink="/api-reference">API reference</a>).</li>
+    <li>Same validate/status/download endpoints as other types (see <a routerLink="/api/overview">API reference</a>).</li>
   </ul>
 
   <h2>SDK integration</h2>
@@ -81,7 +81,7 @@ if (!result.IsValid &amp;&amp; result.Status == LicenseValidationStatus.Expired)
     <div class="integration-grid">
       <a routerLink="/subscription-license" class="integration-card"><i class="ki-outline ki-calendar-tick"></i><h4>Subscription</h4><p>Recurring model</p></a>
       <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>After trial conversion</p></a>
-      <a routerLink="/sdk-dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Details</p></a>
+      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Details</p></a>
     </div>
   </section>
 </div>
