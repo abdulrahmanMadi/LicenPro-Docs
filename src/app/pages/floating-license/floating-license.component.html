@@ -2,87 +2,104 @@
   <header class="help-page-header">
     <h1>Floating license</h1>
     <p class="lead">
-      <strong>Floating</strong> (and <strong>Concurrent</strong>) licenses represent <em>seats</em>: a maximum number of simultaneous active users/machines enforced through activations and <strong>session heartbeats</strong> to the API.
-      They are inherently <strong>online</strong>-oriented — the pool is authoritative on the server.
+      A <strong>floating</strong> license is an <strong>enterprise seat pool</strong> enforced by <strong>live sessions</strong> (connect + heartbeat).
+      One license key serves many users, but only <em>N</em> can run the app at the same time. Floating is <strong>always online</strong>—there is no offline floating mode.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
-      <i class="ki-outline ki-people"></i>
-      <h4>Max seats</h4>
-      <p><code>MaxActiveUsersCount</code> on create.</p>
+      <i class="ki-outline ki-pulse"></i>
+      <h4>Session seats</h4>
+      <p>Pool cap = max concurrent live sessions.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-pulse"></i>
-      <h4>Heartbeat</h4>
-      <p>SDK session keeps seat claimed.</p>
+      <i class="ki-outline ki-wifi"></i>
+      <h4>Always online</h4>
+      <p>Heartbeats required; no offline enforcement.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-chart-line"></i>
-      <h4>Dashboard</h4>
-      <p>See active sessions vs cap.</p>
+      <h4>Sessions dashboard</h4>
+      <p>Real-time pool usage vs cap.</p>
     </div>
   </div>
 
-  <h2>Floating vs Concurrent</h2>
-  <p>
-    Both are modeled in the API enum as distinct values (<code>Floating</code> and <code>Concurrent</code>) and map to SDK types <code>FloatingLicense</code> and <code>ConcurrentLicense</code> with the same seat concept (<code>MaxActiveUsersCount</code>).
-    Product documentation usually treats them as sibling “network seat” models; pick the enum your business rules expect when creating licenses.
-  </p>
-
-  <h2>How it works</h2>
-  <p>
-    Each checkout occupies capacity until the session ends or the heartbeat times out. The SDK’s <code>LicenseClient.ValidateAsync</code> path participates in activation + session management so the server can reject a seat when the pool is full.
-  </p>
-
-  <h2>Creating a floating license (dashboard / API)</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Licenses</code> with <code>type: "Floating"</code> (or <code>"Concurrent"</code>), <code>maxActiveUsersCount</code> set to the pool size, <code>issuedTo</code> (org or label), <code>softwareReleaseId</code>, optional entitlements.</li>
-    <li>Distribute license key + <code>license.bin</code> to the customer environment.</li>
-    <li>Monitor usage under product <strong>Sessions</strong> / <strong>Activations</strong> in the dashboard.</li>
-  </ol>
-
-  <h2>REST API</h2>
+  <h2>Business model</h2>
+  <p>Floating targets organizations that buy <strong>concurrent capacity</strong> rather than named users or installs—classic CAD, PLM, and license-server economics at scale.</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>GET /api/Licenses/&#123;licenseKey&#125;/activations</code> — activation snapshot (anonymous).</li>
-    <li><code>GET /api/Licenses/status/&#123;licenseKey&#125;</code> — includes seat-oriented fields in the returned payload where applicable.</li>
-    <li>Vendor JWT routes for revoke/transfer when you need administrative overrides.</li>
+    <li><strong>Enterprise concurrent deal</strong> — “100 simultaneous users” for entire company.</li>
+    <li><strong>Site license + cap</strong> — one key for a campus; server enforces concurrency.</li>
+    <li><strong>Department pool</strong> — issued-to org label; IT shares one key internally.</li>
+    <li><strong>High churn usage</strong> — users open/close app often; seats recycle on disconnect.</li>
   </ul>
 
-  <h2>SDK integration</h2>
-  <p>Validate like any other type; keep the client alive for <code>ConnectSessionAsync</code> / heartbeat while the app holds a seat. Heartbeat interval is driven by SDK configuration (<code>SdkSettings.HeartbeatIntervalMinutes</code> / manager defaults), not a fake <code>SessionHeartbeatInterval</code> property on <code>LicenseClientOptions</code>.</p>
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — sell higher concurrent tiers; accurate real-time usage via Sessions page.</li>
+    <li><strong>For customers</strong> — fewer keys to manage; pay for peak concurrency not headcount.</li>
+    <li><strong>For enforcement</strong> — session heartbeats free seats within seconds of app exit (vs long-lived activation rows).</li>
+  </ul>
 
-  <pre><code>using LicenPro.SDK;
-using LicenPro.SDK.Enums;
+  <h2>Logic of use (how seats work)</h2>
+  <p>LicenPro counts <strong>live SDK sessions</strong> against <strong>max active users</strong>. When a user starts the app, validation opens a session; heartbeat keeps it alive. When the app exits or heartbeat stops, the seat returns to the pool.</p>
+  <p><strong>Activations tab is hidden</strong> for floating—seats are not tracked via device activation count. Use <strong>Sessions</strong> tab and <code>/dashboard/sessions</code> for operations.</p>
+  <p>This differs from <a routerLink="/concurrent-license">Concurrent</a>, which enforces seats on <strong>device activations</strong> instead of live sessions.</p>
 
-await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
-    LicenseFilePath = "license.bin",
-    PublicKey = publicKeyBase64,
-    LicenseKey = floatingKey,
-    ExpectedLicenseType = LicenseType.Floating
-&rbrace;);
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-people" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: 25-seat engineering pool</span>
+      <p>Vendor sells Floating, max 25. Company deploys one license key to all workstations. Monday 10:00 — 25 designers online, 26th user gets “pool full”. Designer closes app → session ends within heartbeat interval → 26th user succeeds.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-shield-cross" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Stuck session</span>
+      <p>Crash leaves ghost session. IT opens Sessions page, disconnects stale row. Seat immediately available without reissuing license.</p>
+    </div>
+  </div>
 
-var result = await client.ValidateAsync();
-if (!result.IsValid)
-    return;
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Floating + max active users.</li>
+    <li><strong>Distribute</strong> — single org-wide key (+ optional <code>license.bin</code>).</li>
+    <li><strong>Connect</strong> — each running app holds one session seat.</li>
+    <li><strong>Heartbeat</strong> — maintains seat while app runs.</li>
+    <li><strong>Disconnect</strong> — app exit or operator disconnect frees seat.</li>
+    <li><strong>Revoke</strong> — entire pool disabled from license Overview.</li>
+  </ol>
 
-await client.ConnectSessionAsync();
-// On app exit: await client.DisposeAsync();</code></pre>
+  <h2>Dashboard workflow</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create → Floating → set max active users.</li>
+    <li>Monitor <code>/dashboard/sessions</code> and license <strong>Sessions</strong> tab.</li>
+    <li>Disconnect stale sessions; no Activations tab for seat math.</li>
+  </ul>
+
+  <h2>Floating vs Concurrent</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Floating</strong> — seat limit on <em>live sessions</em>; always online; best for fast seat turnover.</li>
+    <li><strong><a routerLink="/concurrent-license">Concurrent</a></strong> — seat limit on <em>device activations</em>; sessions show who is online but activations hold seats.</li>
+  </ul>
 
   <div class="help-callout warning">
     <i class="ki-outline ki-wifi"></i>
     <div>
-      <span class="callout-title">Offline use</span>
-      <p>Floating/concurrent licensing cannot be truthfully enforced without periodic server contact. Offline-only mode is not a supported primary mode for seat pools; use perpetual or node-locked models if you must work air-gapped.</p>
+      <span class="callout-title">Not for air-gapped sites</span>
+      <p>Floating cannot enforce without server heartbeats. Use <a routerLink="/perpetual-license">Perpetual offline</a> or <a routerLink="/node-locked-license">Node-locked</a> for disconnected environments.</p>
     </div>
   </div>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions</h4><p>Operational detail</p></a>
-      <a routerLink="/node-locked-license" class="integration-card"><i class="ki-outline ki-lock"></i><h4>Node-locked</h4><p>Single machine</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Lifecycle</p></a>
+      <a routerLink="/concurrent-license" class="integration-card"><i class="ki-outline ki-users"></i><h4>Concurrent</h4><p>Activation-based seats</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions guide</h4><p>Heartbeat ops</p></a>
+      <a routerLink="/guides/platform/sessions" class="integration-card"><i class="ki-outline ki-pulse"></i><h4>Platform Sessions</h4><p>Dashboard</p></a>
+      <a routerLink="/api/activations-sessions" class="integration-card"><i class="ki-outline ki-data"></i><h4>REST API</h4><p>Integration</p></a>
     </div>
   </section>
 </div>

@@ -1,0 +1,101 @@
+<div class="help-page">
+  <header class="help-page-header">
+    <h1>Concurrent license</h1>
+    <p class="lead">
+      A <strong>concurrent</strong> license lets a fixed number of <strong>devices</strong> use the product at once across a team.
+      Seats are enforced through <strong>device activations</strong>—when a user closes the app, the activation can be released and the seat becomes available for another machine.
+      Unlike <a routerLink="/floating-license">Floating</a>, concurrent is not limited to live session heartbeats for seat counting.
+    </p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-users"></i>
+      <h4>Activation seats</h4>
+      <p>Max active users = device activation cap.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-verify"></i>
+      <h4>Activations tab</h4>
+      <p>Seat usage shown per device row.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-chart-line"></i>
+      <h4>Sessions tab</h4>
+      <p>Live connections for support visibility.</p>
+    </div>
+  </div>
+
+  <h2>Business model</h2>
+  <p>Concurrent is the familiar “N simultaneous users” license sold to teams and SMBs—simpler than enterprise floating servers but same commercial idea: shared key, capped simultaneous use.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Team license</strong> — “5 concurrent users” for a small design team.</li>
+    <li><strong>Classroom / lab</strong> — 30 machines, 15 concurrent seats; students rotate.</li>
+    <li><strong>Branch office</strong> — one key per office with concurrent cap vs named users.</li>
+    <li><strong>Mid-market alternative to Floating</strong> — activation-based enforcement without session-only semantics.</li>
+  </ul>
+
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — clear seat metric on Activations tab; block rogue devices individually.</li>
+    <li><strong>For customers</strong> — share one license key; seats free when colleagues close the app (per deactivation policy).</li>
+    <li><strong>vs Floating</strong> — activations persist until released—better when you need device-level audit trail per seat.</li>
+  </ul>
+
+  <h2>Logic of use (how seats work)</h2>
+  <p>When max active users = 5, the server allows up to <strong>5 device activations</strong> on the license. Each new machine activates until the cap is reached; further activations fail until a seat frees.</p>
+  <p><strong>Live sessions</strong> still appear on the Sessions tab for online concurrent licenses—they show who is connected <em>right now</em>, but <strong>seat enforcement uses activations</strong>, not session count alone.</p>
+  <p>Concurrent can run with <strong>online validation</strong> (typical) so revocation and compliance apply in real time. It is not the same as Floating’s “always online + session-only seats.”</p>
+
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-users" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: 5-seat team license</span>
+      <p>Startup buys Concurrent, max 5. Five engineers activate on five laptops Monday. Sixth engineer fails until one deactivates or IT removes an activation from Activations tab. Engineer closes app and client deactivates → sixth engineer can activate.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-monitor" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Block stolen laptop</span>
+      <p>IT sees unknown device on Activations list, blocks activation. Stolen machine fails on next online check without revoking entire team key.</p>
+    </div>
+  </div>
+
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Concurrent + max active users.</li>
+    <li><strong>Distribute</strong> — shared team key.</li>
+    <li><strong>Activate</strong> — each device consumes one activation seat.</li>
+    <li><strong>Operate</strong> — monitor Activations tab; Sessions for live view.</li>
+    <li><strong>Release seat</strong> — client deactivation or operator block/remove.</li>
+    <li><strong>Revoke</strong> — disable whole license from Overview.</li>
+  </ol>
+
+  <h2>Dashboard workflow</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create → Concurrent → max active users in step 2.</li>
+    <li>License detail → <strong>Activations</strong> tab (seat enforcement).</li>
+    <li><strong>Sessions</strong> tab — who is online now.</li>
+    <li>Global <code>/dashboard/activations</code> for cross-license support.</li>
+  </ul>
+
+  <h2>Concurrent vs Floating</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Seat counter</strong> — Concurrent: <em>activations</em>; Floating: <em>live sessions</em>.</li>
+    <li><strong>Online rule</strong> — Floating: always online; Concurrent: online validation typical but not “always online type” in policy.</li>
+    <li><strong>Dashboard</strong> — Concurrent shows Activations tab; Floating hides it and uses Sessions only.</li>
+    <li><strong>Best for</strong> — Concurrent: team device audit; Floating: large org with rapid seat churn.</li>
+  </ul>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
+    <div class="integration-grid">
+      <a routerLink="/floating-license" class="integration-card"><i class="ki-outline ki-people"></i><h4>Floating</h4><p>Session-based pool</p></a>
+      <a routerLink="/guides/platform/activations" class="integration-card"><i class="ki-outline ki-verify"></i><h4>Activations</h4><p>Platform guide</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions guide</h4><p>Live connections</p></a>
+      <a routerLink="/api/activations-sessions" class="integration-card"><i class="ki-outline ki-data"></i><h4>REST API</h4><p>Integration</p></a>
+    </div>
+  </section>
+</div>

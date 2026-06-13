@@ -2,83 +2,95 @@
   <header class="help-page-header">
     <h1>Subscription license</h1>
     <p class="lead">
-      <strong>Subscription</strong> licenses model time-bounded access (renewal cycles). The server persists <code>SubscriptionExpiryDate</code> and maps to SDK <code>SubscriptionLicense</code> with <code>SubscriptionDuration</code> metadata.
-      End-user apps should validate online regularly; the SDK exposes <strong>expiry notices</strong> before the end date for in-app renewal UX.
+      A <strong>subscription</strong> license grants access for a <strong>defined term</strong>—monthly, annual, or custom.
+      Access ends when the term expires without renewal. Subscriptions are <strong>online-first</strong> so billing, revocation, and compliance stay aligned with server state.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-calendar"></i>
-      <h4>Renewal window</h4>
-      <p>Dashboard + SDK expiry alignment.</p>
+      <h4>Renewal term</h4>
+      <p>Duration or explicit expiry date at issue.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-notification"></i>
-      <h4>Warnings</h4>
-      <p><code>SubscriptionExpiryWarningDays</code> (default 7).</p>
+      <h4>Renewal UX</h4>
+      <p>Warn before expiry; renew after payment.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-wifi"></i>
       <h4>Online-first</h4>
-      <p>ValidateAsync checks server state.</p>
+      <p>Server reflects payment and revocation.</p>
     </div>
   </div>
 
-  <h2>How it works</h2>
-  <p>
-    Creating a subscription with <code>subscriptionDuration</code> / <code>subscriptionDurationHours</code> shifts <code>SubscriptionExpiryDate</code> forward from issuance when those fields are provided; you may also set explicit dates depending on UI/API usage.
-    The SDK builds <code>SubscriptionLicense</code> with <code>UserName</code>, <code>SubscriptionStartDate</code>, and <code>SubscriptionDuration</code> for client-side display logic.
-  </p>
+  <h2>Business model</h2>
+  <p>Subscription is the default for SaaS and recurring revenue: customer pays per period; vendor delivers continuous service and feature updates.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Monthly / annual SaaS</strong> — tiered plans via entitlement sets (Basic, Pro, Enterprise).</li>
+    <li><strong>Seat-based SaaS</strong> — combine with max activations per subscriber.</li>
+    <li><strong>Maintenance subscription</strong> — updates/support while perpetual use right continues elsewhere.</li>
+    <li><strong>Usage + subscription</strong> — optional feature usage telemetry on top of time term.</li>
+  </ul>
 
-  <h2>Creating a subscription (dashboard / API)</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Licenses</code> with <code>type: "Subscription"</code>, <code>issuedTo</code>, <code>softwareReleaseId</code>, and duration fields and/or <code>subscriptionExpiryDate</code>.</li>
-    <li>Attach entitlement sets for tiered SaaS features.</li>
-    <li>Download <code>license.bin</code> after creation.</li>
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — predictable recurring revenue; instant revoke on churn; analytics on active subscribers.</li>
+    <li><strong>For customers</strong> — lower entry cost; cancel at term end.</li>
+    <li><strong>For finance</strong> — expiry dates map to invoice cycles; extend via billing or dashboard after payment.</li>
+  </ul>
+
+  <h2>Logic of use</h2>
+  <p>Subscription stores <strong>expiry</strong> (from duration at create or explicit date). Online validation checks server: expired, revoked, or past-due subscriptions fail even if local file still exists. Renew by extending expiry—customer app sees new term on next validate.</p>
+  <p>Pair renewals with <a routerLink="/webhooks">Webhooks</a> or billing integration so payment success automatically extends the license row.</p>
+
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-calendar-tick" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Annual SaaS plan</span>
+      <p>Customer subscribes Jan 1. Operator issues Subscription, 365 days, entitlement “Pro”. App validates online monthly. Dec 15: renewal email. Jan 1 payment succeeds → webhook extends expiry +365 days. If payment fails → expiry Jan 1 → app shows renew screen.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-shield-cross" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Immediate churn revoke</span>
+      <p>Customer cancels mid-term with no grace. Support revokes license from Overview. Next online validation fails even before calendar expiry.</p>
+    </div>
+  </div>
+
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Subscription + term.</li>
+    <li><strong>Active</strong> — within subscription window.</li>
+    <li><strong>Expiring soon</strong> — renewal campaigns.</li>
+    <li><strong>Renew</strong> — extend expiry after payment.</li>
+    <li><strong>Expired</strong> — term ended without renewal.</li>
+    <li><strong>Revoked</strong> — forced stop (fraud, chargeback).</li>
   </ol>
 
-  <h2>REST API</h2>
-  <p>Same family as other licenses: <code>GET/POST /api/Licenses/...</code> for CRUD, <code>POST /api/Licenses/refresh/&#123;licenseKey&#125;</code> for refresh flows, validate endpoints for server checks. See <a routerLink="/api/overview">API reference</a>.</p>
+  <h2>Dashboard workflow</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create wizard → Subscription → duration or expiry in step 2.</li>
+    <li>Monitor Activations/Sessions for seat enforcement.</li>
+    <li>Edit expiry for manual renewals; Analytics for subscriber health.</li>
+  </ul>
 
-  <h2>SDK integration</h2>
-  <p>After successful <code>ValidateAsync</code>, read <code>result.ExpiryNotice</code> or subscribe to <code>client.LicenseExpiringSoon</code>. Tune warning lead time with <code>SubscriptionExpiryWarningDays</code> (set <code>0</code> to disable).</p>
-
-  <pre><code>using LicenPro.SDK;
-using LicenPro.SDK.Enums;
-
-await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
-    LicenseFilePath = "license.bin",
-    PublicKey = publicKeyBase64,
-    LicenseKey = subscriptionKey,
-    ExpectedLicenseType = LicenseType.Subscription,
-    SubscriptionExpiryWarningDays = 14
-&rbrace;);
-
-client.LicenseExpiringSoon += (_, e) =&gt; &lbrace;
-    var n = e.Notice;
-    // Non-blocking banner from n.WholeDaysRemaining, etc.
-&rbrace;;
-
-var result = await client.ValidateAsync();
-if (result.IsValid &amp;&amp; result.ExpiryNotice != null)
-&lbrace;
-    // Same ExpiryNotice as event for manual validate path
-&rbrace;</code></pre>
-
-  <div class="help-callout info">
-    <i class="ki-outline ki-route"></i>
-    <div>
-      <span class="callout-title">Online vs offline</span>
-      <p><strong>Online</strong> validation keeps subscription state aligned with revocations and billing. <strong>Offline</strong> validation only consults the signed file and local clock — use only when your contract explicitly allows limited offline grace (see SDK <code>SdkSettings</code> for cache/grace-related defaults).</p>
-    </div>
-  </div>
+  <h2>Compare with other models</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>vs <a routerLink="/perpetual-license">Perpetual</a> — subscription requires renewal; perpetual does not by default.</li>
+    <li>vs <a routerLink="/trial-license">Trial</a> — subscription is paid term; trial is evaluation.</li>
+  </ul>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/trial-license" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trial</h4><p>Evaluation</p></a>
-      <a routerLink="/webhooks" class="integration-card"><i class="ki-outline ki-arrow-mix"></i><h4>Webhooks</h4><p>Lifecycle automation</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Updates + cache</p></a>
+      <a routerLink="/trial-license" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trial</h4><p>Upstream funnel</p></a>
+      <a routerLink="/guides/platform/licenses" class="integration-card"><i class="ki-outline ki-key-square"></i><h4>Vendor licenses</h4><p>Detail tabs</p></a>
+      <a routerLink="/webhooks" class="integration-card"><i class="ki-outline ki-arrow-mix"></i><h4>Webhooks</h4><p>Renewal automation</p></a>
+      <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>REST</p></a>
     </div>
   </section>
 </div>

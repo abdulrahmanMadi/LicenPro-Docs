@@ -2,86 +2,94 @@
   <header class="help-page-header">
     <h1>Trial license</h1>
     <p class="lead">
-      A <strong>trial</strong> license is time-boxed evaluation. The server stores an expiration derived from <code>TrialPeriod</code> / <code>TrialPeriodHours</code> on create;
-      the SDK surfaces <code>LicenseType.Trial</code> and enforces expiry the same way as other types, with optional <strong>expiry warning</strong> hooks for UX.
+      A <strong>trial</strong> license is time-boxed evaluation access. Duration is set at issuance; when time runs out the license becomes <strong>Expired</strong> and the customer must purchase, extend, or enter a paid key.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-timer"></i>
-      <h4>Duration</h4>
-      <p>Days + optional hours from issuance.</p>
+      <h4>Fixed window</h4>
+      <p>Days + optional hours from issue or activation.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-chart-line"></i>
-      <h4>Activations</h4>
-      <p>Same activation/session stack as paid types.</p>
+      <h4>Trials dashboard</h4>
+      <p>Active, Expired, Converted, Cancelled.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-shield-search"></i>
-      <h4>Upgrade path</h4>
-      <p>Replace file + key when customer buys.</p>
+      <h4>Conversion funnel</h4>
+      <p>Extend, end, or upgrade to paid type.</p>
     </div>
   </div>
 
-  <h2>How it works</h2>
-  <p>
-    On the server, <code>LicenseService.CreateLicenseAsync</code> parses <code>Type</code> as <code>Trial</code> and, when <code>trialPeriod</code> / <code>trialPeriodHours</code> are provided, sets <code>ExpirationDate</code> to <code>UtcNow + duration</code>.
-    The signed SDK model is <code>TrialLicense</code> with <code>TrialPeriod</code> and computed <code>ExpirationDate</code>.
-  </p>
-
-  <h2>Creating a trial license (dashboard)</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Select product and release; open license creation.</li>
-    <li>Set <code>type</code> to <strong>Trial</strong>.</li>
-    <li>Set <strong>Trial period</strong> fields in the API (<code>trialPeriod</code> days, <code>trialPeriodHours</code> 0–23) or equivalent UI fields.</li>
-    <li>Provide <strong>Name</strong>, <strong>IssuedTo</strong>, optional notes and entitlements for feature-limited trials.</li>
-    <li>Generate/download <code>license.bin</code> for the evaluator.</li>
-  </ol>
-  <div class="help-callout info">
-    <i class="ki-outline ki-information"></i>
-    <div>
-      <span class="callout-title">Plans</span>
-      <p>Free-tier accounts may create <strong>Perpetual</strong> and <strong>Trial</strong> only; other types require the appropriate subscription feature flag on the server.</p>
-    </div>
-  </div>
-
-  <h2>REST API</h2>
+  <h2>Business model</h2>
+  <p>Trial is the standard product-led growth pattern: reduce purchase friction, prove value, then monetize.</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Licenses</code> — <code>type: "Trial"</code>, plus <code>trialPeriod</code> / <code>trialPeriodHours</code>, required <code>softwareReleaseId</code>, etc.</li>
-    <li>Same validate/status/download endpoints as other types (see <a routerLink="/api/overview">API reference</a>).</li>
+    <li><strong>Time-limited full product</strong> — 14/30-day evaluation with all features.</li>
+    <li><strong>Feature-limited trial</strong> — entitlement set caps exports, users, or modules.</li>
+    <li><strong>Freemium bridge</strong> — trial auto-expires; free tier uses different license type or no license.</li>
+    <li><strong>Sales-assisted</strong> — AE extends trial from dashboard during negotiation.</li>
   </ul>
 
-  <h2>SDK integration</h2>
-  <p>Use <code>ExpectedLicenseType = LicenseType.Trial</code> if you ship a trial-only build; handle <code>LicenseValidationStatus.Expired</code> when the clock passed <code>ExpirationDate</code>.</p>
-  <p>Optional: set <code>IncludeTrialInExpiryWarnings = true</code> on <code>LicenseClientOptions</code> so <code>ExpiryNotice</code> / <code>LicenseExpiringSoon</code> fire before trial end (same mechanism as subscriptions).</p>
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — measurable pipeline (Trials page); force expiry without manual key rotation; same RSA/signing stack as paid licenses.</li>
+    <li><strong>For customers</strong> — try before buy; clear deadline drives decision.</li>
+    <li><strong>For marketing</strong> — self-serve signup flows with automatic trial issuance.</li>
+  </ul>
 
-  <pre><code>using LicenPro.SDK;
-using LicenPro.SDK.Enums;
+  <h2>Logic of use</h2>
+  <p>Server computes <strong>expiration</strong> from trial period at create. SDK and validate endpoint treat expired trials like any expired license. Trials can use online activation/session tracking identical to paid types so you see evaluators in Activations.</p>
+  <p>Free-tier LicenPro accounts can issue <strong>Perpetual</strong> and <strong>Trial</strong> only; other types typically need a paid plan.</p>
 
-await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
-    LicenseFilePath = "license.bin",
-    PublicKey = publicKeyBase64,
-    LicenseKey = trialKey,
-    ExpectedLicenseType = LicenseType.Trial,
-    IncludeTrialInExpiryWarnings = true
-&rbrace;);
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-timer" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: 14-day self-serve trial</span>
+      <p>User registers on vendor site → automation issues Trial, 14 days, feature set “Trial”. User installs app, activates online. Day 12: in-app banner warns expiry. Day 15: validation returns expired → paywall. User buys → vendor issues Subscription or Perpetual; old trial marked Converted or left Expired.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-people" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Sales extension</span>
+      <p>Enterprise prospect needs 30 more days. AE opens <code>/dashboard/trials</code>, extends expiry. No re-install; next online validation picks up new date.</p>
+    </div>
+  </div>
 
-var result = await client.ValidateAsync();
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Trial + period.</li>
+    <li><strong>Active</strong> — customer uses product within window.</li>
+    <li><strong>Expiring soon</strong> — optional UX warnings before end.</li>
+    <li><strong>Expired</strong> — validation fails; Trials filter shows Expired.</li>
+    <li><strong>Extend / End</strong> — operator actions on Trials page.</li>
+    <li><strong>Convert</strong> — new paid license; optional transfer of user/device.</li>
+  </ol>
 
-if (!result.IsValid &amp;&amp; result.Status == LicenseValidationStatus.Expired)
-&lbrace;
-    // Prompt purchase / enter paid key
-&rbrace;</code></pre>
+  <h2>Dashboard workflow</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create: license wizard → Trial → trial period in step 2.</li>
+    <li>Operate: <code>/dashboard/trials</code> (<a routerLink="/guides/platform/trials">Trials guide</a>).</li>
+    <li>Detail: same tabs as other licenses (Overview, Activations, Sessions when online).</li>
+  </ul>
 
-  <p><strong>Offline</strong> evaluation (no server): <code>ValidateOfflineAsync()</code> when your policy allows cached or air-gapped trials.</p>
+  <h2>Compare with other models</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>vs <a routerLink="/subscription-license">Subscription</a> — trial is short evaluation; subscription is paid recurring term.</li>
+    <li>vs <a routerLink="/perpetual-license">Perpetual</a> — trial always expires; perpetual does not by default.</li>
+  </ul>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/subscription-license" class="integration-card"><i class="ki-outline ki-calendar-tick"></i><h4>Subscription</h4><p>Recurring model</p></a>
-      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>After trial conversion</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Details</p></a>
+      <a routerLink="/guides/platform/trials" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trials (platform)</h4><p>Dashboard ops</p></a>
+      <a routerLink="/subscription-license" class="integration-card"><i class="ki-outline ki-calendar-tick"></i><h4>Subscription</h4><p>Conversion target</p></a>
+      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>Conversion target</p></a>
+      <a routerLink="/api/trials-transfers" class="integration-card"><i class="ki-outline ki-data"></i><h4>Trials API</h4><p>REST</p></a>
     </div>
   </section>
 </div>

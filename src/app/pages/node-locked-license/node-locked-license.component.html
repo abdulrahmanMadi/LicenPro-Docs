@@ -2,79 +2,99 @@
   <header class="help-page-header">
     <h1>Node-locked license</h1>
     <p class="lead">
-      A <strong>node-locked</strong> license binds entitlement to a specific <strong>hardware id</strong> captured at issuance (or during activation binding flows).
-      Validation compares the machine fingerprint with the payload and server rules, blocking clones and casual sharing.
+      A <strong>node-locked</strong> license binds entitlement to <strong>one machine</strong> via hardware fingerprint.
+      Copying the license file to another PC fails validation—ideal for per-install desktop software and regulated environments.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-lock"></i>
-      <h4>HardwareId</h4>
-      <p>Stored on license + in signed file.</p>
+      <h4>One machine</h4>
+      <p>Hardware id on license + signed file.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-monitor"></i>
+      <h4>Device tab</h4>
+      <p>Binding, history, transfer/unbind.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-arrows-loop"></i>
       <h4>Rebind flows</h4>
-      <p>API supports confirm/reject/reset binding.</p>
-    </div>
-    <div class="integration-card">
-      <i class="ki-outline ki-wifi"></i>
-      <h4>Online checks</h4>
-      <p>Hardware mismatch returns 403 on REST validate.</p>
+      <p>Approve hardware changes legitimately.</p>
     </div>
   </div>
 
-  <h2>How it works</h2>
-  <p>
-    The server entity stores <code>HardwareId</code>; the SDK model <code>NodeLockedLicense</code> carries it for offline signature verification and client-side display.
-    When the SDK validates online, mismatch surfaces as <code>LicenseValidationStatus</code> failures or HTTP <code>403</code> with <code>HardwareMismatch</code> / <code>DeviceBlocked</code> from <code>POST /api/Licenses/validate</code> depending on path.
-  </p>
-
-  <h2>Creating a node-locked license (dashboard / API)</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Obtain the end user’s hardware id from your onboarding utility (SDK computes a stable fingerprint for the machine).</li>
-    <li><code>POST /api/Licenses</code> with <code>type: "NodeLocked"</code>, <code>hardwareId</code> populated, <code>issuedTo</code>, <code>softwareReleaseId</code>, optional expiration.</li>
-    <li>Generate/download <code>license.bin</code>; deliver alongside the license key.</li>
-    <li>For pending-bind workflows, operators use <code>GET /api/Licenses/pending-bindings</code> and <code>POST .../confirm-binding</code> / <code>reject-binding</code> / <code>reset-binding</code> as exposed on your host under <code>/api/Licenses/...</code>.</li>
-  </ol>
-
-  <h2>REST API highlights</h2>
+  <h2>Business model</h2>
+  <p>Node-locked is the standard “one license = one computer” SKU—common in vertical software, medical devices, and industrial tooling.</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Licenses/validate</code> — include hardware context in <code>validationParams</code> / forms as required by your integration (server evaluates mismatch).</li>
-    <li><code>GET /api/Licenses/validate/&#123;licenseKey&#125;?hardwareId=...</code> — simple query variant.</li>
-    <li><code>POST /api/Licenses/&#123;licenseId&#125;/unbind-device</code> — administrative unbind when hardware changes legitimately.</li>
+    <li><strong>Per-install retail</strong> — customer buys one key per workstation.</li>
+    <li><strong>OEM / appliance</strong> — license pre-bound to shipped hardware.</li>
+    <li><strong>Compliance</strong> — audit trail that software runs only on certified machines.</li>
+    <li><strong>Anti-sharing</strong> — stronger than open perpetual keys for casual piracy.</li>
   </ul>
 
-  <h2>SDK integration</h2>
-  <p>You do <strong>not</strong> pass HWID as a separate argument to <code>ValidateAsync()</code> — the client uses the configured hardware identifier provider internally. Supply correct <code>LicenseFilePath</code>, <code>PublicKey</code>, and <code>LicenseKey</code>; optional <code>IHardwareIdentifier</code> only for advanced/testing scenarios.</p>
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — limits casual key sharing; Device tab shows exact binding for support.</li>
+    <li><strong>For customers</strong> — clear “this PC only” entitlement; transfer workflow for hardware upgrades.</li>
+    <li><strong>For support</strong> — pending-bind queue approves first-run binding; block compromised devices.</li>
+  </ul>
 
-  <pre><code>using LicenPro.SDK;
-using LicenPro.SDK.Enums;
+  <h2>Logic of use</h2>
+  <p><strong>At issue</strong> — hardware id may be set in wizard or captured on first activation (<strong>auto-bind</strong>). Server and <code>license.bin</code> both carry binding material.</p>
+  <p><strong>Online validation</strong> — server compares client fingerprint; mismatch returns hardware error. <strong>Offline validation</strong> — signature + embedded hardware in file.</p>
+  <p><strong>One activation per license</strong> typical—Activations tab shows single primary device; Device tab is the operator focus.</p>
 
-await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
-    LicenseFilePath = "license.bin",
-    PublicKey = publicKeyBase64,
-    LicenseKey = nodeLockedKey,
-    ExpectedLicenseType = LicenseType.NodeLocked
-&rbrace;);
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-lock" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: First-run auto-bind</span>
+      <p>Customer receives key + file. First launch captures HWID, sends bind request. Operator approves in pending-bind queue (or auto-approves). License locked to that PC. Copying file to second PC fails validation.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-arrows-loop" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Hardware upgrade</span>
+      <p>User replaces motherboard. Support opens Device tab → unbind/transfer → user re-activates on new machine. Same commercial license, new fingerprint.</p>
+    </div>
+  </div>
 
-var result = await client.ValidateAsync();
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Node-locked; pick end user / release context.</li>
+    <li><strong>Bind</strong> — at create or first run (pending-bind workflow).</li>
+    <li><strong>Active</strong> — app runs only on bound hardware.</li>
+    <li><strong>Transfer</strong> — operator unbind for legitimate moves.</li>
+    <li><strong>Block device</strong> — security response on Activations/Device.</li>
+    <li><strong>Revoke</strong> — end contract from Overview.</li>
+  </ol>
 
-if (!result.IsValid &amp;&amp;
-    (result.Status == LicenseValidationStatus.ValidationFailed
-     || result.Status == LicenseValidationStatus.DeviceBlocked))
-&lbrace;
-    // Hardware mismatch or blocked device
-&rbrace;</code></pre>
+  <h2>Dashboard workflow</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create → Node-locked → issued-to picker from release.</li>
+    <li>Detail → <strong>Device</strong> tab (binding, transfer, history).</li>
+    <li><strong>Activations</strong> — device rows; block suspicious entries.</li>
+    <li><strong>Sessions</strong> — when online validation enabled alongside binding.</li>
+  </ul>
+  <p><a routerLink="/guides/platform/licenses">Licenses (vendor)</a> · <a routerLink="/guides/platform/activations">Activations</a></p>
 
-  <p><strong>Offline</strong>: <code>ValidateOfflineAsync</code> verifies cryptographic binding in the file; policy may still require periodic online refresh for compliance.</p>
+  <h2>Compare with other models</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>vs <a routerLink="/perpetual-license">Perpetual</a> — node-locked ties to one machine; perpetual may be open or multi-device.</li>
+    <li>vs <a routerLink="/concurrent-license">Concurrent</a> — node-locked is one machine; concurrent is N simultaneous devices.</li>
+    <li>vs <a routerLink="/floating-license">Floating</a> — node-locked is exclusive binding; floating is shared pool.</li>
+  </ul>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/floating-license" class="integration-card"><i class="ki-outline ki-people"></i><h4>Floating</h4><p>Seat pools</p></a>
-      <a routerLink="/api/overview" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>Binding routes</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Update context</p></a>
+      <a routerLink="/concurrent-license" class="integration-card"><i class="ki-outline ki-users"></i><h4>Concurrent</h4><p>Multi-seat team</p></a>
+      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>Unbound model</p></a>
+      <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>Binding routes</p></a>
+      <a routerLink="/sdk/activation-session" class="integration-card"><i class="ki-outline ki-code"></i><h4>Activation SDK</h4><p>Integration</p></a>
     </div>
   </section>
 </div>

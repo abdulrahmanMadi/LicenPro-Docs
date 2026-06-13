@@ -49,6 +49,7 @@ export const routes: Routes = [
           import('./pages/doc-topic/doc-topic-page.component').then((m) => m.DocTopicPageComponent),
         data: { docKind: 'sdk' },
       },
+      { path: 'first-organization', loadComponent: () => import('./pages/first-organization/first-organization.component').then((m) => m.FirstOrganizationComponent) },
       { path: 'first-product', loadComponent: () => import('./pages/first-product/first-product.component').then((m) => m.FirstProductComponent) },
       { path: 'first-license', loadComponent: () => import('./pages/first-license/first-license.component').then((m) => m.FirstLicenseComponent) },
       { path: 'rsa-keys', loadComponent: () => import('./pages/rsa-keys/rsa-keys.component').then((m) => m.RsaKeysComponent) },
@@ -56,6 +57,7 @@ export const routes: Routes = [
       { path: 'trial-license', loadComponent: () => import('./pages/trial-license/trial-license.component').then((m) => m.TrialLicenseComponent) },
       { path: 'subscription-license', loadComponent: () => import('./pages/subscription-license/subscription-license.component').then((m) => m.SubscriptionLicenseComponent) },
       { path: 'floating-license', loadComponent: () => import('./pages/floating-license/floating-license.component').then((m) => m.FloatingLicenseComponent) },
+      { path: 'concurrent-license', loadComponent: () => import('./pages/concurrent-license/concurrent-license.component').then((m) => m.ConcurrentLicenseComponent) },
       { path: 'node-locked-license', loadComponent: () => import('./pages/node-locked-license/node-locked-license.component').then((m) => m.NodeLockedLicenseComponent) },
       {
         path: 'sessions-activations',

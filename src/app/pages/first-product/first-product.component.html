@@ -1,113 +1,111 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Create Your First Product</h1>
-    <p class="lead">Learn how to set up your first software product in LicenPro. Products represent the applications you want to protect and manage with licenses.</p>
+    <h1>Create your first product</h1>
+    <p class="lead">
+      A <strong>product</strong> is the application you license in LicenPro. It anchors your first <strong>software release</strong>,
+      RSA signing keys, product API credentials, entitlements, and every license you issue. This guide matches the
+      <strong>Create Product</strong> modal in the dashboard.
+    </p>
   </header>
 
   <div class="help-callout info">
     <i class="ki-outline ki-time"></i>
     <div>
-      <span class="callout-title">Estimated time: 5-10 minutes</span>
-      <p>This guide covers the initial dashboard setup and RSA key generation required for your first product.</p>
+      <span class="callout-title">Estimated time: 5–10 minutes</span>
+      <p>Requires an organization and dashboard access. RSA keys are generated after the product exists—see <a routerLink="/rsa-keys">RSA keys</a>.</p>
     </div>
   </div>
 
-  <h2>Product Capabilities</h2>
-  <div class="integration-grid">
-    <div class="integration-card">
-      <i class="ki-outline ki-key"></i>
-      <h4>License Management</h4>
-      <p>Generate and manage keys specific to this application.</p>
-    </div>
-    <div class="integration-card">
-       <i class="ki-outline ki-cloud-download"></i>
-       <h4>Release Tracking</h4>
-       <p>Track software versions and distribute updates.</p>
-    </div>
-    <div class="integration-card">
-       <i class="ki-outline ki-shield-tick"></i>
-       <h4>RSA Signing</h4>
-       <p>Enterprise-grade cryptographic license security.</p>
-    </div>
-  </div>
+  <h2>Before you start</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Sign in at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a> and complete <a routerLink="/first-organization">your first organization</a> if needed.</li>
+    <li>Open <strong>Products</strong> in the sidebar (<code>/dashboard/products</code>) and click <strong>Create Product</strong>.</li>
+    <li>Product limits depend on your plan; upgrade if the create action is blocked.</li>
+  </ul>
 
-  <h2 style="margin-top: 4rem;">Step-by-Step Guide</h2>
+  <h2>Create Product form</h2>
+  <p>The modal captures product identity, the <strong>initial release</strong> (required), access rules, and optional branding.</p>
+
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-product.png" data-doc-image-alt="Create Product modal: name, version setup, release level, access type, description, and image" aria-label="View Create Product screenshot full size">
+      <img src="assets/docs/platform-create-product.png" alt="Create Product modal: name, version setup, release level, access type, description, and image" loading="lazy" decoding="async" />
+    </button>
+  </figure>
+
   <div class="doc-stepper">
     <div class="step-item active">
       <div class="step-number">1</div>
       <div class="step-content">
-        <h3>Navigate to Products</h3>
-        <p>From your dashboard, click on <strong>"Products"</strong> in the left sidebar menu. This central hub shows all applications currently managed by your account.</p>
+        <h3>Product name</h3>
+        <p><strong>Product name</strong> (required, max 100 characters)—unique label in your account (e.g. <em>My Awesome Software</em>).</p>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">2</div>
       <div class="step-content">
-        <h3>Primary Details</h3>
-        <p>Click the <strong>"Create Product"</strong> button in the top right. You'll need to provide:</p>
-        <ul style="margin: 1rem 0; padding-left: 20px;">
-          <li><strong>Product Name:</strong> A unique name for your software.</li>
-          <li><strong>Description:</strong> A brief summary for your records.</li>
-          <li><strong>Company Name:</strong> Your organization name.</li>
+        <h3>Version setup</h3>
+        <p><strong>Initial version</strong> (required) creates your first <strong>software release</strong>:</p>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>Version format</strong> — Semantic (e.g. 1.0.0), pre-release, simple, or build-based.</li>
+          <li><strong>Release level</strong> — Stable, Beta, Alpha, or RC.</li>
         </ul>
+        <p>Every license and update check references a <code>softwareReleaseId</code> from this line.</p>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">3</div>
       <div class="step-content">
-        <h3>Configure License Settings</h3>
-        <p>Set the default behavior for this product's licenses:</p>
-        <ul style="margin: 1rem 0; padding-left: 20px;">
-          <li><strong>Default Type:</strong> Perpetual, Trial, or Subscription.</li>
-          <li><strong>Max Activations:</strong> Number of devices allowed per key.</li>
-          <li><strong>Heartbeat:</strong> How often the app checks validity online.</li>
+        <h3>Product access type</h3>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>Associated (Organization)</strong> — licenses are tied to specific organizations; only members of assigned orgs use the product.</li>
+          <li><strong>Opened (All users)</strong> — any holder of a valid license key can use the product across organizations.</li>
         </ul>
+        <p>Access type affects which license models are available when you issue keys.</p>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">4</div>
       <div class="step-content">
-        <h3>Generate RSA Security Keys</h3>
-        <p>Click <strong>"Generate RSA Keys"</strong>. This creates the cryptographic pair used to sign your licenses.</p>
-        
-        <div class="help-callout warning">
-          <i class="ki-outline ki-shield"></i>
-          <div>
-            <span class="callout-title">Security Recommendation</span>
-            <p>Your <strong>Private Key</strong> is kept on the LicenPro server to sign licenses. Your application only needs the <strong>Public Key</strong> embedded in its code for verification.</p>
-          </div>
-        </div>
+        <h3>Description &amp; image (optional)</h3>
+        <p>Rich-text <strong>description</strong> (max 1000 characters) and optional <strong>product image</strong> (PNG, JPG, GIF, WebP, max 2MB).</p>
       </div>
     </div>
 
     <div class="step-item active">
-       <div class="step-number">5</div>
-       <div class="step-content">
-         <h3>Save & Initialize</h3>
-         <p>Review your settings and click <strong>"Create Product"</strong>. You'll be redirected to the product dashboard where you can start generating licenses immediately.</p>
-       </div>
+      <div class="step-number">5</div>
+      <div class="step-content">
+        <h3>Create Product</h3>
+        <p>Click <strong>Create Product</strong>. You enter the product workspace: overview, features, entitlements, releases, licenses, users, access matrix, and audit logs.</p>
+      </div>
     </div>
   </div>
 
-  <h2 style="margin-top: 5rem;">What's Next?</h2>
+  <h2 style="margin-top: 3rem;">After creation</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Generate RSA keys</strong> — Product → <strong>Settings</strong> → <strong>License signing keys (RSA)</strong>. Mandatory before downloading signed <code>license.bin</code>. See <a routerLink="/rsa-keys">RSA keys</a>.</li>
+    <li><strong>Product API key</strong> — copy the product <code>X-API-KEY</code> for anonymous validation routes (distinct from account API keys in Settings).</li>
+    <li><strong>Issue a license</strong> — <a routerLink="/first-license">Generate your first license</a>.</li>
+  </ol>
+
+  <h2 style="margin-top: 4rem;">What&apos;s next?</h2>
   <div class="integration-grid">
+    <a routerLink="/rsa-keys" class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>RSA keys</h4>
+      <p>Sign licenses and embed public key</p>
+    </a>
     <a routerLink="/first-license" class="integration-card">
       <i class="ki-outline ki-key"></i>
-      <h4>First License</h4>
-      <p>Generate a unique key for your new product.</p>
+      <h4>First license</h4>
+      <p>Issue keys and license.bin</p>
     </a>
-    <a routerLink="/rsa-keys" class="integration-card">
-       <i class="ki-outline ki-shield"></i>
-       <h4>Key Management</h4>
-       <p>Learn how to store and rotate RSA keys.</p>
-    </a>
-    <a routerLink="/sdk/dotnet" class="integration-card">
-       <i class="ki-outline ki-code"></i>
-       <h4>Integrate SDK</h4>
-       <p>Connect your .NET app to the new product.</p>
+    <a routerLink="/guides/platform/products" class="integration-card">
+      <i class="ki-outline ki-mouse-square"></i>
+      <h4>Products guide</h4>
+      <p>Platform reference</p>
     </a>
   </div>
 </div>

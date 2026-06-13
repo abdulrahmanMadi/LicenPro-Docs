@@ -1,53 +1,160 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Generate Your First License</h1>
-    <p class="lead">Once your product is set up, you can generate license keys to distribute to your customers. Licenses are the core of LicenPro's entitlement system.</p>
+    <h1>Generate your first license</h1>
+    <p class="lead">
+      A <strong>license</strong> binds entitlements to a customer: type, seats, expiry, software release, and optional feature sets.
+      After creation you distribute the <strong>license key</strong> and signed <code>license.bin</code> for SDK offline validation.
+      Complete <a routerLink="/first-product">first product</a> and <a routerLink="/rsa-keys">RSA keys</a> before issuing licenses.
+    </p>
   </header>
 
   <div class="help-callout info">
-    <i class="ki-outline ki-key"></i>
+    <i class="ki-outline ki-time"></i>
     <div>
-      <span class="callout-title">License Format</span>
-      <p>By default, LicenPro generates keys in the <code>LP-XXXX-XXXX</code> format. These are human-readable and easy for customers to copy-paste.</p>
+      <span class="callout-title">Estimated time: 10–15 minutes</span>
+      <p>Includes choosing license model, release line, and downloading artifacts from license details.</p>
     </div>
   </div>
 
-  <h2>Generation Process</h2>
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield-tick"></i>
+    <div>
+      <span class="callout-title">Prerequisites</span>
+      <p>
+        <strong>Product</strong> with at least one <strong>software release</strong>.
+        <strong>RSA keys generated</strong> for that product (unsigned licenses cannot produce a valid <code>license.bin</code>).
+      </p>
+    </div>
+  </div>
+
+  <h2>What you get after issuance</h2>
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-key"></i>
+      <h4>License key</h4>
+      <p>Human-readable key (e.g. <code>LP-…</code>) for activation UI and online flows.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-file-down"></i>
+      <h4>license.bin</h4>
+      <p>RSA-signed payload file for offline SDK validation.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>Public key</h4>
+      <p>From product settings—embed in your app with the SDK.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 3rem;">Open Create License</h2>
+  <p>
+    From the dashboard: <strong>Products</strong> → select your product → <strong>Licenses</strong> → <strong>Create License</strong>,
+    or use the global <strong>Licenses</strong> list and pick the product context.
+    The form is a two-step wizard: <strong>Basic Info</strong> and <strong>Details</strong>.
+  </p>
+
   <div class="doc-stepper">
     <div class="step-item active">
       <div class="step-number">1</div>
       <div class="step-content">
-        <h3>Select Product</h3>
-        <p>Go to the <strong>Products</strong> list or a specific product's dashboard and click <strong>"Create License"</strong>.</p>
+        <h3>Step 1 — Basic Info</h3>
+        <p><strong>License type</strong> (required)—choose the model that matches how you sell access:</p>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>Perpetual</strong> — no expiry; optional offline vs online activation mode.</li>
+          <li><strong>Trial</strong> — time-limited evaluation with trial period fields.</li>
+          <li><strong>Subscription</strong> — recurring term; duration in days or hours.</li>
+          <li><strong>Floating</strong> — concurrent seats across machines (max active users).</li>
+          <li><strong>Node-locked</strong> — bound to an end user from the selected release.</li>
+        </ul>
+        <p>Model-specific guides: sidebar <strong>License models</strong> or <a routerLink="/perpetual-license">perpetual</a>, <a routerLink="/trial-license">trial</a>, <a routerLink="/subscription-license">subscription</a>, <a routerLink="/floating-license">floating</a>, <a routerLink="/concurrent-license">concurrent</a>, <a routerLink="/node-locked-license">node-locked</a>.</p>
+
+        <p style="margin-top: 1rem;"><strong>Product</strong> (required if not already in product context)—select which application this license belongs to.</p>
+
+        <p><strong>Software release</strong> (required)—pick the release line created with your product (e.g. 1.0.0 Stable). Validation and updates use this id.</p>
+
+        <p><strong>Issuer</strong> (optional)—company or vendor name printed on license metadata.</p>
+
+        <p><strong>Issued to</strong> — depends on type: email for many models, end-user picker for node-locked, auto for some perpetual modes. Must match what the SDK expects during validation when identity is enforced.</p>
+
+        <p><strong>Perpetual mode</strong> (perpetual only):</p>
+        <ul style="margin: 0.5rem 0; padding-left: 1.25rem;">
+          <li><strong>Online</strong> — sessions and activations tracked against the API.</li>
+          <li><strong>Offline</strong> — file-based; note dashboard restrictions for offline perpetual creation on some product access types.</li>
+        </ul>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">2</div>
       <div class="step-content">
-        <h3>Configure Entitlements</h3>
-        <p>Define what the license is allowed to do:</p>
-        <ul style="margin: 1rem 0; padding-left: 20px;">
-          <li><strong>Expiry Date:</strong> When the license should stop working (leave blank for Perpetual).</li>
-          <li><strong>Allocated Seats:</strong> How many concurrent activations are allowed.</li>
-          <li><strong>Feature Flags:</strong> (Optional) Enable specific modules within your application.</li>
+        <h3>Step 2 — Details</h3>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>License name</strong> (required) — internal label for support and search.</li>
+          <li><strong>Expiry / duration</strong> — model-specific (subscription length, trial period, or none for perpetual).</li>
+          <li><strong>Seats &amp; limits</strong> — max activations, max active users (floating), hardware binding options where shown.</li>
+          <li><strong>Entitlement set</strong> (optional) — package of features configured under the product.</li>
+          <li><strong>Notes</strong> (optional) — internal rich-text notes for operators.</li>
         </ul>
+        <p>Click <strong>Save License</strong> (or <strong>Create License</strong>). On success the UI shows the generated <strong>license key</strong> with a copy action.</p>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">3</div>
       <div class="step-content">
-        <h3>Issue & Download</h3>
-        <p>Confirm the details and click <strong>"Save License"</strong>. You can then copy the key or download the <code>.lic</code> file for offline distribution.</p>
+        <h3>Download license.bin</h3>
+        <p>
+          Open the license from the list or success screen → <strong>Download license file</strong> (or equivalent on license details).
+          The file is named <code>&#123;license-name&#125;_license.bin</code>. Ship it with your installer or import path in the SDK via <code>LicenseClientOptions.LicenseFilePath</code>.
+        </p>
+        <p>There is no <code>.lic</code> extension in the default download—use the <code>license.bin</code> artifact from the dashboard.</p>
       </div>
     </div>
   </div>
 
-  <div class="help-callout warning" style="margin-top: 3rem;">
+  <h2>Product access type and license types</h2>
+  <p>
+    <strong>Opened</strong> products may restrict certain perpetual online types in the create form.
+    <strong>Associated</strong> products tie licenses to organization context. If the UI blocks a type you need, review product access on the product settings or convert access type before issuing.
+  </p>
+
+  <h2>Distribute to customers</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Online-first apps</strong> — license key plus SDK calls to <code>POST /api/Licenses/validate</code> with product <code>X-API-KEY</code>.</li>
+    <li><strong>Offline-capable apps</strong> — <code>license.bin</code>, license key, and embedded <strong>public key</strong>; SDK verifies RSA signature locally.</li>
+    <li><strong>Never</strong> ship the RSA private key or your operator JWT in customer binaries.</li>
+  </ul>
+
+  <div class="help-callout info">
     <i class="ki-outline ki-information"></i>
     <div>
-      <p>Offline licenses require the user to import a binary file into your application. If your app is always online, the <strong>License Key</strong> alone is sufficient to activate.</p>
+      <span class="callout-title">License key format</span>
+      <p>Keys are human-readable (commonly <code>LP-…</code> segments) for copy-paste activation flows.</p>
     </div>
+  </div>
+
+  <h2>REST API</h2>
+  <p>
+    Automate issuance with operator JWT routes under <code>/api/Licenses/...</code>.
+    See <a routerLink="/api/licenses">Licenses API</a> and <a routerLink="/guides/platform/licenses">Licenses (vendor)</a>.
+  </p>
+
+  <h2 style="margin-top: 4rem;">What&apos;s next?</h2>
+  <div class="integration-grid">
+    <a routerLink="/sdk/dotnet" class="integration-card">
+      <i class="ki-outline ki-code"></i>
+      <h4>.NET SDK</h4>
+      <p>Validate license.bin in your app</p>
+    </a>
+    <a routerLink="/rsa-keys" class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>RSA keys</h4>
+      <p>Public key embedding</p>
+    </a>
+    <a routerLink="/sessions-activations" class="integration-card">
+      <i class="ki-outline ki-chart-line"></i>
+      <h4>Sessions</h4>
+      <p>Online seat enforcement</p>
+    </a>
   </div>
 </div>

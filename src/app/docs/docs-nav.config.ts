@@ -47,6 +47,7 @@ export const DOCS_NAV: NavSection[] = [
         route: '/quick-start',
         fragment: 'vendor-workflow',
       },
+      { id: 'first-organization', label: 'First organization', icon: 'ki-outline ki-briefcase', route: '/first-organization' },
       { id: 'first-product', label: 'First product', icon: 'ki-outline ki-abstract-26', route: '/first-product' },
       { id: 'first-license', label: 'First license', icon: 'ki-outline ki-key', route: '/first-license' },
       { id: 'rsa-keys', label: 'RSA keys', icon: 'ki-outline ki-shield-tick', route: '/rsa-keys' },
@@ -73,6 +74,7 @@ export const DOCS_NAV: NavSection[] = [
       { id: 'gp-trials', label: 'Trials', icon: 'ki-outline ki-timer', route: '/guides/platform/trials' },
       { id: 'gp-analytics', label: 'Analytics', icon: 'ki-outline ki-graph-up', route: '/guides/platform/analytics' },
       { id: 'gp-storage', label: 'Storage', icon: 'ki-outline ki-cloud', route: '/guides/platform/storage' },
+      { id: 'gp-account', label: 'Account settings', icon: 'ki-outline ki-setting-2', route: '/guides/platform/account-settings' },
     ],
   },
   {
@@ -85,6 +87,7 @@ export const DOCS_NAV: NavSection[] = [
       { id: 'trial', label: 'Trial', icon: 'ki-outline ki-timer', route: '/trial-license' },
       { id: 'subscription', label: 'Subscription', icon: 'ki-outline ki-calendar-tick', route: '/subscription-license' },
       { id: 'floating', label: 'Floating', icon: 'ki-outline ki-people', route: '/floating-license' },
+      { id: 'concurrent', label: 'Concurrent', icon: 'ki-outline ki-users', route: '/concurrent-license' },
       { id: 'node-locked', label: 'Node-locked', icon: 'ki-outline ki-lock', route: '/node-locked-license' },
     ],
   },

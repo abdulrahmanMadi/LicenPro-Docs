@@ -11,6 +11,7 @@ export interface BreadcrumbSegment {
 const STATIC_PAGE_TITLES: Record<string, string> = {
   '/': 'Home',
   '/quick-start': 'Quick start',
+  '/first-organization': 'First organization',
   '/first-product': 'First product',
   '/first-license': 'First license',
   '/rsa-keys': 'RSA keys',
@@ -18,6 +19,7 @@ const STATIC_PAGE_TITLES: Record<string, string> = {
   '/trial-license': 'Trial license',
   '/subscription-license': 'Subscription license',
   '/floating-license': 'Floating license',
+  '/concurrent-license': 'Concurrent license',
   '/node-locked-license': 'Node-locked license',
   '/sessions-activations': 'Sessions & activations',
   '/webhooks': 'Webhooks',

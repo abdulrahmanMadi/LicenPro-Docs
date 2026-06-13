@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-first-license',
+  selector: 'app-first-organization',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './first-license.component.html',
+  templateUrl: './first-organization.component.html',
 })
-export class FirstLicenseComponent {}
+export class FirstOrganizationComponent {}

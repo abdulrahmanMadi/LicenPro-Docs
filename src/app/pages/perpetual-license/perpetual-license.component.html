@@ -2,105 +2,98 @@
   <header class="help-page-header">
     <h1>Perpetual license</h1>
     <p class="lead">
-      A <strong>perpetual</strong> license grants ongoing rights to use the software under the entitlements you attach.
-      The signed <code>license.bin</code> can be validated offline (RSA signature + local checks) while optional <strong>online validation</strong> enables sessions, revocation awareness, and usage tied to the dashboard.
+      A <strong>perpetual</strong> license grants the right to use the software without a recurring subscription term.
+      You sell “buy once, use forever” (optionally with maintenance expiry), and choose <strong>online</strong> or <strong>offline</strong> enforcement at issuance.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-shield-tick"></i>
-      <h4>RSA signed</h4>
-      <p>Tampering with the file breaks the signature.</p>
+      <h4>Long-term entitlement</h4>
+      <p>No renewal cycle unless you add an optional end date.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-wifi"></i>
       <h4>Online or offline</h4>
-      <p>SDK defaults to online validation; offline path available.</p>
+      <p>Perpetual online vs offline mode in the create wizard.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-user"></i>
-      <h4>Issued to</h4>
-      <p>Customer or org identifier stored on the license.</p>
+      <i class="ki-outline ki-file-down"></i>
+      <h4>license.bin</h4>
+      <p>Signed file for offline-capable deployments.</p>
     </div>
   </div>
 
-  <h2>How it works</h2>
-  <p>
-    When you create a perpetual license, the server stores a <code>License</code> row, assigns a <strong>license key</strong>, and can generate a <strong>binary license file</strong> signed with the product’s <strong>RSA private key</strong> (never leaves LicenPro).
-    The SDK loads <code>license.bin</code>, verifies the signature with your embedded <strong>public key</strong>, and checks that the <strong>license key</strong> in options matches the payload.
-  </p>
-  <p>
-    The payload model includes <code>RequiresOnlineValidation</code> on <code>PerpetualLicense</code>: when the issued file marks the license as requiring online checks, the SDK’s online flows enforce that policy (see <code>LicenseManager</code> perpetual handling).
-    Most perpetual files are issued for offline-friendly use; your product settings and issuance pipeline determine the flag.
-  </p>
+  <h2>Business model</h2>
+  <p>Perpetual fits classic software economics: customer pays once (or pays for a version), vendor delivers ongoing value through optional maintenance, support contracts, or upgrade SKUs.</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>One-time license fee</strong> — desktop tools, engineering software, perpetual ERP modules.</li>
+    <li><strong>Perpetual + maintenance</strong> — optional expiry date for updates/support while use rights continue (policy choice).</li>
+    <li><strong>Channel / OEM</strong> — issued-to org label; many seats under one commercial deal.</li>
+    <li><strong>Post-trial conversion</strong> — evaluator upgrades from Trial to perpetual paid key.</li>
+  </ul>
 
-  <h2>Creating a perpetual license (dashboard)</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Open <strong>Products</strong>, select the product, ensure <a routerLink="/rsa-keys">RSA keys</a> exist.</li>
-    <li>Create or pick a <strong>software release</strong> (required on create in the API).</li>
-    <li>Open <strong>Licenses</strong> → create license; set <code>Type</code> to <strong>Perpetual</strong> (case-insensitive enum string).</li>
-    <li>Fill <strong>Name</strong>, <strong>IssuedTo</strong> (customer / org), optional <strong>ExpirationDate</strong> (e.g. maintenance window), <strong>Issuer</strong>, <strong>Notes</strong>.</li>
-    <li>Optional: attach <strong>entitlement sets</strong> so features appear in the signed payload.</li>
-    <li>After save, use <strong>Download</strong> / generate file actions in the dashboard to obtain <code>license.bin</code> for the customer.</li>
+  <h2>Benefits</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>For vendors</strong> — simple SKU story; works offline for air-gapped customers; RSA-signed files reduce piracy vs raw keys alone.</li>
+    <li><strong>For customers</strong> — predictable cost; offline mode avoids dependency on your uptime for daily work.</li>
+    <li><strong>For support</strong> — online perpetual shows activations in dashboard; revoke compromised keys without redeploying entire product.</li>
+  </ul>
+
+  <h2>Logic of use</h2>
+  <p><strong>Online perpetual</strong> — app validates with LicenPro on startup (or periodically). Server records device activations and optional live sessions. Revocation and seat limits apply in real time.</p>
+  <p><strong>Offline perpetual</strong> — app validates <code>license.bin</code> locally with embedded public key. No activation rows unless customer later goes online. Best for factories, labs, or regions with no stable internet.</p>
+  <p><strong>Open perpetual</strong> (product/access pattern) — key may work for any user with the file; “issued to” can show as open access in UI.</p>
+
+  <h2>Example lifecycle</h2>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-abstract-26" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: Engineering firm — 50 offline seats</span>
+      <p>Vendor sells 50 perpetual offline licenses to a plant. Operator issues 50 keys + files. Installers copy <code>license.bin</code> to each workstation. Apps never call the API during normal use. Annual support renewal is a separate subscription or manual expiry on maintenance-only keys if the vendor uses that pattern.</p>
+    </div>
+  </div>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-wifi" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Scenario: SaaS-adjacent desktop — online perpetual</span>
+      <p>Customer buys perpetual with online mode. Each install activates a device; dashboard shows 12 active devices. IT revokes one machine from Activations tab after laptop loss. Next validation on that device fails without affecting other seats.</p>
+    </div>
+  </div>
+
+  <h2>Lifecycle stages</h2>
+  <ol style="margin-left:1.25rem;">
+    <li><strong>Issue</strong> — type Perpetual; pick online/offline; product + release.</li>
+    <li><strong>Distribute</strong> — key + <code>license.bin</code>.</li>
+    <li><strong>Activate</strong> — online: server activation; offline: local file import.</li>
+    <li><strong>Operate</strong> — monitor Activations/Sessions if online.</li>
+    <li><strong>Revoke / transfer</strong> — license Overview when contract ends or user changes.</li>
+    <li><strong>Expire</strong> — only if you set optional expiry (e.g. maintenance window).</li>
   </ol>
 
-  <h2>REST API (vendor-authenticated)</h2>
-  <p>These routes live under your API base (e.g. <code>https://your-host/api</code>). License list/create/update require a <strong>logged-in user</strong> JWT unless you build a separate integration.</p>
+  <h2>Dashboard workflow</h2>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Prerequisites: product, release, RSA keys (<a routerLink="/rsa-keys">RSA keys</a>).</li>
+    <li><strong>Licenses</strong> → Create → Perpetual → online or offline mode.</li>
+    <li>Detail tabs: <strong>Overview</strong>; <strong>Activations</strong> / <strong>Sessions</strong> when online.</li>
+  </ol>
+  <p><a routerLink="/first-license">First license walkthrough</a> · <a routerLink="/guides/platform/licenses">Licenses (vendor workspace)</a></p>
+
+  <h2>Compare with other models</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Licenses</code> — body uses <code>CreateLicenseDto</code>: <code>type: "Perpetual"</code>, <code>name</code>, <code>issuedTo</code>, <code>softwareReleaseId</code> (required), optional dates and <code>entitlementSetIds</code>.</li>
-    <li><code>GET /api/Licenses/&#123;id&#125;/download</code> — download signed license file bytes.</li>
-    <li><code>POST /api/Licenses/&#123;id&#125;/generate-file</code> — (re)generate file payload when permitted.</li>
+    <li>vs <a routerLink="/subscription-license">Subscription</a> — no automatic term renewal; no recurring expiry unless you set one.</li>
+    <li>vs <a routerLink="/trial-license">Trial</a> — perpetual is paid long-term; trial is evaluation-only.</li>
+    <li>vs <a routerLink="/floating-license">Floating</a> / <a routerLink="/concurrent-license">Concurrent</a> — perpetual is usually per-user or per-device, not a shared seat pool.</li>
   </ul>
-
-  <h2>REST API (anonymous + product API key)</h2>
-  <p>Server-side validation without the bin file uses the product <strong>API key</strong> header <code>X-API-KEY</code> (see <code>ApiKeyAuthFilter</code>):</p>
-  <ul style="margin: 0.5rem 0 1.25rem;">
-    <li><code>POST /api/Licenses/validate</code> — <code>multipart/form-data</code>: <code>licenseKey</code>, <code>validationParams</code> (JSON string), optional <code>licenseFile</code>.</li>
-    <li><code>GET /api/Licenses/validate/&#123;licenseKey&#125;?hardwareId=...</code> — lightweight check.</li>
-    <li><code>GET /api/Licenses/status/&#123;licenseKey&#125;?hardwareId=...</code> — status payload for SDK-style clients.</li>
-  </ul>
-
-  <h2>SDK integration</h2>
-  <p>Use <code>LicenseClient</code> with <code>ExpectedLicenseType = LicenseType.Perpetual</code> when you want a hard type guard.</p>
-
-  <pre><code>using LicenPro.SDK;
-using LicenPro.SDK.Enums;
-
-await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
-    LicenseFilePath = "C:/ProgramData/MyApp/license.bin",
-    PublicKey = publicKeyBase64NoPemHeaders,
-    LicenseKey = "LP-....",
-    ExpectedLicenseType = LicenseType.Perpetual
-&rbrace;);
-
-var result = await client.ValidateAsync();
-
-if (result.IsValid)
-&lbrace;
-    // result.License — inspect type / features
-&rbrace;
-else
-&lbrace;
-    // result.Status: Expired, Revoked, SignatureMismatch, ...
-&rbrace;</code></pre>
-
-  <p><strong>Offline-only validation</strong> after you already trust the file: <code>await client.ValidateOfflineAsync()</code> (no live server round-trip for the load path defined in the SDK).</p>
-
-  <div class="help-callout info">
-    <i class="ki-outline ki-route"></i>
-    <div>
-      <span class="callout-title">Online vs offline (summary)</span>
-      <p><strong>Online</strong> (<code>ValidateAsync</code>): signature + credential checks, server revocation / device block, activation, optional session heartbeat. <strong>Offline</strong> (<code>ValidateOfflineAsync</code>): cryptographic and local checks only — suitable air-gapped or fallback when policy allows.</p>
-    </div>
-  </div>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
     <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/rsa-keys" class="integration-card"><i class="ki-outline ki-key"></i><h4>RSA keys</h4><p>Signing chain</p></a>
-      <a routerLink="/api/overview" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>REST index</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>.NET SDK</h4><p>Cache &amp; updates</p></a>
+      <a routerLink="/trial-license" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trial</h4><p>Before perpetual</p></a>
+      <a routerLink="/rsa-keys" class="integration-card"><i class="ki-outline ki-key"></i><h4>RSA keys</h4><p>Signing</p></a>
+      <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>REST</p></a>
+      <a routerLink="/sdk/license-client" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>LicenseClient</h4><p>SDK</p></a>
     </div>
   </section>
 </div>

@@ -2,9 +2,10 @@
   <header class="help-page-header">
     <h1>Quick start</h1>
     <p class="lead">
-      LicenPro splits cleanly into two worlds: the <strong>vendor dashboard</strong> (where you define products, keys, and licenses)
-      and the <strong>.NET SDK</strong> inside your shipped app (where you validate <code>license.bin</code>, optional sessions, and license-aware updates).
-      This page maps how they connect so you can reason about the whole system like production software.
+      LicenPro is a closed loop: you <strong>configure</strong> products and licenses in the <strong>vendor dashboard</strong>,
+      you <strong>distribute</strong> signed <code>license.bin</code> files and license keys to customers,
+      and your shipped app <strong>enforces</strong> entitlements with the <strong>.NET SDK</strong> (public-key verification plus optional calls to the hosted REST API).
+      This page follows that loop in the same order the dashboard and SDK expect—organization first, then product, keys, license, and code.
     </p>
   </header>
 
@@ -13,68 +14,104 @@
     <div>
       <span class="callout-title">Mental model</span>
       <p>
-        <strong>Dashboard</strong> issues cryptographically signed license material and records activations.
-        <strong>SDK</strong> never needs your private key; it uses the <strong>public key</strong> from the product and the customer’s <strong>license key</strong> + <strong>license.bin</strong> file.
-        Your API base URL must include the <code>/api</code> suffix (for example <code>https://licenpro.runasp.net/api</code> or your self-hosted host).
+        <strong>Organization</strong> is your tenant boundary—members, invitations, and product ownership.
+        <strong>Product</strong> is the anchor for releases, RSA signing, API credentials, entitlements, and every license.
+        The <strong>dashboard</strong> signs licenses with a server-side private key; the <strong>SDK</strong> only needs the product <strong>public key</strong>, the customer <strong>license key</strong>, and <code>license.bin</code>.
+        Online validation and automation use <code>https://licenpro.runasp.net/api</code> (or your self-hosted API base)—always with the <code>/api</code> suffix.
       </p>
     </div>
   </div>
 
-  <h2 id="vendor-workflow">Dashboard workflow (vendor side)</h2>
+  <h2 id="vendor-workflow">End-to-end vendor workflow</h2>
   <p>
-    Think of LicenPro as a closed loop: you <strong>define what you sell</strong> in the dashboard, you <strong>ship signed artifacts</strong> to customers,
-    and the <strong>.NET SDK</strong> in your app proves those artifacts against your public key and (optionally) your hosted API.
-    The usual sequence is:
+    The path below matches <a routerLink="/guides/platform/overview">System overview</a> and the live dashboard at
+    <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>.
+    Complete each phase before the next; skipping RSA keys or a software release blocks license issuance.
   </p>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>Organization &amp; product</strong> — create a product under your tenant; everything else hangs off that product.</li>
-    <li><strong>Releases &amp; files</strong> — attach versions, binaries, or metadata so licenses and updates can target a specific release line.</li>
-    <li><strong>RSA keys</strong> — generate a key pair per product before issuing licenses; only the public key ever leaves LicenPro toward your application.</li>
-    <li><strong>Licenses</strong> — choose a model (perpetual, trial, subscription, floating, node-locked), set limits and entitlements, then export <code>license.bin</code> and the license key.</li>
-    <li><strong>Sessions &amp; activations</strong> — optional but recommended for floating seats, compliance, and support; the SDK can register sessions while validating.</li>
-    <li><strong>Automation</strong> — use the REST API or webhooks when provisioning or billing systems should create or retire licenses without manual clicks.</li>
+
+  <app-mermaid-chart chartId="vendor-workflow" [definition]="vendorWorkflowDef" />
+
+  <ol style="margin: 0.5rem 0 1.5rem 1.25rem;">
+    <li><strong>Account &amp; organization</strong> — sign in and create or join a tenant.</li>
+    <li><strong>Product &amp; initial release</strong> — define the app you license and its first version line.</li>
+    <li><strong>RSA keys</strong> — generate signing material per product (mandatory before licenses).</li>
+    <li><strong>Licenses</strong> — issue keys, export <code>license.bin</code>, set seats, type, and entitlements.</li>
+    <li><strong>SDK bootstrap</strong> — point the client at your API, load settings, validate in the app.</li>
+    <li><strong>Optional runtime</strong> — activations, sessions, webhooks, and REST automation.</li>
   </ol>
+
+  <h2>1. Sign in and create an organization</h2>
   <p>
-    The sections below walk the same path in more detail, ending with SDK bootstrap so your shipped binaries stay aligned with what you configured online.
+    Register or sign in at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>,
+    then create or join an <strong>organization</strong>—your tenant for members, products, and licenses.
+    If a teammate already invited you, accept that invite instead of creating a second org.
+  </p>
+  <p>
+    Full walkthrough (Identity &amp; Branding wizard, workspace tabs, roles, invitations, API):
+    <a routerLink="/first-organization">Create your first organization</a>.
+    Platform reference: <a routerLink="/guides/platform/organizations">Organizations</a> · <a routerLink="/api/organizations">Organizations API</a>.
   </p>
 
-  <app-mermaid-chart chartId="activation-vs-session" [definition]="activationSessionDef" />
-
-  <h2>1. Account and organization</h2>
+  <h2>2. Create your first product and release</h2>
   <p>
-    Sign in or register at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>.
-    You work inside an <strong>organization</strong>; products and licenses belong to that tenant. Invite teammates from organization settings when you outgrow a single operator.
+    A <strong>product</strong> is the application you license. Every RSA key pair, API credential, release line, entitlement, and license belongs to one product id.
+    From the sidebar open <strong>Products</strong> → <strong>Create Product</strong>, or create from the organization <strong>Products</strong> tab.
   </p>
-
-  <h2>2. Dashboard: first product</h2>
-  <p>
-    In the app shell, open <strong>Products</strong>, then <strong>Create product</strong>. The product is the anchor for RSA keys, releases, entitlements, and every license you generate.
-    See <a routerLink="/first-product">Create your first product</a> for field-level detail.
-  </p>
-
-  <h2>3. Dashboard: RSA keys (mandatory before licenses)</h2>
-  <p>
-    Each product has its own signing identity. From the product workspace, open <strong>Settings</strong> (or keys section), <strong>generate an RSA key pair</strong>, and copy the <strong>public key</strong> into your application configuration.
-    The <strong>private key</strong> stays in LicenPro only; your desktop or server app must never embed it.
-    Full walkthrough: <a routerLink="/rsa-keys">RSA keys</a>.
-  </p>
-
-  <h2>4. Dashboard: first license and artifacts</h2>
-  <p>
-    Create a license for the product (type, expiry, seats, etc.). After saving, download or distribute:</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>license.bin</code> — signed license payload consumed by the SDK</li>
-    <li>The <strong>license key</strong> string shown in the dashboard (customer enters it once during activation flows)</li>
-    <li>The product <strong>public key</strong> (PEM or Base64, depending on how you export it from settings)</li>
+    <li><strong>Product name</strong> (required) — unique label in your account.</li>
+    <li><strong>Initial version</strong> (required on create) — first <strong>software release</strong> (semver, build number, or custom format). Licenses and update checks target a <code>softwareReleaseId</code>.</li>
+    <li><strong>Release channel</strong> — e.g. Stable, Beta, Alpha, RC—so you can separate production and preview builds.</li>
+    <li><strong>Product access type</strong> — <strong>Associated</strong> (licenses tied to specific organizations) or <strong>Opened</strong> (any valid license holder).</li>
+    <li><strong>Description &amp; image</strong> (optional) — internal documentation and branding.</li>
   </ul>
-  <p>Step-by-step: <a routerLink="/first-license">Generate your first license</a>. License models (perpetual, trial, subscription, floating, node-locked) are covered under <strong>License models</strong> in the sidebar.</p>
+  <p>
+    After save you enter the product workspace (overview, features, entitlements, releases, licenses, users, access matrix, audit).
+    Field-level walkthrough: <a routerLink="/first-product">Create your first product</a> · <a routerLink="/guides/platform/products">Products</a> · <a routerLink="/guides/platform/releases">Releases</a>.
+  </p>
 
-  <h2>5. SDK configuration (before any validation)</h2>
-  <p>The SDK resolves settings in a predictable order:</p>
+  <h2>3. Generate RSA keys (before any license)</h2>
+  <p>
+    Each product has its own signing identity. From the product workspace open <strong>Settings</strong> / keys and <strong>generate an RSA key pair</strong>.
+    LicenPro keeps the <strong>private key</strong> on the server to sign <code>license.bin</code>; your app and SDK embed only the <strong>public key</strong> for verification.
+  </p>
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield"></i>
+    <div>
+      <span class="callout-title">Do not ship the private key</span>
+      <p>Never paste the private key into customer binaries, config files, or source control. Rotation requires re-issuing licenses signed with the new pair.</p>
+    </div>
+  </div>
+  <p>Full guide: <a routerLink="/rsa-keys">RSA keys &amp; signing</a> · REST: <code>POST /api/Products/&#123;id&#125;/keys/generate</code> · <code>GET .../keys/public</code>.</p>
+
+  <h2>4. Copy product API credentials</h2>
+  <p>
+    Runtime calls from your SDK or backend (for example <code>POST /api/Licenses/validate</code>) use the product <strong>X-API-KEY</strong> header—not your personal login JWT.
+    Create or copy this key from the product’s <strong>API / credentials</strong> area in the dashboard (or account pages that list product keys).
+    Store it in server config or a vault; only embed it in end-user apps when you intentionally allow anonymous product API calls from the client.
+  </p>
+  <p>See <a routerLink="/guides/platform/overview">Credentials at a glance</a> on the system overview and <a routerLink="/api/licenses">Licenses API</a>.</p>
+
+  <h2>5. Issue a license and distribute artifacts</h2>
+  <p>
+    Open the product → <strong>Licenses</strong> → <strong>Create License</strong>. Pick the <strong>software release</strong>, license model (perpetual, trial, subscription, floating, node-locked), seats, expiry, and optional entitlements.
+  </p>
+  <p>After saving, distribute to customers:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>license.bin</code> — signed payload; download from license details (SDK offline path).</li>
+    <li><strong>License key</strong> — human-readable key (e.g. <code>LP-…</code>) for activation UI.</li>
+    <li><strong>Public key</strong> — PEM or Base64 export from product keys (SDK verification).</li>
+  </ul>
+  <p>
+    Step-by-step: <a routerLink="/first-license">Generate your first license</a>.
+    Model-specific rules: sidebar <strong>License models</strong> · <a routerLink="/guides/platform/licenses">Licenses (vendor)</a>.
+  </p>
+
+  <h2>6. Configure the SDK (before validation)</h2>
+  <p>Settings resolve in this order:</p>
   <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>If you call <code>SdkConfiguration.Initialize(...)</code> explicitly, that wins.</li>
-    <li>Otherwise the first existing file in the app directory is loaded: <code>licenpro.settings.json</code>, then <code>appsettings.json</code> (optionally with a nested <code>LicenPro</code> section).</li>
-    <li>If nothing is found, defaults apply (including a production-style API base — override for self-hosted or staging).</li>
+    <li>Explicit <code>SdkConfiguration.Initialize(...)</code> if you call it in code.</li>
+    <li>Otherwise the first file found in the app directory: <code>licenpro.settings.json</code>, then <code>appsettings.json</code> (optional nested <code>LicenPro</code> section).</li>
+    <li>Defaults apply if nothing is found—override <code>ServerBaseEndpoint</code> for staging or self-hosting.</li>
   </ol>
 
   <pre><code>// Typical explicit bootstrap (any host)
@@ -82,7 +119,7 @@ using LicenPro.Models.Utils;
 using LicenPro.SDK;
 
 var settings = new SdkSettings {{ '{' }}
-    // Must be an absolute URL ending with /api
+    // Absolute URL ending with /api
     ServerBaseEndpoint = "https://licenpro.runasp.net/api"
 {{ '}' }};
 SdkConfiguration.Initialize(settings);</code></pre>
@@ -91,54 +128,67 @@ SdkConfiguration.Initialize(settings);</code></pre>
     <i class="ki-outline ki-information"></i>
     <div>
       <span class="callout-title">Common mistake</span>
-      <p>Omitting <code>/api</code> or pointing at a marketing domain instead of the API host will break validation and update checks. Match the URL to the deployment your organization uses.</p>
+      <p>Omitting <code>/api</code> or pointing at a marketing domain instead of the API host breaks validation, sessions, and update checks. Match the URL to your deployment.</p>
     </div>
   </div>
 
-  <h2>6. Desktop bootstrap: settings + pending updates</h2>
+  <h2>7. Desktop bootstrap and validation</h2>
   <p>
     For WinForms, WPF, or other desktop hosts, call <code>SdkBootstrap.OnApplicationStartup()</code> once at process entry (before <code>Application.Run</code>).
-    It ensures default JSON settings are loaded and applies any <strong>staged product update</strong> from a previous run (pairs with the update APIs described in the .NET SDK page).
+    It loads default JSON settings and applies any staged product update from a prior run.
   </p>
 
   <pre><code>using LicenPro.SDK.AppHosting;
 
-// WinForms Program.cs (example)
 ApplicationConfiguration.Initialize();
 SdkBootstrap.OnApplicationStartup();
 Application.Run(new MainForm());</code></pre>
 
-  <h2>7. Validate a license in code</h2>
   <p>
-    The primary integration surface is <code>LicenseClient</code> with <code>LicenseClientOptions</code>: paths to <code>license.bin</code>, public key, license key, optional expected type, optional product id for update eligibility, and optional expiry-warning tuning.
-    Successful validation can populate an on-disk <strong>license cache</strong> so the next launch can use <code>LicenseClient.TryAutoValidateAsync</code> without re-reading the bin from UI.
+    Use <code>LicenseClient</code> with <code>LicenseClientOptions</code>: paths to <code>license.bin</code>, public key, license key, optional expected type, optional product id for updates, and expiry-warning tuning.
+  Successful validation can populate an on-disk <strong>license cache</strong> for <code>LicenseClient.TryAutoValidateAsync</code> on the next launch.
   </p>
-  <p>Authoritative API details, status codes, cache helpers, subscription expiry notices, and license-aware updates: <a routerLink="/sdk/dotnet">.NET SDK</a>.</p>
-
-  <h2>8. Optional: sessions, activations, webhooks</h2>
   <p>
-    When you connect a session from the SDK, the dashboard <strong>Sessions</strong> and <strong>Activations</strong> views reflect real usage — useful for floating licenses, compliance, and support.
-    Webhooks notify your backend about license lifecycle events outside the client.
+    Deep dive: <a routerLink="/sdk/dotnet">.NET SDK</a> · <a routerLink="/sdk/configuration">Configuration &amp; bootstrap</a> ·
+    <a routerLink="/sdk/license-client">LicenseClient lifecycle</a> · <a routerLink="/sdk/winforms">WinForms</a> · <a routerLink="/sdk/wpf">WPF</a>.
+  </p>
+
+  <app-mermaid-chart chartId="activation-vs-session" [definition]="activationSessionDef" />
+
+  <h2>8. Optional: activations, sessions, automation</h2>
+  <p>
+    When the SDK registers activations or sessions, dashboard <strong>Activations</strong> and <strong>Sessions</strong> reflect seat usage—important for floating licenses, compliance, and support.
+    <strong>Webhooks</strong> push license lifecycle events to your backend; the REST API provisions or retires licenses from CI or billing with your operator JWT where RBAC allows.
   </p>
   <p>
     <a routerLink="/sessions-activations">Sessions &amp; activations</a> ·
     <a routerLink="/webhooks">Webhooks</a> ·
-    <a routerLink="/api/overview">REST API reference</a> ·
-    <a href="https://licenpro.runasp.net/api" target="_blank" rel="noopener">Hosted API base</a> (<code>/api</code> on your deployment)
+    <a routerLink="/api/overview">REST API overview</a> ·
+    <a href="https://licenpro.runasp.net/api" target="_blank" rel="noopener">Hosted API</a>
   </p>
 
   <section class="next-steps-section" style="margin-top: 3rem;">
     <h2>Continue learning</h2>
     <div class="integration-grid">
+      <a routerLink="/guides/platform/overview" class="integration-card">
+        <i class="ki-outline ki-element-11"></i>
+        <h4>System overview</h4>
+        <p>Dashboard, API, and SDK roles</p>
+      </a>
+      <a routerLink="/first-organization" class="integration-card">
+        <i class="ki-outline ki-briefcase"></i>
+        <h4>First organization</h4>
+        <p>Tenant setup in the dashboard</p>
+      </a>
       <a routerLink="/first-product" class="integration-card">
         <i class="ki-outline ki-abstract-26"></i>
         <h4>First product</h4>
-        <p>Dashboard setup in depth</p>
+        <p>Product form and release setup</p>
       </a>
-      <a routerLink="/sdk/winforms" class="integration-card">
-        <i class="ki-outline ki-mouse"></i>
-        <h4>WinForms sample</h4>
-        <p>Startup, cache, UI feedback</p>
+      <a routerLink="/first-license" class="integration-card">
+        <i class="ki-outline ki-key"></i>
+        <h4>First license</h4>
+        <p>Issue keys and license.bin</p>
       </a>
       <a routerLink="/sdk/dotnet" class="integration-card">
         <i class="ki-outline ki-code"></i>

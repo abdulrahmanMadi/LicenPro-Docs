@@ -1,0 +1,214 @@
+<div class="help-page">
+  <header class="help-page-header">
+    <h1>Create your first organization</h1>
+    <p class="lead">
+      An <strong>organization</strong> is your tenant in LicenPro—the workspace where teammates collaborate,
+      products are assigned, and licenses stay scoped to your company. This guide walks through signing in,
+      creating an organization in the dashboard, inviting members, and opening the workspace you use before
+      creating any product.
+    </p>
+  </header>
+
+  <div class="help-callout info">
+    <i class="ki-outline ki-time"></i>
+    <div>
+      <span class="callout-title">Estimated time: 5–10 minutes</span>
+      <p>Account registration (if needed), organization wizard, and a quick tour of the organization hub.</p>
+    </div>
+  </div>
+
+  <h2>What an organization is</h2>
+  <p>
+    Everything you do as a vendor operator is scoped to an organization: <strong>members and roles</strong>,
+    <strong>product assignments</strong>, audit visibility, and (where applicable) billing context.
+    A <strong>product</strong> is what you license; the <strong>organization</strong> is who owns and operates it.
+    You can belong to multiple organizations (for example your company plus a client sandbox) and switch between them in the dashboard.
+  </p>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-people"></i>
+      <h4>Team &amp; roles</h4>
+      <p>Owners, admins, members, and viewers with product-level access.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-mouse-square"></i>
+      <h4>Product scope</h4>
+      <p>Products linked to the org; licenses issued under those products.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>Audit &amp; settings</h4>
+      <p>Invitations, defaults, and activity logs at tenant level.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 3rem;">Before you create one</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Already invited?</strong> Accept the email invitation or open the pending invite in the dashboard—do not create a duplicate org unless you intentionally need a separate tenant.</li>
+    <li><strong>New vendor?</strong> Register at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>, then create your first organization below.</li>
+    <li><strong>Plan limits</strong> — the number of organizations you can create depends on your subscription; if the <strong>Create Organization</strong> button is hidden, upgrade or use an existing tenant.</li>
+  </ul>
+
+  <h2>Step-by-step: Create Organization</h2>
+  <p>
+    Open <strong>Organizations</strong> in the dashboard sidebar (<code>/dashboard/organizations</code>) and click
+    <strong>Create Organization</strong>. The modal wizard has two steps—<strong>Identity</strong> and <strong>Branding</strong>—then
+    <strong>Establish Organization</strong> saves the tenant.
+  </p>
+
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-organization.png" data-doc-image-alt="Create Organization modal step 1 Identity: organization name, website, and default entry role" aria-label="View Create Organization screenshot full size">
+      <img src="assets/docs/platform-create-organization.png" alt="Create Organization modal step 1 Identity: organization name, website, and default entry role" loading="lazy" decoding="async" />
+    </button>
+  </figure>
+
+  <div class="doc-stepper">
+    <div class="step-item active">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Sign in to the dashboard</h3>
+        <p>
+          Use <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>
+          with email/password or your configured identity provider. After login you land on the dashboard home;
+          open <strong>Organizations</strong> from the left menu.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Step 1 — Identity</h3>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>Organization name</strong> (required) — public display name for your company or team (e.g. <em>Roland Corp Digital</em>).</li>
+          <li><strong>Official website</strong> (optional) — your company URL; shown on the organization profile.</li>
+          <li><strong>Default entry role</strong> — applied when someone joins without a role on the invitation:
+            <ul style="margin: 0.5rem 0; padding-left: 1.25rem;">
+              <li><strong>Member</strong> — standard operator access to assigned products.</li>
+              <li><strong>Viewer</strong> — read-only; cannot change licenses or settings.</li>
+              <li><strong>Admin</strong> — full organization management except owner-only actions.</li>
+            </ul>
+          </li>
+        </ul>
+        <p>Click <strong>Next</strong> when required fields are valid.</p>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Step 2 — Branding</h3>
+        <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+          <li><strong>Organization logo</strong> (optional) — JPEG, PNG, GIF, or WebP; appears on the organization overview hero.</li>
+          <li><strong>Organization description</strong> (optional) — rich text summary of your team or mission; shown on the overview tab.</li>
+        </ul>
+        <p>Click <strong>Establish Organization</strong>. You become the <strong>Owner</strong> of the new tenant.</p>
+      </div>
+    </div>
+
+    <div class="step-item active">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <h3>Open the organization workspace</h3>
+        <p>
+          From the organizations list, open your tenant. The URL is
+          <code>/dashboard/organization/:orgId</code> with tabs below. The <strong>Overview</strong> page shows logo,
+          description, member and product counts, and quick links.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Organization workspace tabs</h2>
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-element-11"></i>
+      <h4>Overview</h4>
+      <p>Profile, team preview, stats, and quick navigation.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-people"></i>
+      <h4>Members</h4>
+      <p>Active members, roles, status, and product access.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-sms"></i>
+      <h4>Invitations</h4>
+      <p>Email invites, resend, revoke, and role on invite.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-mouse-square"></i>
+      <h4>Products</h4>
+      <p>Products assigned to this organization.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-setting-2"></i>
+      <h4>Settings</h4>
+      <p>Default member role, invitation rules, branding updates.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-notepad"></i>
+      <h4>Audit logs</h4>
+      <p>Operator actions recorded for compliance and support.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 3rem;">Roles at a glance</h2>
+  <p>Roles control what operators can do inside the organization and on assigned products:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Owner</strong> — full control; assigned to the creator; can transfer ownership and delete the org.</li>
+    <li><strong>Admin</strong> — manage members, invitations, products, and most settings.</li>
+    <li><strong>ProductOwner</strong> — focused on product-scoped operations where your deployment assigns that role.</li>
+    <li><strong>Member</strong> — day-to-day license and product work on assigned products.</li>
+    <li><strong>Viewer</strong> — read dashboards and records without mutating data.</li>
+  </ul>
+  <p>
+    When inviting someone, pick a role on the invitation or rely on the <strong>default entry role</strong> you set during creation.
+    Deeper reference: <a routerLink="/guides/platform/organizations">Organizations</a> platform guide.
+  </p>
+
+  <h2>Invite your team (optional)</h2>
+  <p>
+    On <strong>Members</strong> or <strong>Invitations</strong>, send email invites with an explicit role.
+    Pending invites appear until accepted or expired. Revoke invites that should no longer be used.
+    Accepting an invite adds the user to the organization with the chosen role and product access rules your admins configure.
+  </p>
+
+  <div class="help-callout warning">
+    <i class="ki-outline ki-information"></i>
+    <div>
+      <span class="callout-title">Deleting an organization</span>
+      <p>
+        Terminating an organization is irreversible: products, members, invitations, and historical data for that tenant are removed.
+        Use a separate sandbox org for experiments if you are unsure.
+      </p>
+    </div>
+  </div>
+
+  <h2>REST API &amp; automation</h2>
+  <p>
+    Operator JWT calls can manage organizations via <code>/api/organizations</code> and related membership routes
+    (create tenant, list members, invite, accept invitation). See
+    <a routerLink="/api/organizations">Organizations API</a> and <a routerLink="/api/auth-users">Auth &amp; users</a>.
+  </p>
+
+  <h2 style="margin-top: 4rem;">What&apos;s next?</h2>
+  <div class="integration-grid">
+    <a routerLink="/first-product" class="integration-card">
+      <i class="ki-outline ki-abstract-26"></i>
+      <h4>First product</h4>
+      <p>Create a product and initial release.</p>
+    </a>
+    <a routerLink="/quick-start" class="integration-card">
+      <i class="ki-outline ki-flag"></i>
+      <h4>Quick start</h4>
+      <p>Full vendor loop through SDK.</p>
+    </a>
+    <a routerLink="/guides/platform/organizations" class="integration-card">
+      <i class="ki-outline ki-briefcase"></i>
+      <h4>Organizations guide</h4>
+      <p>Platform reference for tenants.</p>
+    </a>
+  </div>
+</div>

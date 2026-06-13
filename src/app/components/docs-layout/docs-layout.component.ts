@@ -2,6 +2,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  HostListener,
   inject,
   Injector,
   PLATFORM_ID,
@@ -82,6 +83,10 @@ export class DocsLayoutComponent {
   /** Collapsed top-level sections (OVERVIEW, …), keyed by `guides:sectionId` / `api:sectionId`. */
   readonly collapsedSectionKeys = signal<Set<string>>(new Set());
 
+  readonly imageLightboxOpen = signal(false);
+  readonly imageLightboxSrc = signal('');
+  readonly imageLightboxAlt = signal('');
+
   constructor() {
     this.resetNavClones();
     this.applyUrlToNavMode(this.router.url);
@@ -105,6 +110,7 @@ export class DocsLayoutComponent {
           takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
+          this.closeImageLightbox();
           queueMicrotask(() => this.scrollDocsPanesToTop());
           const url = this.router.url;
           const prevMode = this.navMode();
@@ -134,6 +140,32 @@ export class DocsLayoutComponent {
 
   get searchHitCount(): number {
     return this.searchQuery.trim() ? this.flattenedItems.length : 0;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeCloseLightbox(): void {
+    if (this.imageLightboxOpen()) {
+      this.closeImageLightbox();
+    }
+  }
+
+  onDocsContentClick(event: MouseEvent): void {
+    const trigger = (event.target as HTMLElement | null)?.closest?.('[data-doc-image-lightbox]');
+    if (!trigger) return;
+    const src = trigger.getAttribute('data-doc-image-lightbox');
+    const alt = trigger.getAttribute('data-doc-image-alt') ?? '';
+    if (!src) return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.imageLightboxSrc.set(src);
+    this.imageLightboxAlt.set(alt);
+    this.imageLightboxOpen.set(true);
+  }
+
+  closeImageLightbox(): void {
+    this.imageLightboxOpen.set(false);
+    this.imageLightboxSrc.set('');
+    this.imageLightboxAlt.set('');
   }
 
   private scheduleTocRefresh(): void {

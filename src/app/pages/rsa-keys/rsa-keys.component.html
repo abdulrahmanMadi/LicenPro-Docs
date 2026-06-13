@@ -1,59 +1,60 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>RSA keys &amp; signing</h1>
+    <h1>RSA keys, signing &amp; API credentials</h1>
     <p class="lead">
-      LicenPro signs each <code>license.bin</code> with your product’s <strong>RSA private key</strong> stored only on the server.
-      Your distributed applications embed the matching <strong>public key</strong> so the SDK can verify integrity and authenticity <em>without</em> ever receiving the private key.
+      LicenPro uses two different kinds of keys: <strong>RSA signing keys</strong> (per product, for <code>license.bin</code>)
+      and <strong>account API keys</strong> (for your automation scripts with scoped REST access). Customer apps and the SDK
+      need the product <strong>public key</strong> and optionally the product <code>X-API-KEY</code>—never your RSA private key or operator password.
     </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-lock-2"></i>
-      <h4>Private key</h4>
-      <p>Server-only; signs license payloads.</p>
+      <h4>RSA private key</h4>
+      <p>Server-only; signs every license file.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-shield-tick"></i>
-      <h4>Public key</h4>
-      <p>Shipped in the client; verifies signatures.</p>
+      <h4>RSA public key</h4>
+      <p>Embed in apps; SDK verifies signatures.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-cloud-download"></i>
-      <h4>Download</h4>
-      <p>REST + dashboard download PEM/JSON.</p>
+      <i class="ki-outline ki-key"></i>
+      <h4>Account API keys</h4>
+      <p>JWT-backed REST automation with scopes.</p>
     </div>
   </div>
 
-  <h2>How signing fits validation</h2>
+  <h2 style="margin-top: 3rem;">Part 1 — RSA signing keys (per product)</h2>
   <p>
-    When <code>LicenseClient.ValidateAsync</code> runs, it loads your public key into <code>LicenseUtils.LoadLicensingSecrets(...)</code> and verifies the RSA signature over the license payload.
-    If the customer swaps in another product’s file, changes bytes, or you rotated keys without re-issuing, verification fails with <code>LicenseValidationStatus.SignatureMismatch</code> and actionable error text from the SDK.
+    Each product has its own RSA key pair. When you issue or download a license, LicenPro signs the payload with the
+    <strong>private key</strong> stored on the server. Your application embeds only the matching <strong>public key</strong>
+    so <code>LicenseClient</code> can prove the file was issued for that product and was not tampered with.
   </p>
 
-  <h2>Dashboard operations</h2>
+  <h3>Dashboard: generate and download</h3>
   <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Open the product → keys / security section.</li>
-    <li><strong>Generate</strong> a new RSA pair when onboarding a product (one-time per environment strategy).</li>
-    <li><strong>Copy / download public key</strong> and embed Base64 (strip PEM headers) into config or code.</li>
-    <li>Never export the private key to customer apps — only LicenPro services use it to sign.</li>
+    <li>Open the product → <strong>Settings</strong> (<code>/dashboard/products/.../settings</code>).</li>
+    <li>Scroll to <strong>License signing keys (RSA)</strong>.</li>
+    <li>Click <strong>Generate keys</strong> if none exist, or <strong>Regenerate</strong> when rotating (see warning below).</li>
+    <li>Click <strong>Download public key</strong> (PEM) for operators or copy Base64 material for SDK config.</li>
   </ol>
 
-  <h2>REST API (product owner JWT)</h2>
-  <p>Routes under <code>/api/Products/&#123;id&#125;/keys/...</code> (authorized product access):</p>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><code>POST /api/Products/&#123;id&#125;/keys/generate</code> — create/regenerate key material for the product.</li>
-    <li><code>GET /api/Products/&#123;id&#125;/keys/status</code> — whether keys exist / metadata.</li>
-    <li><code>GET /api/Products/&#123;id&#125;/keys/public</code> — JSON payload with public key for SDK wiring.</li>
-    <li><code>GET /api/Products/&#123;id&#125;/keys/public/download</code> — file download (PEM) for operators.</li>
-  </ul>
-  <p>All of the above require an authorized user with product resource access (see API authorization policies).</p>
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield-cross"></i>
+    <div>
+      <span class="callout-title">Never ship the private key</span>
+      <p>The private key never leaves LicenPro. Do not paste it into apps, config files, or customer deliverables.</p>
+    </div>
+  </div>
 
-  <h2>Related security REST</h2>
-  <p><code>POST /api/security/derive-key</code> (anonymous) derives a key from <code>licenseKey</code> + salt Base64 — used in protected license file flows where the customer key participates in decryption (SDK coordinates this with <code>LicenseFileProtector</code> patterns).</p>
-
-  <h2>SDK embedding</h2>
-  <p>Pass the Base64 public key (no PEM headers) to <code>LicenseClientOptions.PublicKey</code>. The client configures <code>LicenseUtils</code> internally; you normally do not call <code>LoadLicensingSecrets</code> yourself for simple integrations.</p>
+  <h3>How signing fits validation</h3>
+  <p>
+    <code>LicenseClient.ValidateAsync</code> loads your public key (via <code>LicenseClientOptions.PublicKey</code>)
+    and verifies the RSA signature on <code>license.bin</code>. Wrong product file, edited bytes, or stale key after rotation
+    yields <code>LicenseValidationStatus.SignatureMismatch</code>.
+  </p>
 
   <pre><code>using LicenPro.SDK;
 
@@ -63,19 +64,107 @@ await using var client = new LicenseClient(new LicenseClientOptions &lbrace;
     LicenseKey = "LP-...."
 &rbrace;);</code></pre>
 
+  <h3>REST API (operator JWT)</h3>
+  <p>Authorized product access required:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>POST /api/Products/&#123;id&#125;/keys/generate</code> — create or regenerate pair.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/status</code> — whether keys exist and metadata.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public</code> — JSON public key for integrations.</li>
+    <li><code>GET /api/Products/&#123;id&#125;/keys/public/download</code> — PEM file download.</li>
+  </ul>
+
+  <h3>Key rotation</h3>
   <div class="help-callout warning">
-    <i class="ki-outline ki-shield-cross"></i>
+    <i class="ki-outline ki-information"></i>
     <div>
-      <span class="callout-title">Rotation</span>
-      <p>Regenerating keys invalidates every license file signed with the previous private key. Plan rotation: publish new app builds with the new public key, re-issue bins, and stagger customer upgrades.</p>
+      <span class="callout-title">Rotation impact</span>
+      <p>Regenerating RSA keys invalidates every <code>license.bin</code> signed with the old private key. Plan: publish app builds with the new public key, re-issue licenses, and stagger customer upgrades.</p>
     </div>
   </div>
 
-  <section class="next-steps-section" style="margin-top: 2rem;">
+  <h3>Related: derive-key endpoint</h3>
+  <p>
+    <code>POST /api/security/derive-key</code> (anonymous) derives material from <code>licenseKey</code> and salt for protected license file flows.
+    The SDK coordinates this with <code>LicenseFileProtector</code> patterns where the customer key participates in decryption.
+  </p>
+
+  <h2 style="margin-top: 4rem;">Part 2 — Account API keys (REST automation)</h2>
+  <p>
+    Separate from RSA and separate from the per-product <code>X-API-KEY</code> used on anonymous validation routes.
+    <strong>Account API keys</strong> authenticate automation (CI, billing jobs, internal tools) to management APIs using scoped permissions.
+    Manage them under <strong>Settings</strong> → <strong>API keys</strong> (<code>/dashboard/settings</code>, Developer &amp; account section).
+  </p>
+
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/account-api-keys.png" data-doc-image-alt="Account Settings API keys page with Generate API Key button" aria-label="View API keys page screenshot full size">
+      <img src="assets/docs/account-api-keys.png" alt="Account Settings API keys page with Generate API Key button" loading="lazy" decoding="async" />
+    </button>
+  </figure>
+
+  <h3>Generate API Key modal</h3>
+  <p>Click <strong>Generate API Key</strong> and complete the form:</p>
+
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/account-generate-api-key.png" data-doc-image-alt="Generate API Key modal: name, description, expiration, and permission scopes" aria-label="View Generate API Key modal screenshot full size">
+      <img src="assets/docs/account-generate-api-key.png" alt="Generate API Key modal: name, description, expiration, and permission scopes" loading="lazy" decoding="async" />
+    </button>
+  </figure>
+
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Name</strong> (required) — e.g. <em>CI/CD Pipeline</em>.</li>
+    <li><strong>Description</strong> (optional) — rich text explaining purpose.</li>
+    <li><strong>Expiration date</strong> (optional) — leave empty for no expiration.</li>
+    <li><strong>Scopes</strong> — least privilege; typical pairs:
+      <ul style="margin: 0.5rem 0; padding-left: 1.25rem;">
+        <li>Read / Write Licenses</li>
+        <li>Read / Write Activations</li>
+        <li>Read / Write Products</li>
+        <li>Read / Write Releases</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="help-callout warning">
+    <i class="ki-outline ki-shield"></i>
+    <div>
+      <span class="callout-title">One-time display</span>
+      <p>After <strong>Generate Key</strong>, the secret is shown once. Copy it to a vault immediately; revoked keys cannot be recovered.</p>
+    </div>
+  </div>
+
+  <h2>Credentials cheat sheet</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Operator JWT</strong> — browser session after dashboard login; management routes.</li>
+    <li><strong>Account API key</strong> — scoped automation from Settings → API keys.</li>
+    <li><strong>Product X-API-KEY</strong> — per-product header for anonymous product routes (e.g. validate).</li>
+    <li><strong>RSA public key</strong> — verify <code>license.bin</code> in the SDK.</li>
+    <li><strong>RSA private key</strong> — never distributed; signs on server only.</li>
+  </ul>
+  <p>See also <a routerLink="/guides/platform/overview">Credentials at a glance</a> on the system overview.</p>
+
+  <section class="next-steps-section" style="margin-top: 3rem;">
+    <h2>Continue learning</h2>
     <div class="integration-grid">
-      <a routerLink="/first-product" class="integration-card"><i class="ki-outline ki-abstract-26"></i><h4>First product</h4><p>Where keys live</p></a>
-      <a routerLink="/api/overview" class="integration-card"><i class="ki-outline ki-data"></i><h4>API reference</h4><p>Full route list</p></a>
-      <a routerLink="/sdk/dotnet" class="integration-card"><i class="ki-outline ki-code"></i><h4>.NET SDK</h4><p>Validation stack</p></a>
+      <a routerLink="/first-product" class="integration-card">
+        <i class="ki-outline ki-abstract-26"></i>
+        <h4>First product</h4>
+        <p>Where RSA keys live</p>
+      </a>
+      <a routerLink="/first-license" class="integration-card">
+        <i class="ki-outline ki-key"></i>
+        <h4>First license</h4>
+        <p>Download license.bin</p>
+      </a>
+      <a routerLink="/api/security" class="integration-card">
+        <i class="ki-outline ki-lock"></i>
+        <h4>Security API</h4>
+        <p>API keys &amp; derive-key</p>
+      </a>
+      <a routerLink="/sdk/dotnet" class="integration-card">
+        <i class="ki-outline ki-code"></i>
+        <h4>.NET SDK</h4>
+        <p>Validation stack</p>
+      </a>
     </div>
   </section>
 </div>

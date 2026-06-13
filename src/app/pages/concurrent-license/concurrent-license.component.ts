@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-first-license',
+  selector: 'app-concurrent-license',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './first-license.component.html',
+  templateUrl: './concurrent-license.component.html',
 })
-export class FirstLicenseComponent {}
+export class ConcurrentLicenseComponent {}

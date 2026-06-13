@@ -114,15 +114,12 @@
               </span>
               <span class="docs-nav-section-label" [innerHTML]="section.matchedText || section.label"></span>
               <span class="docs-nav-section-chevron" aria-hidden="true">
-                @if (isSectionCollapsed(section.id)) {
-                  <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
-                } @else {
-                  <i class="ki-outline ki-up docs-nav-chevron-icon"></i>
-                }
+                <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
               </span>
             </button>
 
-            <ul class="docs-nav-items">
+            <div class="docs-nav-collapse-body" [class.is-collapsed]="isSectionCollapsed(section.id)">
+              <ul class="docs-nav-items">
               <ng-container *ngFor="let item of section.items">
                 <li
                   *ngIf="item.children?.length"
@@ -140,14 +137,11 @@
                       <span [innerHTML]="item.matchedText || item.label"></span>
                     </div>
                     <span class="docs-nav-branch-chevron" aria-hidden="true">
-                      @if (isNavBranchCollapsed(item.id)) {
-                        <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
-                      } @else {
-                        <i class="ki-outline ki-up docs-nav-chevron-icon"></i>
-                      }
+                      <i class="ki-outline ki-down docs-nav-chevron-icon"></i>
                     </span>
                   </button>
-                  <ul class="docs-nav-sublist">
+                  <div class="docs-nav-collapse-body docs-nav-collapse-body--nested" [class.is-collapsed]="isNavBranchCollapsed(item.id)">
+                    <ul class="docs-nav-sublist">
                     <li *ngFor="let sub of item.children" class="docs-nav-item docs-nav-tree-leaf docs-nav-tree-leaf--nested" [class.hidden]="sub.visible === false">
                       <a
                         [routerLink]="sub.route"
@@ -160,7 +154,8 @@
                         <span [innerHTML]="sub.matchedText || sub.label"></span>
                       </a>
                     </li>
-                  </ul>
+                    </ul>
+                  </div>
                 </li>
 
                 <li *ngIf="!item.children?.length" class="docs-nav-item docs-nav-tree-leaf" [class.hidden]="item.visible === false">
@@ -176,7 +171,8 @@
                   </a>
                 </li>
               </ng-container>
-            </ul>
+              </ul>
+            </div>
           </div>
         </li>
       </ul>
@@ -212,7 +208,7 @@
 
     <div class="docs-layout-content">
       <main #docsScrollRoot class="docs-content">
-        <div class="docs-content-inner" id="doc-top">
+        <div class="docs-content-inner" id="doc-top" (click)="onDocsContentClick($event)">
           <router-outlet (activate)="onDocsOutletActivate()"></router-outlet>
 
           <footer class="docs-content-footer">
@@ -257,4 +253,27 @@
       </aside>
     </div>
   </div>
+
+  @if (imageLightboxOpen()) {
+    <div
+      class="doc-lightbox-overlay"
+      role="presentation"
+      (click)="closeImageLightbox()">
+      <div
+        class="doc-lightbox-inner"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="imageLightboxAlt() || 'Image preview'"
+        (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          class="doc-lightbox-close"
+          (click)="closeImageLightbox()"
+          aria-label="Close image preview">
+          <i class="ki-outline ki-cross" aria-hidden="true"></i>
+        </button>
+        <img [src]="imageLightboxSrc()" [alt]="imageLightboxAlt()" />
+      </div>
+    </div>
+  }
 </div>
