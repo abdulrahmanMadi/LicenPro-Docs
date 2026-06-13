@@ -473,6 +473,12 @@ a.doc-inline-link {
   color: var(--muted-foreground);
 }
 
+.doc-figure figcaption.doc-figure-caption {
+  margin-top: 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+
 /** Screenshot cards (guide pages): same zoom affordance as hero figures on overview. */
 .doc-figure.doc-figure-card:not(.doc-figure--hero) {
   margin: 1.75rem 0;
@@ -525,15 +531,16 @@ a.doc-inline-link {
 }
 
 .doc-figure.doc-figure-card:not(.doc-figure--hero) img {
-  width: 100%;
+  width: auto;
   max-width: 100%;
   min-width: 0;
   height: auto;
   display: block;
-  margin: 0;
+  margin: 0 auto;
   border-radius: 0;
   border: none;
   vertical-align: top;
+  image-rendering: auto;
 }
 
 /** Hero workflow: outer card is responsive (min-width 0); inner button opens doc lightbox. */
@@ -588,15 +595,16 @@ a.doc-inline-link {
 }
 
 .doc-figure--hero.doc-figure-card img {
-  width: 100%;
+  width: auto;
   max-width: 100%;
   min-width: 0;
   height: auto;
   display: block;
-  margin: 0;
+  margin: 0 auto;
   border-radius: 0;
   border: none;
   vertical-align: top;
+  image-rendering: auto;
 }
 
 /** Legacy: standalone hero without card (if used elsewhere). */
@@ -639,15 +647,16 @@ a.doc-inline-link {
 }
 
 .doc-figure--hero:not(.doc-figure-card) img {
-  width: 100%;
+  width: auto;
   max-width: 100%;
   min-width: 0;
   height: auto;
   display: block;
-  margin: 0;
+  margin: 0 auto;
   border-radius: 0;
   border: none;
   vertical-align: top;
+  image-rendering: auto;
 }
 
 .doc-figure-hint {
@@ -675,8 +684,8 @@ a.doc-inline-link {
 
 .doc-lightbox-inner {
   position: relative;
-  max-width: min(92vw, 1200px);
-  max-height: 90vh;
+  max-width: 98vw;
+  max-height: 96vh;
   padding-top: 4px;
   display: flex;
   flex-direction: column;
@@ -685,11 +694,13 @@ a.doc-inline-link {
 }
 
 .doc-lightbox-inner img {
-  max-width: 100%;
-  max-height: calc(90vh - 48px);
   width: auto;
   height: auto;
+  max-width: 98vw;
+  max-height: calc(96vh - 48px);
   object-fit: contain;
+  object-position: center;
+  image-rendering: auto;
   border-radius: 12px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
 }

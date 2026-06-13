@@ -3,6 +3,15 @@ import type { DocTopic } from '../doc-topic.types';
 const link = (path: string, label: string) =>
   `<a class="doc-inline-link" href="${path}">${label}</a>`;
 
+/** Dashboard screenshot with lightbox (full-resolution asset, no compression). */
+const screenshot = (file: string, alt: string) =>
+  `<figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/${file}" data-doc-image-alt="${alt}" aria-label="View screenshot full size">
+      <img src="assets/docs/${file}" alt="${alt}" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
+  </figure>`;
+
 const HOST = 'https://licenpro.runasp.net';
 
 export const PLATFORM_GUIDES: Record<string, DocTopic> = {
@@ -14,6 +23,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/overview1.png" data-doc-image-alt="LicenPro workflow: Dashboard for vendor setup, REST API for runtime operations, and client SDKs in customer applications (multi-language SDKs and examples planned)" aria-label="View workflow diagram full size">
           <img src="assets/docs/overview1.png" alt="LicenPro workflow: Dashboard for vendor setup, REST API for runtime operations, and client SDKs in customer applications (multi-language SDKs and examples planned)" loading="lazy" decoding="async" />
         </button>
+        <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
       </figure>
       <div class="help-callout info help-callout--plain"><i class="ki-outline ki-information" aria-hidden="true"></i><div>
         <span class="callout-title">Three surfaces</span>
@@ -34,6 +44,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-overview-who-does-what.png" data-doc-image-alt="Who does what: vendor operators in the dashboard, integrators and automation from CI and billing, and customer applications with SDK or HTTPS—all via the LicenPro REST API" aria-label="View who does what diagram full size">
           <img src="assets/docs/platform-overview-who-does-what.png" alt="Who does what: vendor operators in the dashboard, integrators and automation from CI and billing, and customer applications with SDK or HTTPS—all via the LicenPro REST API" loading="lazy" decoding="async" />
         </button>
+        <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
       </figure>
       <ul style="margin-left:1.25rem;">
         <li><strong>Vendor operators</strong> — work in the browser dashboard under your organization; day-to-day authoring of products, releases, keys, and licenses.</li>
@@ -129,43 +140,73 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Transfer or delete</strong> — ownership transfer (Owner); org delete (Owner only, destructive).</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/organizations</code> — list, create, edit, delete organizations you belong to.</li>
-        <li><code>/dashboard/organization/:orgSlug/…</code> — org workspace (URL rewrites from GUID to slug after load).</li>
-      </ul>
-
       <h2>Organization tabs</h2>
       <p>Each tab is a child route under the org layout. Tabs for <strong>Members</strong>, <strong>Invitations</strong>, <strong>Audit Logs</strong>, and <strong>Settings</strong> appear only when <code>myRole</code> is <code>Owner</code>, <code>Admin</code>, <code>ProductOwner</code>, or <code>ResellerAdmin</code>. <strong>Overview</strong> and <strong>Products</strong> are visible to all members.</p>
 
       <h3>Overview</h3>
-      <p><code>…/overview</code> (default). Org-level KPIs: license mix, activation trends, quick counts for members, products, and pending invitations. Use this as the landing page after switching org context.</p>
+      <p>Default landing tab when you open an organization. Use it to answer “what is happening in this tenant right now?” before you drill into products or licenses.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Summary cards</strong> — member count, assigned products, license totals, and activation trends scoped to this org.</li>
+        <li><strong>License mix</strong> — quick view of perpetual, trial, subscription, floating, and concurrent keys tied to org products.</li>
+        <li><strong>Recent activity</strong> — shortcuts to the latest license events and team changes without opening Audit Logs.</li>
+        <li><strong>Context switch</strong> — if you belong to multiple orgs, confirm the org name in the header before acting on data.</li>
+      </ul>
+      <p><strong>Typical tasks:</strong> weekly health check, executive snapshot before a renewal call, verify a new product assignment landed.</p>
 
       <h3>Products</h3>
-      <p><code>…/products</code>. Lists products assigned to this organization. <strong>Owner / Admin</strong> can assign or unassign products to the org. Members see products they can access via assignment or access matrix—not necessarily every product in your account.</p>
+      <p>Catalog of software products linked to this organization. Assignment here does <em>not</em> issue licenses—it grants the org (and its members) visibility and access paths to products you already created in your vendor account.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Assign product</strong> — Owner / Admin opens <strong>Assign Product</strong>, searches the vendor catalog, and links one or more products. Members then see assigned products on this tab and in their sidebar (subject to access matrix rules on each product).</li>
+        <li><strong>Unassign</strong> — removes org linkage; does not delete the product or its licenses platform-wide.</li>
+        <li><strong>Member view</strong> — Members and Viewers only see products they are assigned to or granted via per-release access matrix rows—not every product in your account.</li>
+        <li><strong>Next step</strong> — after assignment, product owners add users and matrix rows on the product workspace (${link('/guides/platform/products', 'Products guide')}).</li>
+      </ul>
+      ${screenshot('platform-organization-assign-product.png', 'Assign Product modal: select products to link to the organization')}
 
       <h3>Members</h3>
-      <p><code>…/members</code>. Team directory: name, email, org role, join date. Actions (API-gated):</p>
+      <p>Authoritative team directory for the organization: who belongs, what org role they hold, and when they joined.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Invite</strong> — email + role: Member, Viewer, ProductOwner, or Admin (Owner assigns Admin).</li>
-        <li><strong>Change role</strong> — Owner/Admin/ResellerAdmin; Owner-only rules for Admin role assignment.</li>
-        <li><strong>Remove</strong> — Owner, Admin, ProductOwner, ResellerAdmin; cannot remove Owner.</li>
+        <li><strong>Invite</strong> — email + role: Member, Viewer, ProductOwner, or Admin (only Owner can assign Admin).</li>
+        <li><strong>Change role</strong> — Owner, Admin, or ResellerAdmin; Owner-only rules apply when promoting to Admin.</li>
+        <li><strong>Remove</strong> — Owner, Admin, ProductOwner, ResellerAdmin; cannot remove the Owner.</li>
+        <li><strong>Role vs product access</strong> — org role controls org tabs; product owners and access matrix control per-product license work.</li>
       </ul>
+      <p><strong>Role quick guide:</strong> Member = contribute on assigned products; Viewer = read-only; ProductOwner = manage products/licenses without full org admin; Admin = team + settings except Owner-only actions.</p>
+      ${screenshot('platform-organization-invite-member.png', 'Invite Team Member modal: email, assigned role, and invitation message')}
 
       <h3>Invitations</h3>
-      <p><code>…/invitations</code>. Pending invites: resend, revoke, status. Roles offered in UI: Member, Viewer, Admin (Members tab also offers ProductOwner). Token links expire per server policy.</p>
+      <p>Operational queue for people who have not yet accepted. Use it when onboarding is stuck or you need to revoke a mistaken invite.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Status</strong> — Pending, expired, or revoked; filter and search by recipient email.</li>
+        <li><strong>Resend</strong> — generates a fresh token email without changing the chosen role.</li>
+        <li><strong>Revoke</strong> — invalidates the link immediately; recipient must receive a new invite.</li>
+        <li><strong>Expiry</strong> — each row shows when the token expires; expired invites cannot be accepted until resent.</li>
+        <li><strong>Roles in UI</strong> — Member, Viewer, Admin on this tab; Members tab also offers ProductOwner when inviting.</li>
+      </ul>
+      ${screenshot('platform-organization-invitations.png', 'Organization Team Invitations tab: pending invites with role, status, and expiry')}
 
       <h3>Audit Logs</h3>
-      <p><code>…/audit-logs</code>. Org-scoped activity: member changes, settings updates, product assignments. Pair with ${link('/guides/platform/analytics', 'Analytics')} for trends and ${link('/api/telemetry', 'Telemetry API')} for exports.</p>
+      <p>Immutable org-scoped trail for compliance and support: who changed team membership, assigned products, or org settings.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Columns</strong> — timestamp, action (e.g. InvitationSent, LicenseCreated), product, entity type, entity name, IP address.</li>
+        <li><strong>Filters</strong> — action type, entity type, date range, and free-text search across user, entity, or product.</li>
+        <li><strong>Export CSV</strong> — download the filtered view for SIEM or spreadsheet analysis.</li>
+        <li><strong>Details</strong> — eye icon opens structured payload for a single event.</li>
+        <li><strong>Pair with Analytics</strong> — audit is point-in-time; ${link('/guides/platform/analytics', 'Analytics')} shows trends over time.</li>
+      </ul>
+      ${screenshot('platform-organization-audit-logs.png', 'Organization Audit Logs tab: license and invitation activity with filters and export')}
 
       <h3>Settings</h3>
-      <p><code>…/settings</code>. Owner-focused configuration:</p>
+      <p>Owner-focused configuration split into sub-sections (left nav inside Settings):</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>General</strong> — name, description, website.</li>
-        <li><strong>Policies</strong> — <code>allowSelfRegistration</code>, <code>requireApprovalForJoining</code>, <code>defaultMemberRole</code> (Member, Viewer, Admin for new joiners).</li>
-        <li><strong>Branding</strong> — logo and colors for org presentation.</li>
-        <li><strong>Danger zone</strong> — delete organization (Owner only; irreversible).</li>
+        <li><strong>General</strong> — entity name, registry ID, rich-text description, and public website URL shown on the org profile.</li>
+        <li><strong>Branding</strong> — logo and colors for org presentation in the dashboard and invitations.</li>
+        <li><strong>Policies</strong> — <code>allowSelfRegistration</code>, <code>requireApprovalForJoining</code>, and <code>defaultMemberRole</code> for new joiners (Member, Viewer, or Admin).</li>
+        <li><strong>Governance</strong> — ownership transfer and advanced policy toggles where your deployment exposes them.</li>
+        <li><strong>Danger zone</strong> — delete organization (Owner only; irreversible; licenses under org products may cascade per server policy).</li>
       </ul>
+      <p><strong>Before you save:</strong> description and website are customer-facing on the org header; policy changes affect the next invitation or self-registration attempt, not retroactively on existing members.</p>
+      ${screenshot('platform-organization-settings-general.png', 'Organization Settings General Configuration: name, description, website, and branding sub-nav')}
 
       <h2>Organization roles matrix</h2>
       <ul style="margin-left:1.25rem;">
@@ -210,13 +251,6 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Retire</strong> — deactivate or delete from Settings danger zone (cascades releases and licenses).</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/products</code> — all products you can access; create via <code>/dashboard/products/create</code>.</li>
-        <li><code>/dashboard/products/:productSlug</code> — product workspace (slug replaces GUID in URL after load).</li>
-        <li><code>/dashboard/products/:productSlug/edit</code> — edit form (same fields as create modal).</li>
-      </ul>
-
       <h2>Access types: Associated vs Opened</h2>
       <p>Chosen at create time; drives UI and license rules:</p>
       <ul style="margin-left:1.25rem;">
@@ -233,37 +267,88 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       </ul>
 
       <h3>Overview</h3>
-      <p>Default tab. Summary cards: status, access type, owners, release/license counts, recent activity. Starting point before drilling into Releases or Licenses.</p>
+      <p>Default tab after opening a product. Confirms access type, owner list, current release line, and license counts before you issue keys or edit entitlements.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Status badge</strong> — Active vs locked (subscription/plan limits may block management).</li>
+        <li><strong>Quick counts</strong> — releases, licenses, recent activations where the UI surfaces them.</li>
+        <li><strong>Owners</strong> — who can manage RSA keys, Users, Access Matrix, and license CRUD.</li>
+        <li><strong>End-user landing</strong> — assigned Members often start here then open Releases or Licenses.</li>
+      </ul>
 
       <h3>Features</h3>
-      <p><code>…/features</code>. Define capability flags (name, key, description). Features are referenced inside entitlement sets and evaluated at runtime by the SDK <code>FeatureManager</code>.</p>
+      <p>Capability catalog for this product. Each feature becomes a stable key your app checks at runtime via the SDK <code>FeatureManager</code>.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Create Feature</strong> — name, description, and assignment to entitlement groups (Groub/Group tags in UI).</li>
+        <li><strong>Search</strong> — filter long catalogs before bundling into sets.</li>
+        <li><strong>Do not skip keys</strong> — feature keys must stay stable across releases; renaming breaks signed entitlements in the field.</li>
+      </ul>
+      <p>Deep dive: ${link('/guides/platform/features-entitlements', 'Features &amp; entitlements')}.</p>
 
       <h3>Entitlement Sets</h3>
-      <p><code>…/entitlements</code> (+ <code>/create</code>, <code>/edit/:setId</code>). Bundle features into SKUs. When creating a license, pick a set to attach packaged entitlements without hard-coding checks in every build. See ${link('/guides/platform/features-entitlements', 'Features &amp; entitlements')}.</p>
+      <p>Reusable SKUs that bundle features for license issuance. Operators pick a set in the license wizard instead of toggling dozens of flags per customer.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Create Set</strong> — name, description, linked releases, and member features with per-feature values.</li>
+        <li><strong>Release scope</strong> — sets can target specific version lines (e.g. 1.0.0 vs 1.0.3).</li>
+        <li><strong>License wizard</strong> — optional dropdown on step 1 attaches packaged entitlements to new keys.</li>
+      </ul>
 
       <h3>Releases</h3>
-      <p><code>…/releases</code>. Version lines for this product only. Each license binds to a <code>softwareReleaseId</code> for validation and update checks. Create from tab or global <code>/dashboard/releases</code>.</p>
+      <p>Version lines for this product. Every license binds to one release id for validation, entitlement scope, and SDK update checks.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>New Release</strong> — multi-step wizard: basic info, entitlement sets, files, notes.</li>
+        <li><strong>Table columns</strong> — version, type (Stable/Beta/…), published status, created/released dates, license count.</li>
+        <li><strong>Global list</strong> — sidebar <strong>Releases</strong> shows cross-product view; product tab is the primary operator path.</li>
+      </ul>
+      <p>See ${link('/guides/platform/releases', 'Releases guide')} for draft vs published and artifact linking.</p>
 
       <h3>Licenses</h3>
-      <p><code>…/licenses</code> (+ create/edit routes). Issue keys, download <code>license.bin</code>, revoke, transfer. End users with only assignment see this tab but not management actions.</p>
+      <p>Issue, edit, revoke, and download license material for this product.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Create</strong> — two-step wizard (type, product, release, entitlement set → seats, expiry, notes).</li>
+        <li><strong>Distribute</strong> — license key string + signed <code>license.bin</code> from detail view.</li>
+        <li><strong>Member view</strong> — assigned users see licenses they can activate; management buttons require ownership.</li>
+        <li><strong>Types</strong> — perpetual, trial, subscription, floating, concurrent, node-locked (${link('/guides/platform/licenses', 'Licenses guide')}).</li>
+      </ul>
 
       <h3>Users</h3>
-      <p><code>…/users</code> (owners only). Assign organization members to the product. Assignment does not replace <strong>owners</strong>—owners are explicit in <code>product.owners</code> and control RSA keys and destructive actions.</p>
+      <p>Onboard organization members onto this product. Users added here gain product scope but <strong>no release access until the Access Matrix grants versions</strong>.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Select organization</strong> — dropdown lists orgs where this product is assigned.</li>
+        <li><strong>Multi-select members</strong> — pick people who are not already on the product.</li>
+        <li><strong>Empty state</strong> — when every org member is already assigned, the modal explains that onboarding is complete.</li>
+        <li><strong>Owners</strong> — listed in <code>product.owners</code>; separate from Users tab assignment.</li>
+      </ul>
+      ${screenshot('platform-product-add-user.png', 'Add User modal: onboard organization members to the product')}
 
       <h3>Access Matrix</h3>
-      <p><code>…/access-matrix</code> (owners only). Per-member, per-release grants: which org users may view or use specific release lines. Fine-grained alternative to blanket product assignment—critical for Viewer/Member roles.</p>
+      <p>Fine-grained per-user, per-release grants. Essential when org Members should see only specific version lines or when Viewers need read-only release access.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Manage Access</strong> — checkbox list of all published releases plus <strong>Grant to all versions</strong> (includes future releases).</li>
+        <li><strong>Search versions</strong> — filter long release lists inside the modal.</li>
+        <li><strong>Status banner</strong> — shows how many versions a user already has vs total available.</li>
+        <li><strong>Without matrix rows</strong> — assigned Members may see the product but cannot activate licenses on blocked versions.</li>
+      </ul>
+      ${screenshot('platform-product-access-matrix-manage.png', 'Manage Access modal: grant version access per user including future releases')}
 
       <h3>Audit Logs</h3>
-      <p><code>…/audit-logs</code>. Product-scoped audit trail: license changes, settings updates, key rotation, member assignment.</p>
+      <p>Product-scoped audit trail—narrower than org audit but includes license lifecycle events tied to this software.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Typical actions</strong> — LicenseCreated, LicenseDeleted, LicenseFileDownload, InvitationSent (when product context applies).</li>
+        <li><strong>Filters &amp; export</strong> — same pattern as org audit: action, entity type, date range, CSV export.</li>
+        <li><strong>Support workflow</strong> — correlate customer ticket with IP and timestamp before revoking a key.</li>
+      </ul>
+      ${screenshot('platform-product-audit-logs.png', 'Product Audit Logs tab: license creation, download, and invitation activity')}
 
       <h3>Settings</h3>
-      <p><code>…/settings</code> (owners only). In-tab sections:</p>
+      <p>Product owners configure runtime behavior and cryptographic material. End users and non-owners never see this tab.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>General</strong> — name, description, status, access type (where editable).</li>
-        <li><strong>Client Updates</strong> — update-check endpoints and metadata used by SDK update managers.</li>
-        <li><strong>License signing keys (RSA)</strong> — generate, regenerate, download public key (${link('/rsa-keys', 'RSA guide')}).</li>
-        <li><strong>Danger zone</strong> — delete product (releases and licenses cascade).</li>
+        <li><strong>General</strong> — name, description, status, access type (where editable after create).</li>
+        <li><strong>Client product updates</strong> — toggle <strong>Offer product updates to clients</strong>; when disabled, update APIs return no upgrade for this product.</li>
+        <li><strong>License signing keys (RSA)</strong> — generate, regenerate, download public PEM; private key never leaves the server (${link('/rsa-keys', 'RSA guide')}).</li>
+        <li><strong>Danger zone</strong> — delete product; releases and licenses cascade.</li>
       </ul>
+      <p><strong>Rotation warning:</strong> regenerating RSA keys invalidates existing <code>license.bin</code> files until customers re-download licenses and apps embed the new public key.</p>
+      ${screenshot('platform-product-settings-rsa-keys.png', 'Product Settings: client updates toggle and License signing keys with regenerate and download public key')}
 
       <h2>Who can do what on products</h2>
       <ul style="margin-left:1.25rem;">
@@ -294,32 +379,42 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Access matrix</strong> — grant members access per release row, not only per product.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/releases</code> — global list across products (filter, search).</li>
-        <li><code>/dashboard/releases/create</code> — create release (pick product context).</li>
-        <li><code>/dashboard/releases/:id</code> — detail; <code>/edit</code> for modifications.</li>
-        <li><code>/dashboard/products/:slug/releases</code> — product-scoped tab (primary operator path).</li>
-        <li><code>/dashboard/products/:slug/releases/create</code> — create in product context.</li>
-      </ul>
+      <h2>Product Releases tab</h2>
+      <p>Primary operator surface for version management inside a product workspace. The global <strong>Releases</strong> sidebar item shows the same data across all products you can access.</p>
+      ${screenshot('platform-product-releases-list.png', 'Product Releases tab: version list with type, status, and license counts')}
 
       <h2>Release fields (typical)</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Version string</strong> — semantic, pre-release, simple, or build-based (matches product versioning style).</li>
-        <li><strong>Release level</strong> — Stable (production), Beta, Alpha, RC—signals support and update policy.</li>
-        <li><strong>Status</strong> — active vs archived; archived releases may block new license issuance.</li>
-        <li><strong>Notes / changelog</strong> — operator-facing metadata for support.</li>
-        <li><strong>Artifacts</strong> — optional binaries via ${link('/guides/platform/storage', 'Storage connectors')} instead of uploading through core API for every build.</li>
+        <li><strong>Version string</strong> — semantic (<code>1.0.0</code>), pre-release (<code>1.0.0-alpha.1</code>), simple (<code>1</code>), or build-based (<code>1.0.0.1</code>) depending on wizard choice.</li>
+        <li><strong>Release level</strong> — Stable (production), Beta, Alpha, RC—signals support expectations and update policy.</li>
+        <li><strong>Status</strong> — Draft (hidden from end users) vs Published (visible in catalogs and license wizard).</li>
+        <li><strong>Notes / changelog</strong> — operator-facing text shown on the release detail page and optionally in update metadata.</li>
+        <li><strong>Entitlement sets</strong> — link sets that apply to this version line (see wizard step 2).</li>
+        <li><strong>Artifacts</strong> — installers via ${link('/guides/platform/storage', 'Storage connectors')} (Google Drive, OneDrive, custom server) instead of large API uploads.</li>
       </ul>
 
       <h2>Operator workflow</h2>
       <ol style="margin-left:1.25rem;">
         <li>Open product → <strong>Releases</strong> tab (or global Releases list).</li>
-        <li><strong>Create release</strong> — version, level, notes; confirm product binding.</li>
-        <li>Link storage artifact if installers live on Drive/OneDrive/custom server.</li>
-        <li>Issue licenses against this release id before customers upgrade app builds.</li>
-        <li>When deprecating, archive old release after migrating licenses or forcing update channel.</li>
+        <li><strong>Create release</strong> — step 1: versioning format, version number, release level, draft vs published.</li>
+        <li>Step 2: pick entitlement sets that apply to this build.</li>
+        <li>Step 3: attach files from storage or upload references.</li>
+        <li>Step 4: changelog and release notes for support teams.</li>
+        <li>Issue licenses against this release id <em>before</em> customers upgrade app builds.</li>
+        <li>When deprecating, archive old release after migrating licenses or forcing an update channel.</li>
       </ol>
+      ${screenshot('platform-create-release-basic-info.png', 'Create Release wizard step 1: versioning format, release level, and draft or published status')}
+
+      <h2>Release detail page</h2>
+      <p>Opened from a row in the releases table or global release list. Shows everything support needs for a single version line.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Header badges</strong> — versioning style (Semantic), level (Stable), and Published status.</li>
+        <li><strong>Changelog &amp; release notes</strong> — editable narrative for operators and customers.</li>
+        <li><strong>Entitlement sets</strong> — which SKUs apply to this release.</li>
+        <li><strong>Files card</strong> — linked storage artifact with cloud download action (e.g. Google Drive file).</li>
+        <li><strong>Edit</strong> — update metadata without re-creating the release id (prefer new release for breaking version bumps).</li>
+      </ul>
+      ${screenshot('platform-release-detail.png', 'Release detail page: changelog, notes, entitlement sets, and Google Drive file download')}
 
       <h2>Roles</h2>
       <ul style="margin-left:1.25rem;">
@@ -348,22 +443,27 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       </ol>
 
       <h2>Features tab</h2>
-      <p>Product owners define:</p>
+      <p>Product owners define the capability catalog before bundling SKUs. End users and non-owners do not see this tab.</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>Feature key</strong> — stable identifier referenced in code (<code>FeatureManager.IsEnabled("key")</code>).</li>
-        <li><strong>Display name &amp; description</strong> — operator documentation.</li>
+        <li><strong>Display name &amp; description</strong> — operator documentation and support context.</li>
+        <li><strong>Assign to groups</strong> — blue tags (e.g. Groub1, Groub2) pre-group features for entitlement set authoring.</li>
+        <li><strong>Create Feature</strong> — adds a row to the searchable table with created-on date and actions menu.</li>
         <li><strong>Type / default</strong> — boolean gates, numeric limits, or structured values per your product model.</li>
       </ul>
-      <p>End users and non-owners do not see this tab.</p>
+      <p><strong>Design tip:</strong> prefer fewer, well-named keys over dozens of overlapping toggles—customers receive entitlements through sets, not individual feature rows.</p>
+      ${screenshot('platform-product-features.png', 'Product Features tab: define features and assign to entitlement groups')}
 
       <h2>Entitlement Sets tab</h2>
-      <p>Routes: <code>…/entitlements</code>, <code>…/entitlements/create</code>, <code>…/entitlements/edit/:setId</code>.</p>
+      <p>Bundle features into reusable packages operators attach at license creation.</p>
       <ul style="margin-left:1.25rem;">
-        <li>Create a set name and description.</li>
-        <li>Add features from the product catalog with per-feature values (enabled, limits).</li>
-        <li>Save—sets appear in license create form dropdown.</li>
-        <li>Editing a set affects <strong>new</strong> issuances; existing licenses keep signed material until re-issued or refreshed online.</li>
+        <li><strong>Create Set</strong> — name, description, and linked release tags (1.0.0, 1.0.3, …).</li>
+        <li><strong>Features column</strong> — count of capabilities in each set (e.g. “3 features”).</li>
+        <li><strong>Add features</strong> — pick from catalog with per-feature values (enabled, limits).</li>
+        <li><strong>License wizard</strong> — saved sets appear in the step 1 dropdown.</li>
+        <li><strong>Edit impact</strong> — changes affect <strong>new</strong> issuances; existing signed licenses keep old material until re-issued or refreshed online.</li>
       </ul>
+      ${screenshot('platform-product-entitlement-sets.png', 'Entitlement Sets tab: group features into reusable sets linked to releases')}
 
       <h2>Runtime enforcement</h2>
       <ul style="margin-left:1.25rem;">
@@ -406,51 +506,60 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Transfer</strong> — reassign issued-to user or node-locked device where policy allows.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/licenses</code> — global list (all accessible products).</li>
-        <li><code>/dashboard/licenses/create</code> — create wizard (pick product if not in context).</li>
-        <li><code>/dashboard/licenses/:id</code> — vendor license detail.</li>
-        <li><code>/dashboard/licenses/edit/:id</code> — edit form.</li>
-        <li><code>/dashboard/products/:slug/licenses/…</code> — same flows in product context.</li>
-        <li><code>/dashboard/my-licenses</code> — <strong>end-user</strong> licenses issued to you (not vendor ops).</li>
-        <li><code>/dashboard/my-licenses/:id/activate</code> — customer activation UI.</li>
-      </ul>
+      <h2>Where to work in the dashboard</h2>
+      <p>Use the sidebar <strong>Licenses</strong> list for cross-product search, or open a product → <strong>Licenses</strong> tab when you already know the software context. End customers use <strong>My Licenses</strong> (not the vendor workspace) for keys issued to their account.</p>
 
       <h2>Create wizard — Step 1: Basic Info</h2>
+      <p>Pick the license model and binding context—everything downstream (seats, sessions, activations) follows the type card you select.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>License type</strong> — Perpetual, Trial, Subscription, Floating, Node-locked, Concurrent (plan may gate types).</li>
-        <li><strong>Product</strong> — required in global create mode.</li>
-        <li><strong>Software release</strong> — required; binds validation to version line.</li>
-        <li><strong>Issuer</strong> — optional vendor name on metadata.</li>
+        <li><strong>License type cards</strong> — Perpetual, Concurrent, Node-locked, Subscription, Floating, Trial (plan may gate types).</li>
+        <li><strong>Product</strong> — required when creating from the global list; pre-filled in product context.</li>
+        <li><strong>Software release</strong> — required; binds validation and update checks to a version line.</li>
+        <li><strong>Issuer</strong> — optional vendor name on license metadata.</li>
         <li><strong>Issued to</strong> — email, end-user picker, or auto (type-dependent).</li>
-        <li><strong>Perpetual mode</strong> — Online (activations tracked) vs Offline (file-based).</li>
-        <li><strong>Entitlement set</strong> — optional package from product entitlements tab.</li>
+        <li><strong>Perpetual mode</strong> — Online (activations tracked) vs Offline (signed file only).</li>
+        <li><strong>Entitlement set</strong> — optional package from the product Entitlement Sets tab.</li>
       </ul>
 
       <h2>Create wizard — Step 2: Details</h2>
+      <p>Operational limits and labels operators and support teams rely on after issuance.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>License name</strong> — internal label (required).</li>
+        <li><strong>License name</strong> — internal label (required); appears in lists and audit logs.</li>
         <li><strong>Duration / expiry</strong> — subscription length, trial period, or none for perpetual.</li>
-        <li><strong>Seats &amp; limits</strong> — max activations, max concurrent users (floating), hardware binding.</li>
-        <li><strong>Notes</strong> — rich-text operator notes.</li>
-        <li><strong>Submit</strong> — success screen shows license key + copy; open detail to download file.</li>
+        <li><strong>Seats &amp; limits</strong> — max activations (concurrent/node-locked), max concurrent users (floating), hardware binding flags.</li>
+        <li><strong>Notes</strong> — rich-text operator notes (sales context, support tickets).</li>
+        <li><strong>Success screen</strong> — copy license key; open detail to download <code>license.bin</code>.</li>
       </ul>
 
       <h2>License detail tabs (vendor)</h2>
-      <p><code>/dashboard/licenses/:id</code> — tabs depend on type and ownership:</p>
+      <p>Opened from any license row. Tab visibility depends on license type and whether you are a product owner or system Admin.</p>
 
       <h3>Overview (always)</h3>
-      <p>Key metadata, status badge, type, release, issued-to, expiry, download <code>license.bin</code>, revoke, delete, transfer user, edit link.</p>
+      <p>Single-pane summary for day-to-day vendor ops.</p>
+      <ul style="margin-left:1.25rem;">
+        <li>License key, status badge, type, release, issued-to, expiry.</li>
+        <li>Download <code>license.bin</code>, revoke, delete, transfer user, edit link.</li>
+        <li>Copy key for email delivery; audit log correlates downloads with IP.</li>
+      </ul>
 
       <h3>Activations</h3>
-      <p>Visible when <strong>Admin or product owner</strong> and license type supports device binding. Per-license activation list, block/unblock, notes. See ${link('/guides/platform/activations', 'Activations')}.</p>
+      <p>Device and environment seats for binding models. Visible when the license type supports hardware or device tracking and you have owner/Admin rights.</p>
+      <ul style="margin-left:1.25rem;">
+        <li>Per-device rows with block/unblock and support notes.</li>
+        <li>Primary surface for ${link('/concurrent-license', 'Concurrent')} seat math (activations, not sessions).</li>
+      </ul>
+      <p>See ${link('/guides/platform/activations', 'Activations')}.</p>
 
       <h3>Sessions</h3>
-      <p>Online-capable licenses only. Live sessions with heartbeat timestamps; disconnect stale clients. See ${link('/guides/platform/sessions', 'Sessions')}.</p>
+      <p>Live online connections with heartbeat timestamps. Shown for online-capable licenses—especially ${link('/floating-license', 'Floating')} where seats follow <em>live sessions</em>, not registered devices.</p>
+      <ul style="margin-left:1.25rem;">
+        <li>Disconnect stale clients holding seats after app crash.</li>
+        <li>Correlate session id with API logs for support.</li>
+      </ul>
+      <p>See ${link('/guides/platform/sessions', 'Sessions')}.</p>
 
       <h3>Device</h3>
-      <p><strong>Node-locked</strong> licenses: bound hardware fingerprint, activation history, transfer/unbind device workflows.</p>
+      <p><strong>Node-locked</strong> licenses only: bound hardware fingerprint, activation history, transfer/unbind workflows when policy allows a machine change.</p>
 
       <h2>License status lifecycle</h2>
       <ul style="margin-left:1.25rem;">
@@ -488,26 +597,20 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Deactivate</strong> — client or operator releases seat for reuse.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
+      <h2>Global Activations page</h2>
+      <p>Sidebar: <strong>Activations</strong>. Cross-product view when you do not yet know which license key is involved.</p>
       <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/activations</code> — global list across your products.</li>
-        <li><code>/dashboard/activations/:id</code> — single activation detail.</li>
-        <li><code>/dashboard/licenses/:id</code> → <strong>Activations</strong> tab — per-license slice.</li>
-      </ul>
-
-      <h2>Global activations page</h2>
-      <p>Sidebar: <strong>Activations</strong>. Operators use:</p>
-      <ul style="margin-left:1.25rem;">
-        <li><strong>Search</strong> — license key, device, user email.</li>
+        <li><strong>Search</strong> — license key, device fingerprint, user email, machine name.</li>
         <li><strong>Status filter</strong> — active, blocked, deactivated.</li>
-        <li><strong>Date presets</strong> — 7D / 30D / 90D / all / custom range.</li>
-        <li><strong>Block / unblock</strong> — force deny without deleting history.</li>
-        <li><strong>Edit notes</strong> — support annotations.</li>
+        <li><strong>Date presets</strong> — 7D / 30D / 90D / all / custom range for incident windows.</li>
+        <li><strong>Block / unblock</strong> — force deny on next online check without deleting history.</li>
+        <li><strong>Edit notes</strong> — support annotations visible to other operators.</li>
+        <li><strong>Drill-down</strong> — open activation detail or jump to parent license.</li>
       </ul>
-      <p>API scopes list to products you own or administer; system Admin sees broader sets.</p>
+      <p>API scopes list products you own or administer.</p>
 
       <h2>Per-license Activations tab</h2>
-      <p>From license detail when type supports binding and you are Admin/product owner. Faster support path when you already have the license key context.</p>
+      <p>Faster path when support already has the license key. Same block/unblock semantics as the global list but pre-filtered to one license. Use when a customer says “seat 3 of 5 is stuck on an old laptop.”</p>
 
       <h2>By license model</h2>
       <ul style="margin-left:1.25rem;">
@@ -541,20 +644,18 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Disconnect (operator)</strong> — force terminate from dashboard for stuck sessions.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
+      <h2>Global Sessions page</h2>
+      <p>Sidebar: <strong>Sessions</strong>. NOC-style monitoring of who is online right now across floating and other heartbeat-enabled models.</p>
       <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/sessions</code> — all sessions across licenses (sidebar <strong>Sessions</strong>).</li>
-        <li><code>/dashboard/licenses/:id</code> → <strong>Sessions</strong> tab — scoped to one license.</li>
+        <li><strong>Online / offline filter</strong> — focus on live clients vs historical rows.</li>
+        <li><strong>Search</strong> — license key, user email, machine name, app version.</li>
+        <li><strong>Auto-refresh</strong> — periodic reload during release weekends or license migrations.</li>
+        <li><strong>Disconnect</strong> — remote termination; client fails on next heartbeat.</li>
+        <li><strong>Details</strong> — version string, IP/geo when collected, session id for API correlation.</li>
       </ul>
 
-      <h2>Global Sessions page</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><strong>Online / offline filter</strong> — focus on live clients.</li>
-        <li><strong>Search</strong> — license, user, machine name.</li>
-        <li><strong>Auto-refresh</strong> — periodic reload for NOC-style monitoring.</li>
-        <li><strong>Disconnect</strong> — remote session termination (customer app receives failure on next heartbeat).</li>
-        <li><strong>Details</strong> — version string, IP/geo if collected, session id for API correlation.</li>
-      </ul>
+      <h2>Per-license Sessions tab</h2>
+      <p>Same data as the global page scoped to one license—ideal when debugging a single floating pool key.</p>
 
       <h2>When sessions matter</h2>
       <ul style="margin-left:1.25rem;">
@@ -586,20 +687,15 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Convert</strong> — replace with paid perpetual/subscription license; transfer entitlements/device bindings where supported.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/trials</code> — trial license list with status filters.</li>
-        <li><code>/dashboard/trials/create</code> — may redirect to license create with Trial preset.</li>
-        <li><code>/dashboard/licenses/create</code> — pick type Trial in wizard step 1.</li>
-      </ul>
-
       <h2>Trials page operations</h2>
+      <p>Sidebar: <strong>Trials</strong>. Aggregates trial-type licenses so sales and support do not hunt through the full license list.</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>Filter by status</strong> — Active, Expired, Converted, Cancelled.</li>
-        <li><strong>Search</strong> — customer email, license key, product.</li>
-        <li><strong>Extend trial</strong> — push expiry date; audit log entry.</li>
-        <li><strong>End trial</strong> — immediate expiry; validation fails on next check.</li>
-        <li><strong>Open license detail</strong> — full activations/sessions context.</li>
+        <li><strong>Search</strong> — customer email, license key, product name.</li>
+        <li><strong>Extend trial</strong> — push expiry date; writes an audit entry.</li>
+        <li><strong>End trial</strong> — immediate expiry; validation fails on next SDK or API check.</li>
+        <li><strong>Create</strong> — use license wizard with type <strong>Trial</strong> or Trials page shortcut when offered.</li>
+        <li><strong>Open license detail</strong> — full activations/sessions context for escalations.</li>
       </ul>
 
       <h2>Trial vs subscription</h2>
@@ -621,7 +717,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p>The <strong>Analytics</strong> dashboard consolidates operational metrics: how many licenses are active, where activations spike, trial conversion pressure, and product-level adoption. It complements point-in-time lists (Licenses, Activations) with time-series views.</p>
 
       <h2>Dashboard route</h2>
-      <p><code>/dashboard/analytics</code> — single page with sections (no sub-tabs). Sidebar: <strong>Analytics</strong>.</p>
+      <p>Open <strong>Analytics</strong> from the sidebar. Single page with filterable sections—no sub-tabs. Use org selector and date range before exporting or scheduling reports.</p>
 
       <h2>Page sections</h2>
       <ul style="margin-left:1.25rem;">
@@ -670,13 +766,8 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Revoke</strong> — disconnect provider; existing release links may break until re-linked.</li>
       </ol>
 
-      <h2>Dashboard routes</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/storage</code> — Storage hub (provider cards).</li>
-        <li><code>/dashboard/storage/google-drive</code> — Google Drive integration UI.</li>
-        <li><code>/dashboard/storage/onedrive</code> — Microsoft OneDrive integration.</li>
-        <li><code>/dashboard/storage/custom-server</code> — custom HTTP storage (often Pro plan).</li>
-      </ul>
+      <h2>Storage hub</h2>
+      <p>Sidebar: <strong>Storage</strong>. Connect external file hosts before you attach binaries to releases.</p>
 
       <h2>Provider comparison</h2>
       <ul style="margin-left:1.25rem;">
@@ -711,43 +802,35 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p><strong>Account settings</strong> manage <em>you</em> as a platform user—not a product or organization. Product signing keys live under Product → Settings (${link('/rsa-keys', 'RSA keys guide')}); account <strong>API keys</strong> automate REST calls with scoped JWT-backed credentials.</p>
 
       <h2>Route</h2>
-      <p><code>/dashboard/account-settings</code> with query tab: <code>?tab=profile|security|notifications|manageplan|apikeys|danger</code>. Sidebar: <strong>Settings</strong> (gear icon). Related: <code>/dashboard/billing</code>, <code>/dashboard/checkout</code> (Pro upgrade).</p>
+      <p>Open <strong>Settings</strong> (gear icon) from the sidebar. Tabs are driven by query parameter: profile, security, notifications, manage plan, API keys, and danger zone. Billing and checkout live as adjacent pages for upgrades.</p>
 
       <h2>Settings sections</h2>
 
-      <h3>My Profile (<code>tab=profile</code>)</h3>
-      <p>Display name, avatar, contact email, timezone preferences. Updates operator identity shown in audit logs and invitations—not license metadata.</p>
+      <h3>My Profile</h3>
+      <p>Display name, avatar, contact email, timezone preferences. Updates operator identity shown in audit logs and invitations—not license metadata or product RSA keys.</p>
 
-      <h3>Security (<code>tab=security</code>)</h3>
-      <p>Password change, two-factor authentication, active sessions. Pair with <code>/dashboard/login-attempts</code> (admin security views) for breach investigation.</p>
+      <h3>Security</h3>
+      <p>Password change, two-factor authentication, and review of active login sessions on your operator account.</p>
 
-      <h3>Notifications (<code>tab=notifications</code>)</h3>
+      <h3>Notifications</h3>
       <p>Email and in-app preferences: license events, invitations, billing, marketing (per toggles). Does not change customer app telemetry.</p>
 
-      <h3>Manage plan (<code>tab=manageplan</code>)</h3>
-      <p>Current subscription tier (Free vs Pro), limits on organizations, products, license types, storage connectors. Upgrade flows link to checkout. Locked products show <code>isSubscriptionLocked</code> in UI—owners cannot manage until plan restored.</p>
+      <h3>Manage plan</h3>
+      <p>Current subscription tier (Free vs Pro), limits on organizations, products, license types, and storage connectors. Upgrade flows link to checkout. Locked products show <code>isSubscriptionLocked</code> in the UI—owners cannot manage until the plan is restored.</p>
 
-      <h3>Billing (<code>/dashboard/billing</code>)</h3>
-      <p>Invoices, payment method, history—commerce surface adjacent to manage plan.</p>
+      <h3>Billing</h3>
+      <p>Invoices, payment method, and payment history—commerce surface adjacent to manage plan.</p>
 
-      <h3>API keys (<code>tab=apikeys</code>)</h3>
+      <h3>API keys</h3>
       <p>Generate scoped REST credentials for CI/CD and internal tools:</p>
       <ul style="margin-left:1.25rem;">
         <li>Name, description, optional expiration.</li>
         <li>Scopes: Read/Write Licenses, Activations, Products, Releases.</li>
-        <li>Secret shown once—store in vault (${link('/rsa-keys', 'full API keys walkthrough')}).</li>
+        <li>Secret shown once—store in a vault (${link('/rsa-keys', 'full API keys walkthrough')}).</li>
       </ul>
 
-      <h3>Danger zone (<code>tab=danger</code>)</h3>
-      <p>Delete operator account—irreversible; does not delete organizations you own (handle org transfer first).</p>
-
-      <h2>System admin settings (JWT Admin only)</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><code>/dashboard/system-settings</code> — platform configuration.</li>
-        <li><code>/dashboard/roles</code> — custom roles &amp; permissions (<code>Products.View</code>, <code>Licenses.Create</code>, …).</li>
-        <li><code>/dashboard/logs</code> — merged Audit | Login | Email | SDK logs.</li>
-        <li><code>/dashboard/subscribers</code> — subscription subscriber admin.</li>
-      </ul>
+      <h3>Danger zone</h3>
+      <p>Delete operator account—irreversible. Does not delete organizations you own; transfer org ownership first.</p>
 
       <p>${link('/api/auth-users', 'Auth &amp; users API')} · ${link('/api/security', 'Security API')} · ${link('/api/billing', 'Billing API')} · ${link('/guides/platform/overview', 'System overview')}</p>
     `,

@@ -111,7 +111,7 @@ export class DocsLayoutComponent {
         )
         .subscribe(() => {
           this.closeImageLightbox();
-          queueMicrotask(() => this.scrollDocsPanesToTop());
+          this.scrollDocsPanesToTop();
           const url = this.router.url;
           const prevMode = this.navMode();
           this.applyUrlToNavMode(url);
@@ -174,9 +174,16 @@ export class DocsLayoutComponent {
     // before that DOM exists; afterNextRender runs after the next completed render pass.
     afterNextRender(
       () => {
+        this.scrollDocsPanesToTop();
         this.refreshTocFromDom();
-        setTimeout(() => this.refreshTocFromDom(), 120);
-        setTimeout(() => this.refreshTocFromDom(), 400);
+        setTimeout(() => {
+          this.scrollDocsPanesToTop();
+          this.refreshTocFromDom();
+        }, 120);
+        setTimeout(() => {
+          this.scrollDocsPanesToTop();
+          this.refreshTocFromDom();
+        }, 400);
       },
       { injector: this.injector }
     );
@@ -185,6 +192,7 @@ export class DocsLayoutComponent {
   /** Fires when a lazy route component is attached — innerHTML topics often land right after. */
   onDocsOutletActivate(): void {
     if (!this.isBrowser) return;
+    this.scrollDocsPanesToTop();
     this.scheduleTocRefresh();
   }
 

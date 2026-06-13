@@ -53,6 +53,13 @@
     The form is a two-step wizard: <strong>Basic Info</strong> and <strong>Details</strong>.
   </p>
 
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-basic-info.png" data-doc-image-alt="Generate License wizard step 1 Basic Info: license type cards (Perpetual, Concurrent, Node-Locked, Subscription, Floating, Trial) and product selection" aria-label="View Generate License Basic Info screenshot full size">
+      <img src="assets/docs/platform-create-license-basic-info.png" alt="Generate License wizard step 1 Basic Info: license type cards (Perpetual, Concurrent, Node-Locked, Subscription, Floating, Trial) and product selection" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
+  </figure>
+
   <div class="doc-stepper">
     <div class="step-item active">
       <div class="step-number">1</div>
@@ -60,11 +67,12 @@
         <h3>Step 1 — Basic Info</h3>
         <p><strong>License type</strong> (required)—choose the model that matches how you sell access:</p>
         <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-          <li><strong>Perpetual</strong> — no expiry; optional offline vs online activation mode.</li>
-          <li><strong>Trial</strong> — time-limited evaluation with trial period fields.</li>
+          <li><strong>Perpetual</strong> — multi-user, indefinite use; online or offline mode.</li>
+          <li><strong>Concurrent</strong> — shared team key; max simultaneous users via activations.</li>
+          <li><strong>Node-locked</strong> — bound to one machine (hardware captured on first run).</li>
           <li><strong>Subscription</strong> — recurring term; duration in days or hours.</li>
-          <li><strong>Floating</strong> — concurrent seats across machines (max active users).</li>
-          <li><strong>Node-locked</strong> — bound to an end user from the selected release.</li>
+          <li><strong>Floating</strong> — enterprise seat pool enforced by live sessions.</li>
+          <li><strong>Trial</strong> — time-limited evaluation with trial period fields.</li>
         </ul>
         <p>Model-specific guides: sidebar <strong>License models</strong> or <a routerLink="/perpetual-license">perpetual</a>, <a routerLink="/trial-license">trial</a>, <a routerLink="/subscription-license">subscription</a>, <a routerLink="/floating-license">floating</a>, <a routerLink="/concurrent-license">concurrent</a>, <a routerLink="/node-locked-license">node-locked</a>.</p>
 

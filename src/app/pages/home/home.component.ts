@@ -51,7 +51,7 @@ import { RouterLink } from '@angular/router';
           <h3>Changelog</h3>
           <p>Release notes and product updates</p>
         </a>
-        <a routerLink="/quick-start" fragment="vendor-workflow" class="doc-card">
+        <a routerLink="/quick-start" class="doc-card">
           <i class="ki-outline ki-route"></i>
           <h3>Vendor workflow</h3>
           <p>Products, releases, keys, licenses, SDK</p>

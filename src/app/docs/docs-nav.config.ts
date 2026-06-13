@@ -40,13 +40,6 @@ export const DOCS_NAV: NavSection[] = [
     expanded: true,
     items: [
       { id: 'quick-start', label: 'Quick start', icon: 'ki-outline ki-flag', route: '/quick-start' },
-      {
-        id: 'vendor-workflow',
-        label: 'Dashboard workflow',
-        icon: 'ki-outline ki-route',
-        route: '/quick-start',
-        fragment: 'vendor-workflow',
-      },
       { id: 'first-organization', label: 'First organization', icon: 'ki-outline ki-briefcase', route: '/first-organization' },
       { id: 'first-product', label: 'First product', icon: 'ki-outline ki-abstract-26', route: '/first-product' },
       { id: 'first-license', label: 'First license', icon: 'ki-outline ki-key', route: '/first-license' },
