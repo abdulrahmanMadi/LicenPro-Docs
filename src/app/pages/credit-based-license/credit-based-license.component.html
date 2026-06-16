@@ -1,0 +1,245 @@
+<div class="help-page">
+  <header class="help-page-header">
+    <h1>Credit-Based license</h1>
+    <p class="lead">
+      A <strong>Credit-Based</strong> license (<code>MeteredToken</code>, metering mode <code>Token</code>) is
+      <strong>always online</strong>. Customers share one <strong>credit wallet</strong> across all devices on the
+      license key. Each entitled feature deducts credits according to <strong>per-feature token pricing</strong> on
+      the product — not a flat “one use per call” like Usage-Based.
+    </p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-wallet"></i>
+      <h4>Shared wallet</h4>
+      <p>One balance per license key — not per device.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-price-tag"></i>
+      <h4>Variable cost</h4>
+      <p>Each feature has a <code>TokenCost</code> × quantity.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-chart-line-up"></i>
+      <h4>Usage tab</h4>
+      <p>Balance, ledger, manual top-ups (owners).</p>
+    </div>
+  </div>
+
+  <h2>When to choose Credit-Based</h2>
+  <p>
+    Choose <strong>Credit-Based</strong> when you sell a <strong>pre-paid pool of credits</strong> and different
+    features in your product should cost <strong>different amounts</strong>. The customer starts with a balance
+    (for example 10,000 credits). Each time they run a billable action, your app calls
+    <code>ConsumeAsync</code> and the server deducts credits based on that feature’s configured price.
+  </p>
+  <p>
+    Think of it like a prepaid phone plan with variable call rates: one minute to country A costs 2 credits,
+    one minute to country B costs 5 credits — same wallet, different prices per action.
+  </p>
+
+  <h3>Good fits</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>API or SaaS with tiered actions</strong> — “10,000 API credits per month”; a simple read costs 1 credit, a heavy export costs 25.</li>
+    <li><strong>Document / OCR / AI products</strong> — “5,000 pages included”; OCR costs 10 credits per page, summary costs 40.</li>
+    <li><strong>Creative or compute tools</strong> — “1,000 render credits”; preview is cheap, 4K export is expensive.</li>
+    <li><strong>Top-up sales</strong> — customer buys another 5,000 credits when the wallet is low (manual grant from the Usage tab today).</li>
+  </ul>
+
+  <h3>How it behaves in LicenPro</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Dashboard label: <strong>Credit-Based</strong>. API enum: <code>MeteredToken</code>.</li>
+    <li>Balance is shown in <strong>credits</strong> (shared across all devices on the license key).</li>
+    <li>You must set a <strong>token cost per feature</strong> before consume works (via metering API; UI coming later).</li>
+    <li>Example: feature <code>ExportPdf</code> priced at 25 → one consume deducts <strong>25 credits</strong>, not 1.</li>
+  </ul>
+
+  <h3>When to use Usage-Based instead</h3>
+  <p>
+    If every billable action should cost <strong>exactly one use</strong> — “500 exports included”, “1,000 API calls” —
+    and you do <strong>not</strong> need different prices per feature, use
+    <a routerLink="/usage-based-license">Usage-Based</a> (<code>MeteredCount</code>). It is simpler: no feature pricing step.
+  </p>
+
+  <h2>At a glance</h2>
+  <table>
+    <thead>
+      <tr><th>Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Backend enum</td><td><code>LicenseType.MeteredToken</code> (value <code>6</code>)</td></tr>
+      <tr><td>Dashboard label</td><td><strong>Credit-Based</strong></td></tr>
+      <tr><td>Metering mode</td><td><code>MeteringMode.Token</code></td></tr>
+      <tr><td>Balance unit</td><td><strong>credits</strong></td></tr>
+      <tr><td>Cost per consume</td><td><code>FeatureMeterPricing.TokenCost × quantity</code></td></tr>
+      <tr><td>Activation mode</td><td><strong>Online only</strong> — offline is not available</td></tr>
+      <tr><td>Seat limit</td><td>None — any number of devices may activate; the wallet is the limit</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Key invariant</h2>
+  <p>
+    Balance is <strong>only</strong> checked and deducted in <code>POST /api/meter/consume</code>.
+    License validation, activation, and session connect <strong>never</strong> look at the balance.
+    A Credit-Based license can activate at zero credits; your app must call <code>ConsumeAsync</code> when a
+    billable feature runs and handle <code>InsufficientBalance</code> (HTTP 402).
+  </p>
+
+  <h2>Create a Credit-Based license (dashboard)</h2>
+  <p>
+    Open <strong>Licenses</strong> → <strong>Generate License</strong>. Four steps:
+    <strong>Activation</strong> → <strong>License Type</strong> → <strong>Basic Info</strong> → <strong>Details</strong>.
+  </p>
+
+  <h3>Step 1 — Activation</h3>
+  <p>Select <strong>Online</strong>. Credit-Based is an always-online type — the wizard forces online mode and hides metered cards if Offline is selected.</p>
+
+  <h3>Step 2 — License type</h3>
+  <p>Select the <strong>Credit-Based</strong> card (“Variable cost per feature”). Subtitle explains the shared credit pool and manual top-ups.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-license-type.png" data-doc-image-alt="License Type step with Credit-Based selected" aria-label="View License Type step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-license-type.png" alt="License Type step with Credit-Based selected" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">License Type — Credit-Based (MeteredToken).</figcaption>
+  </figure>
+
+  <h3>Step 3 — Basic info</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Product</strong> and <strong>Software release</strong> (required).</li>
+    <li><strong>Issued to</strong> — end user assigned to the release (required for non-perpetual types).</li>
+    <li><strong>License name</strong> — internal label in lists and audit.</li>
+    <li>Optional <strong>Entitlement set</strong> — when set, only entitled features can be consumed.</li>
+  </ul>
+
+  <h3>Step 4 — Details</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Initial credits balance</strong> (<code>initialMeterBalance</code>) — required, must be <strong>&gt; 0</strong> (default in the form is often 10,000).</li>
+    <li><strong>Notes</strong> — operator context (invoice, SKU, support ticket).</li>
+  </ul>
+  <p>On save, the backend creates a <code>MeterWallet</code> with mode <code>Token</code> and writes an <strong>InitialGrant</strong> ledger row when balance &gt; 0.</p>
+  <pre ngNonBindable style="margin: 0.75rem 0 1rem; padding: 1rem; background: var(--bs-gray-100, #f5f5f5); border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto;"><code>Create Credit-Based license, initial 10,000
+└─ MeterWallet &#123; mode: Token, balance: 10000 &#125;
+   └─ UsageLedger &#123; type: InitialGrant, amount: +10000, balanceAfter: 10000 &#125;</code></pre>
+
+  <h2>Configure per-feature pricing (Credit-Based only)</h2>
+  <p>
+    Before clients consume a feature, set its token cost on the product.
+    API: <code>PUT /api/meter/features/&#123;featureId&#125;/pricing</code> (product owner / admin).
+  </p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><code>TokenCost</code> must be <strong>&gt; 0</strong>.</li>
+    <li>Previous active pricing rows are deactivated; history is preserved.</li>
+    <li>Consuming a feature with <strong>no active pricing</strong> returns <code>PricingNotConfigured</code> (HTTP 422).</li>
+  </ul>
+  <p><em>Note:</em> A dedicated pricing UI in the dashboard is planned; today pricing is set via API.</p>
+
+  <h2>Activation &amp; sessions</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Always-online — activation and sessions are required like Floating.</li>
+    <li><strong>No activation seat cap</strong> — <code>EnforceSeatLimitOnActivation</code> is false for metered types; many devices may share one key.</li>
+    <li>Activations and sessions appear in the dashboard for support visibility (optional attribution on consume via <code>hardwareId</code> / <code>activationId</code>).</li>
+  </ul>
+  <p>See <a routerLink="/guides/platform/activations">Activations</a> and <a routerLink="/guides/platform/sessions">Sessions</a> platform guides.</p>
+
+  <h2>Runtime — SDK &amp; API</h2>
+  <p>Typical client flow:</p>
+  <pre ngNonBindable style="margin: 0.75rem 0 1rem; padding: 1rem; background: var(--bs-gray-100, #f5f5f5); border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto;"><code>var client = new LicenseClient(options);
+
+// 1. Validate (always online — does NOT check credit balance)
+var result = await client.ValidateAsync();
+if (!result.IsValid) return;
+
+// 2. Before running a billable feature — deduct credits
+var consume = await client.ConsumeAsync("ExportPdf", quantity: 1);
+if (!consume.Success &amp;&amp; consume.IsInsufficientBalance)
+    ShowTopUpPrompt();
+
+// 3. Optional — show remaining credits
+var balance = await client.GetBalanceAsync();</code></pre>
+  <p>
+    <code>ConsumeAsync</code> calls <code>POST /api/meter/consume</code> with product <code>X-API-KEY</code>.
+    Pass an <strong>idempotency key</strong> to make retries safe — replays return the prior result without double-charging.
+  </p>
+
+  <h3>Consume request</h3>
+  <table>
+    <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>licenseKey</code></td><td>Yes</td><td>Customer license key</td></tr>
+      <tr><td><code>featureName</code></td><td>Yes</td><td>Must be entitled; must have active pricing</td></tr>
+      <tr><td><code>idempotencyKey</code></td><td>Yes</td><td>Reuse on retry of the same logical operation</td></tr>
+      <tr><td><code>quantity</code></td><td>No (default 1)</td><td>Cost = <code>TokenCost × quantity</code></td></tr>
+      <tr><td><code>hardwareId</code></td><td>No</td><td>Auto-detected by SDK when omitted</td></tr>
+      <tr><td><code>activationId</code></td><td>No</td><td>Attribute usage to a device row</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Worked example</h3>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create license with initial <strong>10,000 credits</strong>.</li>
+    <li>Price feature <code>"render"</code> at <strong>TokenCost 40</strong>.</li>
+    <li>SDK consumes <code>render</code> ×1 → cost 40 → balance <strong>9,960</strong>.</li>
+    <li>Retry with same <code>idempotencyKey</code> → replay, balance still <strong>9,960</strong>.</li>
+    <li>Consume unpriced feature → <code>PricingNotConfigured</code> (422).</li>
+    <li>Owner grants <strong>+5,000</strong> → balance <strong>14,960</strong>, ledger <code>AdminGrant</code>.</li>
+  </ol>
+
+  <h2>Usage tab (license detail)</h2>
+  <p>Open a Credit-Based license → <strong>Usage</strong> tab.</p>
+  <table>
+    <thead><tr><th>Role</th><th>What you see</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product owner / Admin</strong></td><td>Remaining balance, <strong>Grant balance</strong> form (amount, reason, external reference), full usage ledger</td></tr>
+      <tr><td><strong>Assigned end user</strong> (My Licenses → detail)</td><td>Read-only balance card; ledger without grant actions</td></tr>
+      <tr><td><strong>Member / Viewer</strong></td><td>No grant UI; read-only where permitted</td></tr>
+    </tbody>
+  </table>
+  <p>Ledger entry types: <strong>InitialGrant</strong>, <strong>Consume</strong> (negative amount), <strong>AdminGrant</strong>, <strong>Adjust</strong>.</p>
+  <p>Top-ups are <strong>manual only</strong> — there is no payment gateway integration in the current release.</p>
+
+  <h2>Analytics</h2>
+  <p>
+    Organization analytics includes a metered usage section from
+    <code>GET /api/statistics/meter-usage</code>: metered license counts, total balance remaining,
+    consumed/granted in the period, low-balance alerts, daily consumption trend, top features, and top licenses.
+  </p>
+
+  <h2>Consume error codes</h2>
+  <table>
+    <thead><tr><th>ErrorCode</th><th>HTTP</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>InvalidRequest</code></td><td>400</td><td>Missing key, feature, or idempotency key</td></tr>
+      <tr><td><code>LicenseNotFound</code></td><td>404</td><td>No license for the key</td></tr>
+      <tr><td><code>NotMeteredLicense</code></td><td>400</td><td>Wrong license type</td></tr>
+      <tr><td><code>LicenseInvalid</code></td><td>400</td><td>Status is not Valid</td></tr>
+      <tr><td><code>FeatureNotEntitled</code></td><td>403</td><td>Feature not in entitlement sets (when sets are configured)</td></tr>
+      <tr><td><code>WalletNotFound</code></td><td>400</td><td>Wallet missing</td></tr>
+      <tr><td><code>PricingNotConfigured</code></td><td>422</td><td>No active <code>TokenCost</code> for this feature</td></tr>
+      <tr><td><code>InsufficientBalance</code></td><td>402</td><td><code>balance &lt; cost</code></td></tr>
+      <tr><td><code>ConcurrencyConflict</code></td><td>409</td><td>Retry the consume call</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Credit-Based vs Usage-Based</h2>
+  <p>Use this quick guide if you are deciding between the two metered types:</p>
+  <table>
+    <thead><tr><th>Question</th><th>Credit-Based</th><th><a routerLink="/usage-based-license">Usage-Based</a></th></tr></thead>
+    <tbody>
+      <tr><td>What are you selling?</td><td>A <strong>credit wallet</strong> (e.g. “10,000 credits”)</td><td>A <strong>number of actions</strong> (e.g. “500 exports”)</td></tr>
+      <tr><td>Cost per action</td><td><strong>Varies by feature</strong> — you set each feature’s token price</td><td><strong>Always the same</strong> — usually 1 use per consume</td></tr>
+      <tr><td>Setup before first consume</td><td>Configure <code>TokenCost</code> per feature</td><td>Nothing extra — just create the license with an initial use count</td></tr>
+      <tr><td>Best analogy</td><td>Prepaid credits with different prices per service</td><td>“Includes 500 uses” — each button click counts as one</td></tr>
+    </tbody>
+  </table>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
+    <div class="integration-grid">
+      <a routerLink="/usage-based-license" class="integration-card"><i class="ki-outline ki-chart-simple"></i><h4>Usage-Based</h4><p>Flat use counter</p></a>
+      <a routerLink="/guides/platform/licenses" class="integration-card"><i class="ki-outline ki-key"></i><h4>Licenses guide</h4><p>Vendor workspace</p></a>
+      <a routerLink="/first-license" class="integration-card"><i class="ki-outline ki-plus-square"></i><h4>First license</h4><p>Wizard walkthrough</p></a>
+      <a routerLink="/sdk/features-usage" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>SDK features &amp; usage</h4><p>ConsumeAsync</p></a>
+    </div>
+  </section>
+</div>

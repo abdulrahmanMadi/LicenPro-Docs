@@ -1,52 +1,156 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Sessions & Activations</h1>
-    <p class="lead">Track how and where your licenses being used across the globe with real-time session management.</p>
+    <h1>Sessions &amp; Activations</h1>
+    <p class="lead">
+      Monitor how licenses are used in production. <strong>Activations</strong> are durable device records;
+      <strong>Sessions</strong> are live SDK connections with heartbeats. Both appear for <strong>online</strong>
+      <a routerLink="/perpetual-license">Perpetual</a> and <a routerLink="/node-locked-license">Node-Locked</a> licenses.
+    </p>
   </header>
 
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-screen"></i>
       <h4>Activations</h4>
-      <p>A permanent record of a device linked to a license key.</p>
+      <p>Permanent device ↔ license link (first validate/activate).</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-timer"></i>
       <h4>Sessions</h4>
-      <p>A temporary record of an active application instance.</p>
+      <p>Temporary connection while the app runs (heartbeat).</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-lock"></i>
+      <h4>Node-locked</h4>
+      <p>Typically 1 activation; binding on Device tab.</p>
     </div>
   </div>
 
-  <h2>Lifecycle of a License</h2>
+  <h2>Lifecycle</h2>
   <div class="doc-stepper">
     <div class="step-item active">
       <div class="step-number">1</div>
       <div class="step-content">
-        <h3>Activation</h3>
-        <p>The first time a user enters their key. The HWID is recorded, and an "Activation Slot" is consumed.</p>
+        <h3>Validation / activation</h3>
+        <p>
+          First successful online validation creates an <strong>activation</strong> row: hardware fingerprint, device name, IP, user.
+          Node-locked also updates <strong>binding status</strong> (auto-bind or pending approval).
+        </p>
       </div>
     </div>
     <div class="step-item active">
       <div class="step-number">2</div>
       <div class="step-content">
-        <h3>Session Start</h3>
-        <p>Every time the app launches. A session is created to track concurrency and active usage.</p>
+        <h3>Session connect</h3>
+        <p>
+          After validation, the SDK calls <code>POST /api/Sessions/connect</code>. A session row appears under
+          license details → <strong>Active Sessions</strong> and the global <strong>Sessions</strong> page.
+        </p>
       </div>
     </div>
     <div class="step-item active">
       <div class="step-number">3</div>
       <div class="step-content">
-        <h3>Heartbeat Sync</h3>
-        <p>The app periodically updates the session. If the heartbeat stops (crash or disconnect), the session is eventually cleaned up.</p>
+        <h3>Heartbeat</h3>
+        <p>
+          Periodic heartbeats update <strong>Last heartbeat</strong>. If heartbeats stop (crash, network loss), the session goes offline after timeout.
+          Use <strong>Live</strong> refresh on the sessions table.
+        </p>
+      </div>
+    </div>
+    <div class="step-item active">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <h3>Disconnect / cleanup</h3>
+        <p>App exit sends disconnect. Operators can force-disconnect from session actions. <strong>Cleanup</strong> on global Sessions removes stale rows.</p>
       </div>
     </div>
   </div>
+
+  <h2>Where to view data</h2>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>View</th><th>Scope</th><th>Best for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>License → <strong>Activations</strong> tab</td><td>One license</td><td>Devices using this key</td></tr>
+      <tr><td>License → <strong>Active Sessions</strong> tab</td><td>One license</td><td>Who is running the app right now</td></tr>
+      <tr><td>License → <strong>Device Binding</strong> tab</td><td>Node-locked only</td><td>Hardware bind, approve/reject, history</td></tr>
+      <tr><td>Sidebar → <strong>Activations</strong></td><td>All licenses</td><td>Cross-product support search</td></tr>
+      <tr><td>Sidebar → <strong>Sessions</strong></td><td>All licenses</td><td>Live fleet monitoring</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Activation fields (license tab &amp; global list)</h2>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Field</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Device</strong></td><td>Computer name (e.g. DESKTOP-…) and hardware fingerprint hash</td></tr>
+      <tr><td><strong>User / System user</strong></td><td>Account name reported by the SDK at activation</td></tr>
+      <tr><td><strong>IP address</strong></td><td>Public IP when the device activated</td></tr>
+      <tr><td><strong>Activated</strong></td><td>Timestamp of first successful bind for this device</td></tr>
+      <tr><td><strong>Status</strong></td><td><strong>Active</strong> — may validate; <strong>Blocked</strong> — denied on next check; inactive — deactivated</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-activations-global-list.png" data-doc-image-alt="Global Activations page with device, user, IP, status columns" aria-label="View global Activations screenshot">
+      <img src="assets/docs/platform-activations-global-list.png" alt="Global Activations page with device, user, IP, status columns" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Global Activations — all devices across products.</figcaption>
+  </figure>
+
+  <h2>Session fields (license tab &amp; global list)</h2>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Field</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>User</strong></td><td>Session user + app version (e.g. v1.0.0.0)</td></tr>
+      <tr><td><strong>Device</strong></td><td>Hostname and OS version string</td></tr>
+      <tr><td><strong>License name</strong></td><td>Link to license details (global Sessions only)</td></tr>
+      <tr><td><strong>IP address</strong></td><td>Masked client IP</td></tr>
+      <tr><td><strong>Connected</strong></td><td>When session started (relative + duration)</td></tr>
+      <tr><td><strong>Heartbeat</strong></td><td>Last SDK ping — proves app is still open</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-sessions-global-list.png" data-doc-image-alt="Global Active Sessions with heartbeat column" aria-label="View global Sessions screenshot">
+      <img src="assets/docs/platform-sessions-global-list.png" alt="Global Active Sessions with heartbeat column" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Global Sessions — live connections across the fleet.</figcaption>
+  </figure>
+
+  <h2>Perpetual vs node-locked behavior</h2>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th></th><th>Perpetual (online)</th><th>Node-locked (online)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Activations list</strong></td><td>Many devices possible (<code>n / ∞</code>)</td><td>Usually one (<code>1 / 1</code>)</td></tr>
+      <tr><td><strong>Sessions</strong></td><td>One or more while apps run</td><td>Typically one session on bound device</td></tr>
+      <tr><td><strong>Device Binding tab</strong></td><td>Not shown</td><td>Hardware ID, approve/reject, history</td></tr>
+      <tr><td><strong>Revoke device</strong></td><td>Block activation → next validate fails</td><td>Same + hardware remains bound until unbind</td></tr>
+    </tbody>
+  </table>
 
   <div class="help-callout info">
     <i class="ki-outline ki-information"></i>
     <div>
       <span class="callout-title">Revocation</span>
-      <p>You can terminate a session or revoke an activation remotely from the Dashboard. The application will receive this status on its next heartbeat and can shut down or prompt for a new key.</p>
+      <p>
+        Block an activation or disconnect a session from the dashboard. The SDK receives the denial on the next
+        validation, heartbeat, or status check. Perpetual online licenses can revoke one laptop without affecting others;
+        node-locked affects the single bound device only.
+      </p>
     </div>
+  </div>
+
+  <h2>See also</h2>
+  <div class="integration-grid">
+    <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>Full workflow</p></a>
+    <a routerLink="/node-locked-license" class="integration-card"><i class="ki-outline ki-lock"></i><h4>Node-locked</h4><p>Binding workflow</p></a>
+    <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>Validate endpoint</p></a>
   </div>
 </div>

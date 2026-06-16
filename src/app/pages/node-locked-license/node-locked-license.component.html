@@ -2,8 +2,9 @@
   <header class="help-page-header">
     <h1>Node-locked license</h1>
     <p class="lead">
-      A <strong>node-locked</strong> license binds entitlement to <strong>one machine</strong> via hardware fingerprint.
-      Copying the license file to another PC fails validation—ideal for per-install desktop software and regulated environments.
+      A <strong>node-locked</strong> license binds entitlement to <strong>one machine</strong> via a stable hardware fingerprint.
+      Copying the license file to another PC fails validation. Choose <strong>Auto-bind</strong> (instant lock on first validation)
+      or <strong>Product owner approval</strong> (review in the Device Binding tab before the end user can run the app).
     </p>
   </header>
 
@@ -11,90 +12,225 @@
     <div class="integration-card">
       <i class="ki-outline ki-lock"></i>
       <h4>One machine</h4>
-      <p>Hardware id on license + signed file.</p>
+      <p>Hardware ID stored on server and in <code>license.bin</code>.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-shield-tick"></i>
+      <h4>Binding modes</h4>
+      <p>Auto-bind or product-owner approval at create time.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-monitor"></i>
       <h4>Device tab</h4>
-      <p>Binding, history, transfer/unbind.</p>
-    </div>
-    <div class="integration-card">
-      <i class="ki-outline ki-arrows-loop"></i>
-      <h4>Rebind flows</h4>
-      <p>Approve hardware changes legitimately.</p>
+      <p>Binding status, approve/reject, transfer, history.</p>
     </div>
   </div>
 
-  <h2>Business model</h2>
-  <p>Node-locked is the standard “one license = one computer” SKU—common in vertical software, medical devices, and industrial tooling.</p>
+  <h2>Create a node-locked license (dashboard)</h2>
+  <p>
+    Open <strong>Licenses</strong> → <strong>Generate License</strong>. The wizard has four steps:
+    <strong>Activation</strong>, <strong>License Type</strong>, <strong>Basic Info</strong>, and <strong>Details</strong>.
+  </p>
+
+  <h3>Step 1 — Activation mode</h3>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>Per-install retail</strong> — customer buys one key per workstation.</li>
-    <li><strong>OEM / appliance</strong> — license pre-bound to shipped hardware.</li>
-    <li><strong>Compliance</strong> — audit trail that software runs only on certified machines.</li>
-    <li><strong>Anti-sharing</strong> — stronger than open perpetual keys for casual piracy.</li>
+    <li><strong>Offline</strong> — typical for node-locked desktop apps. Distribute <code>license.bin</code>; the SDK validates locally after an optional online bootstrap.</li>
+    <li><strong>Online</strong> — live API validation on each run; activations and sessions appear in the dashboard in real time.</li>
   </ul>
 
-  <h2>Benefits</h2>
+  <h3>Step 2 — License type</h3>
+  <p>Select <strong>Node-Locked</strong>. The card explains that hardware is captured on first run and the license is bound to that device.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-license-type.png" data-doc-image-alt="Generate License wizard License Type step with Node-Locked selected" aria-label="View License Type step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-license-type.png" alt="Generate License wizard License Type step with Node-Locked selected" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">License Type — select Node-Locked.</figcaption>
+  </figure>
+
+  <h3>Step 3 — Basic info</h3>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>For vendors</strong> — limits casual key sharing; Device tab shows exact binding for support.</li>
-    <li><strong>For customers</strong> — clear “this PC only” entitlement; transfer workflow for hardware upgrades.</li>
-    <li><strong>For support</strong> — pending-bind queue approves first-run binding; block compromised devices.</li>
+    <li><strong>Product</strong> (required) — e.g. IntelliJ IDEA.</li>
+    <li><strong>Software release</strong> (required) — version line the license is tied to (e.g. 1.0.2).</li>
+    <li><strong>Issued to</strong> (required) — end user assigned to that release. The SDK sends this as <code>IssuedTo</code> during validation; it must match the license record.</li>
+    <li><strong>License name</strong> (required) — internal label shown in lists and exports.</li>
   </ul>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-basic-info.png" data-doc-image-alt="Generate License Basic Info step: product, software release, issued-to user, license name" aria-label="View Basic Info step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-basic-info.png" alt="Generate License Basic Info step: product, software release, issued-to user, license name" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Basic Info — product, release, and assigned end user.</figcaption>
+  </figure>
 
-  <h2>Logic of use</h2>
-  <p><strong>At issue</strong> — hardware id may be set in wizard or captured on first activation (<strong>auto-bind</strong>). Server and <code>license.bin</code> both carry binding material.</p>
-  <p><strong>Online validation</strong> — server compares client fingerprint; mismatch returns hardware error. <strong>Offline validation</strong> — signature + embedded hardware in file.</p>
-  <p><strong>One activation per license</strong> typical—Activations tab shows single primary device; Device tab is the operator focus.</p>
+  <h3>Step 4 — Details (device binding mode)</h3>
+  <p>On the <strong>Details</strong> step, choose how the first device is locked:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Auto-bind</strong> — first validation locks that machine immediately. No dashboard action required. Best for trusted or single-user deployments.</li>
+    <li><strong>Product owner approval</strong> — first validation submits a binding request. The product owner must click <strong>Approve Device</strong> in License details → Device Binding before the license works on that machine.</li>
+  </ul>
+  <p>Also set optional <strong>Entitlement sets</strong> and <strong>Notes</strong>, then click <strong>Generate License</strong>.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-details-binding.png" data-doc-image-alt="Generate License Details step: Device binding mode Auto-bind vs Product owner approval" aria-label="View Details binding step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-details-binding.png" alt="Generate License Details step: Device binding mode Auto-bind vs Product owner approval" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Details — Device binding mode (same card style as Activation mode).</figcaption>
+  </figure>
 
-  <h2>Example lifecycle</h2>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-lock" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: First-run auto-bind</span>
-      <p>Customer receives key + file. First launch captures HWID, sends bind request. Operator approves in pending-bind queue (or auto-approves). License locked to that PC. Copying file to second PC fails validation.</p>
-    </div>
-  </div>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-arrows-loop" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: Hardware upgrade</span>
-      <p>User replaces motherboard. Support opens Device tab → unbind/transfer → user re-activates on new machine. Same commercial license, new fingerprint.</p>
-    </div>
-  </div>
+  <h2>After creation — licenses list</h2>
+  <p>
+    Node-locked rows show <strong>Type: NodeLocked</strong>, <strong>Mode: Online</strong> or <strong>Offline</strong>,
+    <strong>Status: Valid</strong>, and <strong>Activations</strong> (e.g. <code>1 / 1</code> when one device is bound).
+  </p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-licenses-list.png" data-doc-image-alt="Licenses list showing NodeLocked and Perpetual rows with mode and activation counts" aria-label="View licenses list screenshot full size">
+      <img src="assets/docs/platform-licenses-list.png" alt="Licenses list showing NodeLocked and Perpetual rows with mode and activation counts" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Licenses list — compare Node-Locked (1/1) vs Perpetual (unlimited activations).</figcaption>
+  </figure>
 
-  <h2>Lifecycle stages</h2>
+  <h2>Machine workflow (SDK / WinForms test app)</h2>
   <ol style="margin-left:1.25rem;">
-    <li><strong>Issue</strong> — type Node-locked; pick end user / release context.</li>
-    <li><strong>Bind</strong> — at create or first run (pending-bind workflow).</li>
-    <li><strong>Active</strong> — app runs only on bound hardware.</li>
-    <li><strong>Transfer</strong> — operator unbind for legitimate moves.</li>
-    <li><strong>Block device</strong> — security response on Activations/Device.</li>
-    <li><strong>Revoke</strong> — end contract from Overview.</li>
+    <li>Download <code>license.bin</code> and copy the <strong>license key</strong> from license details.</li>
+    <li>Configure the SDK: product <strong>public key</strong>, <strong>API key</strong>, and <code>ServerBaseEndpoint</code> in <code>licenpro.settings.json</code>.</li>
+    <li>Load the license file and key in your app, then <strong>Validate License</strong> (online).</li>
+    <li>The SDK sends a stable <strong>hardware fingerprint</strong>, <strong>IssuedTo</strong>, and device metadata to <code>POST /api/Licenses/validate</code>.</li>
+    <li>On success, the SDK may start an online <strong>session</strong> (heartbeat while the app runs).</li>
   </ol>
 
-  <h2>Dashboard workflow</h2>
+  <h3>Auto-bind — first validation on machine</h3>
+  <div class="help-callout info help-callout--plain">
+    <i class="ki-outline ki-flash-circle" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Expected result</span>
+      <p><strong>VALID</strong> on the client. Dashboard → Device Binding shows <strong>Bound</strong> with hardware ID, device name, and OS. Activations tab shows one active device.</p>
+    </div>
+  </div>
+
+  <h3>Product owner approval — first validation on machine</h3>
+  <div class="help-callout warning help-callout--plain">
+    <i class="ki-outline ki-user-tick" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Expected result (before approval)</span>
+      <p><strong>INVALID</strong> on the client with a pending-binding message. Dashboard shows a yellow banner and <strong>Pending Approval</strong> on Device Binding. The end user must wait until the owner clicks <strong>Approve Device</strong>, then validate again.</p>
+    </div>
+  </div>
+
+  <h3>Second machine (same license file)</h3>
+  <p>Validation fails with a <strong>hardware mismatch</strong> message — the license is already bound to the first fingerprint.</p>
+
+  <h2>License details — Overview tab</h2>
+  <p>Use Overview for license metadata and binding summary:</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Create → Node-locked → issued-to picker from release.</li>
-    <li>Detail → <strong>Device</strong> tab (binding, transfer, history).</li>
-    <li><strong>Activations</strong> — device rows; block suspicious entries.</li>
-    <li><strong>Sessions</strong> — when online validation enabled alongside binding.</li>
+    <li><strong>License type</strong> — NodeLocked</li>
+    <li><strong>Validation mode</strong> — Online or Offline</li>
+    <li><strong>Binding mode</strong> — Auto-bind or Product owner approval</li>
+    <li><strong>Binding status</strong> — Not bound, Pending confirmation, Bound to device, or Rejected</li>
+    <li><strong>Hardware ID</strong> — full fingerprint hash (copy button)</li>
+    <li><strong>Usage statistics</strong> — active devices vs allowed (typically 1 / 1)</li>
+    <li><strong>Online activity</strong> — links to Activations and Active Sessions counts</li>
   </ul>
-  <p><a routerLink="/guides/platform/licenses">Licenses (vendor)</a> · <a routerLink="/guides/platform/activations">Activations</a></p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-overview.png" data-doc-image-alt="Node-Locked license Overview tab: binding mode, binding status, hardware ID, usage stats" aria-label="View Overview tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-overview.png" alt="Node-Locked license Overview tab: binding mode, binding status, hardware ID, usage stats" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Overview — binding mode, status, and hardware ID.</figcaption>
+  </figure>
+
+  <h2>Device Binding tab</h2>
+  <p>Primary operator view for node-locked hardware:</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Bound device</strong> — hardware ID, device name, OS, activated time, last seen</li>
+    <li><strong>Pending state</strong> — requested hardware ID with <strong>Approve Device</strong> / <strong>Reject</strong> (product owner only)</li>
+    <li><strong>Activation history</strong> — table of Activated / Deactivated / Transferred events with IP and timestamp</li>
+    <li><strong>Unbind / transfer</strong> — reset binding for legitimate hardware moves (owner actions)</li>
+  </ul>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-device-binding.png" data-doc-image-alt="Node-Locked Device Binding tab: activated device, hardware ID, activation history" aria-label="View Device Binding tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-device-binding.png" alt="Node-Locked Device Binding tab: activated device, hardware ID, activation history" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Device Binding — bound machine and activation history.</figcaption>
+  </figure>
+
+  <h2>Activations tab (per license)</h2>
+  <p>
+    Shows the device record created when the license validated or activated. For node-locked online licenses there is typically
+    <strong>one activation per license</strong>.
+  </p>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Column</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Device</strong></td><td>Hostname (e.g. DESKTOP-…) and hardware fingerprint prefix</td></tr>
+      <tr><td><strong>User</strong></td><td>Windows / SDK user name reported at activation</td></tr>
+      <tr><td><strong>IP</strong></td><td>Public IP at activation time</td></tr>
+      <tr><td><strong>Activated</strong></td><td>Relative time since first bind</td></tr>
+      <tr><td><strong>Status</strong></td><td>Active, inactive, or blocked</td></tr>
+      <tr><td><strong>Actions</strong></td><td>Block, deactivate, or manage device (owner)</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-activations-tab.png" data-doc-image-alt="Node-Locked license Activations tab with one active device row" aria-label="View Activations tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-activations-tab.png" alt="Node-Locked license Activations tab with one active device row" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Activations — one row per bound device.</figcaption>
+  </figure>
+
+  <h2>Active Sessions tab (online node-locked)</h2>
+  <p>
+    When validation mode is <strong>Online</strong>, the SDK opens a live session and sends <strong>heartbeats</strong> while the app runs.
+    This tab lists current connections for this license only.
+  </p>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Column</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>User</strong></td><td>Session user name and app version (e.g. v1.0.0)</td></tr>
+      <tr><td><strong>Device</strong></td><td>Hostname and operating system string</td></tr>
+      <tr><td><strong>IP Address</strong></td><td>Masked public IP of the client</td></tr>
+      <tr><td><strong>Connected</strong></td><td>When the session started (relative time)</td></tr>
+      <tr><td><strong>Heartbeat</strong></td><td>Last SDK ping — proves the app is still running</td></tr>
+      <tr><td><strong>Actions</strong></td><td>View session details or disconnect remotely</td></tr>
+    </tbody>
+  </table>
+  <p>Use <strong>Live</strong> auto-refresh and filters (All / Online / Offline) to monitor usage.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-sessions-tab.png" data-doc-image-alt="Node-Locked license Active Sessions tab with live heartbeat" aria-label="View Active Sessions tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-sessions-tab.png" alt="Node-Locked license Active Sessions tab with live heartbeat" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Active Sessions — live SDK connection for this license.</figcaption>
+  </figure>
+
+  <h2>Global Activations &amp; Sessions pages</h2>
+  <p>
+    Sidebar <strong>Activations</strong> and <strong>Sessions</strong> show records across all products and licenses — useful for support desks.
+    See <a routerLink="/sessions-activations">Sessions &amp; Activations</a> for column definitions and lifecycle.
+  </p>
+
+  <h2>Server messages (end user)</h2>
+  <p>When validation or binding fails, the API returns clear messages (also shown in the SDK test app status detail):</p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Binding submitted / pending</strong> — approval mode; wait for owner action</li>
+    <li><strong>Binding rejected</strong> — owner rejected; contact support or reset binding</li>
+    <li><strong>Hardware mismatch</strong> — wrong machine</li>
+    <li><strong>Credential mismatch</strong> — Issued To does not match validation params</li>
+    <li><strong>Device blocked</strong> — operator blocked this device from Activations</li>
+  </ul>
 
   <h2>Compare with other models</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>vs <a routerLink="/perpetual-license">Perpetual</a> — node-locked ties to one machine; perpetual may be open or multi-device.</li>
-    <li>vs <a routerLink="/concurrent-license">Concurrent</a> — node-locked is one machine; concurrent is N simultaneous devices.</li>
-    <li>vs <a routerLink="/floating-license">Floating</a> — node-locked is exclusive binding; floating is shared pool.</li>
+    <li>vs <a routerLink="/perpetual-license">Perpetual</a> — node-locked is one machine; perpetual may allow many activations (∞).</li>
+    <li>vs <a routerLink="/concurrent-license">Concurrent</a> — node-locked is exclusive binding; concurrent is N simultaneous devices.</li>
+    <li>vs <a routerLink="/floating-license">Floating</a> — node-locked is fixed hardware; floating is a shared seat pool.</li>
   </ul>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
     <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/concurrent-license" class="integration-card"><i class="ki-outline ki-users"></i><h4>Concurrent</h4><p>Multi-seat team</p></a>
-      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>Unbound model</p></a>
-      <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>Binding routes</p></a>
-      <a routerLink="/sdk/activation-session" class="integration-card"><i class="ki-outline ki-code"></i><h4>Activation SDK</h4><p>Integration</p></a>
+      <a routerLink="/perpetual-license" class="integration-card"><i class="ki-outline ki-key"></i><h4>Perpetual</h4><p>Multi-device model</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions &amp; Activations</h4><p>Global monitoring</p></a>
+      <a routerLink="/first-license" class="integration-card"><i class="ki-outline ki-plus-square"></i><h4>First license</h4><p>Wizard walkthrough</p></a>
+      <a routerLink="/sdk/winforms" class="integration-card"><i class="ki-outline ki-code"></i><h4>WinForms SDK</h4><p>Test validator</p></a>
     </div>
   </section>
 </div>

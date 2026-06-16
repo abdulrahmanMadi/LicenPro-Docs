@@ -60,7 +60,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Releases</strong> — version lines so licenses and update checks target a specific build or channel.</li>
         <li><strong>Features &amp; entitlement sets</strong> — optional packaging of capabilities into SKUs you assign to licenses.</li>
         <li><strong>RSA keys</strong> — generate per product before issuing licenses; only the public key is distributed to apps.</li>
-        <li><strong>Licenses</strong> — choose model (perpetual, trial, subscription, floating, node-locked, …), set limits, export <code>license.bin</code> and the license key.</li>
+        <li><strong>Licenses</strong> — choose model (perpetual, trial, subscription, floating, concurrent, node-locked, credit-based, usage-based, …), set limits, export <code>license.bin</code> and the license key.</li>
       </ol>
       <p>Deeper reads: ${link('/guides/platform/organizations', 'Organizations')} · ${link('/first-organization', 'First organization')} · ${link('/guides/platform/products', 'Products')} · ${link('/guides/platform/releases', 'Releases')} · ${link('/guides/platform/features-entitlements', 'Features &amp; entitlements')} · ${link('/rsa-keys', 'RSA keys')} · ${link('/guides/platform/licenses', 'Licenses (vendor)')} · ${link('/first-product', 'First product')} · ${link('/first-license', 'First license')}.</p>
 
@@ -71,7 +71,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Organizations</strong> — ${link('/guides/platform/organizations', 'Organizations guide')} · tabs: Overview, Products, Members, Invitations, Audit, Settings.</li>
         <li><strong>Products</strong> — ${link('/guides/platform/products', 'Products guide')} · tabs: Overview, Features, Entitlements, Releases, Licenses, Users, Access Matrix, Audit, Settings.</li>
         <li><strong>Releases</strong> — ${link('/guides/platform/releases', 'Releases guide')} (global + per-product tab).</li>
-        <li><strong>Licenses</strong> — ${link('/guides/platform/licenses', 'Licenses guide')} · wizard + detail tabs (Overview, Activations, Sessions, Device).</li>
+        <li><strong>Licenses</strong> — ${link('/guides/platform/licenses', 'Licenses guide')} · wizard + detail tabs (Overview, Activations, Sessions, Usage, Device).</li>
         <li><strong>Activations</strong> — ${link('/guides/platform/activations', 'Activations guide')}.</li>
         <li><strong>Sessions</strong> — ${link('/guides/platform/sessions', 'Sessions guide')}.</li>
         <li><strong>Trials</strong> — ${link('/guides/platform/trials', 'Trials guide')}.</li>
@@ -105,7 +105,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p>After the core loop works, teams usually add one or more of the following:</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>Activations &amp; sessions</strong> — ${link('/sessions-activations', 'Sessions &amp; activations guide')} and ${link('/guides/platform/activations', 'Activations')} / ${link('/guides/platform/sessions', 'Sessions')} platform pages.</li>
-        <li><strong>License models</strong> — perpetual, trial, subscription, floating, node-locked (sidebar <em>License models</em>).</li>
+        <li><strong>License models</strong> — perpetual, trial, subscription, floating, concurrent, node-locked, credit-based, usage-based (sidebar <em>License models</em>).</li>
         <li><strong>Webhooks</strong> — ${link('/webhooks', 'Webhooks')} for lifecycle events to your backend without polling.</li>
         <li><strong>Updates &amp; logging</strong> — ${link('/sdk/updates-logging', 'SDK updates &amp; logging')} for license-aware update checks and structured logs.</li>
       </ul>
@@ -307,7 +307,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Create</strong> — two-step wizard (type, product, release, entitlement set → seats, expiry, notes).</li>
         <li><strong>Distribute</strong> — license key string + signed <code>license.bin</code> from detail view.</li>
         <li><strong>Member view</strong> — assigned users see licenses they can activate; management buttons require ownership.</li>
-        <li><strong>Types</strong> — perpetual, trial, subscription, floating, concurrent, node-locked (${link('/guides/platform/licenses', 'Licenses guide')}).</li>
+        <li><strong>Types</strong> — perpetual, trial, subscription, floating, concurrent, node-locked, credit-based, usage-based (${link('/guides/platform/licenses', 'Licenses guide')}).</li>
       </ul>
 
       <h3>Users</h3>
@@ -480,10 +480,10 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
   },
   licenses: {
     title: 'Licenses (vendor workspace)',
-    lead: 'Issue, distribute, revoke, and monitor licenses from the dashboard. Covers the two-step create wizard, detail tabs, license types, and vendor vs end-user views.',
+    lead: 'Issue, distribute, revoke, and monitor licenses from the dashboard. Covers the four-step create wizard, detail tabs (including Usage for metered types), license types, and vendor vs end-user views.',
     body: `
       <p>Vendors create <strong>licenses</strong> against a product and software release, then distribute the <strong>license key</strong> and signed <code>license.bin</code>. License <em>type</em> drives expiry, seats, activations, sessions, and SDK validation rules.</p>
-      <p>Walkthrough: ${link('/first-license', 'Generate your first license')} · Model guides: ${link('/perpetual-license', 'Perpetual')}, ${link('/trial-license', 'Trial')}, ${link('/subscription-license', 'Subscription')}, ${link('/floating-license', 'Floating')}, ${link('/concurrent-license', 'Concurrent')}, ${link('/node-locked-license', 'Node-locked')}.</p>
+      <p>Walkthrough: ${link('/first-license', 'Generate your first license')} · Model guides: ${link('/perpetual-license', 'Perpetual')}, ${link('/trial-license', 'Trial')}, ${link('/subscription-license', 'Subscription')}, ${link('/floating-license', 'Floating')}, ${link('/concurrent-license', 'Concurrent')}, ${link('/node-locked-license', 'Node-locked')}, ${link('/credit-based-license', 'Credit-Based')}, ${link('/usage-based-license', 'Usage-Based')}.</p>
 
       <h2>License models at a glance</h2>
       <ul style="margin-left:1.25rem;">
@@ -492,13 +492,15 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Subscription</strong> — recurring term; renew or revoke on churn.</li>
         <li><strong>Floating</strong> — shared pool; seats enforced by <em>live sessions</em>; always online.</li>
         <li><strong>Concurrent</strong> — shared team key; seats enforced by <em>device activations</em>.</li>
-        <li><strong>Node-locked</strong> — one machine per license; hardware bind + transfer.</li>
+        <li><strong>Node-locked</strong> — one machine per license; hardware bind + transfer; auto-bind or owner approval.</li>
+        <li><strong>Credit-Based</strong> (<code>MeteredToken</code>) — online-only; shared credit wallet; per-feature token pricing. ${link('/credit-based-license', 'Full guide')}.</li>
+        <li><strong>Usage-Based</strong> (<code>MeteredCount</code>) — online-only; shared use counter; one use per consume. ${link('/usage-based-license', 'Full guide')}.</li>
       </ul>
 
       <h2>License lifecycle (vendor view)</h2>
       <ol style="margin-left:1.25rem;">
         <li><strong>Prerequisites</strong> — product, release, RSA keys generated (${link('/rsa-keys', 'RSA keys')}).</li>
-        <li><strong>Create</strong> — two-step wizard (Basic Info → Details).</li>
+        <li><strong>Create</strong> — four-step wizard (Activation → License Type → Basic Info → Details).</li>
         <li><strong>Distribute</strong> — copy license key; download <code>license.bin</code> from detail view.</li>
         <li><strong>Activate (customer)</strong> — SDK or <code>POST /api/Licenses/validate</code> with product <code>X-API-KEY</code>.</li>
         <li><strong>Operate</strong> — monitor activations/sessions; extend trials; adjust seats where allowed.</li>
@@ -508,28 +510,46 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
 
       <h2>Where to work in the dashboard</h2>
       <p>Use the sidebar <strong>Licenses</strong> list for cross-product search, or open a product → <strong>Licenses</strong> tab when you already know the software context. End customers use <strong>My Licenses</strong> (not the vendor workspace) for keys issued to their account.</p>
+      ${screenshot('platform-licenses-list.png', 'Licenses list — Type, Mode, Status, and Activations columns (e.g. 2/∞ perpetual, 1/1 node-locked)')}
 
-      <h2>Create wizard — Step 1: Basic Info</h2>
-      <p>Pick the license model and binding context—everything downstream (seats, sessions, activations) follows the type card you select.</p>
+      <h2>Create wizard — Step 1: Activation</h2>
+      <p>Choose how the license is validated at runtime:</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>License type cards</strong> — Perpetual, Concurrent, Node-locked, Subscription, Floating, Trial (plan may gate types).</li>
+        <li><strong>Online</strong> — server validation, activations, and sessions; required for Floating, Subscription, Credit-Based, and Usage-Based.</li>
+        <li><strong>Offline</strong> — signed <code>license.bin</code> only; Perpetual, Trial, and Node-Locked can use offline mode.</li>
+      </ul>
+      ${screenshot('platform-create-license-step1-activation.png', 'Step 1 — Online vs Offline activation mode')}
+
+      <h2>Create wizard — Step 2: License Type</h2>
+      <p>Pick the model card—everything downstream (seats, sessions, tokens, binding) follows this choice.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Type cards</strong> — Perpetual, Trial, Subscription, Floating, Concurrent, Node-Locked, <strong>Credit-Based</strong>, <strong>Usage-Based</strong> (plan may gate types).</li>
+        <li>Online-only types are disabled when Offline activation is selected on step 1.</li>
+      </ul>
+      ${screenshot('platform-create-license-step-license-type.png', 'Step 2 — License type cards including Credit-Based and Usage-Based')}
+
+      <h2>Create wizard — Step 3: Basic Info</h2>
+      <ul style="margin-left:1.25rem;">
         <li><strong>Product</strong> — required when creating from the global list; pre-filled in product context.</li>
         <li><strong>Software release</strong> — required; binds validation and update checks to a version line.</li>
         <li><strong>Issuer</strong> — optional vendor name on license metadata.</li>
         <li><strong>Issued to</strong> — email, end-user picker, or auto (type-dependent).</li>
-        <li><strong>Perpetual mode</strong> — Online (activations tracked) vs Offline (signed file only).</li>
         <li><strong>Entitlement set</strong> — optional package from the product Entitlement Sets tab.</li>
       </ul>
+      ${screenshot('platform-create-license-step-basic-info.png', 'Step 3 — Basic Info: product, release, issued-to, license name')}
 
-      <h2>Create wizard — Step 2: Details</h2>
+      <h2>Create wizard — Step 4: Details</h2>
       <p>Operational limits and labels operators and support teams rely on after issuance.</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>License name</strong> — internal label (required); appears in lists and audit logs.</li>
         <li><strong>Duration / expiry</strong> — subscription length, trial period, or none for perpetual.</li>
-        <li><strong>Seats &amp; limits</strong> — max activations (concurrent/node-locked), max concurrent users (floating), hardware binding flags.</li>
+        <li><strong>Seats &amp; limits</strong> — max activations (concurrent/node-locked), max concurrent users (floating), token balance (credit-based), usage caps (usage-based).</li>
+        <li><strong>Node-Locked — device binding mode</strong> — <em>Auto-bind on first validation</em> or <em>Product owner approval</em> (Details step only).</li>
+        <li><strong>Perpetual online</strong> — optional username/password for credential validation.</li>
         <li><strong>Notes</strong> — rich-text operator notes (sales context, support tickets).</li>
         <li><strong>Success screen</strong> — copy license key; open detail to download <code>license.bin</code>.</li>
       </ul>
+      ${screenshot('platform-create-license-step-details-binding.png', 'Step 4 — Node-Locked Details: Auto-bind vs Product owner approval')}
 
       <h2>License detail tabs (vendor)</h2>
       <p>Opened from any license row. Tab visibility depends on license type and whether you are a product owner or system Admin.</p>
@@ -547,16 +567,24 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li>Per-device rows with block/unblock and support notes.</li>
         <li>Primary surface for ${link('/concurrent-license', 'Concurrent')} seat math (activations, not sessions).</li>
+        <li><strong>Node-Locked</strong> — approve pending devices when binding mode is Product owner approval.</li>
+        <li><strong>Perpetual online</strong> — audit trail of machines (e.g. <code>2/∞</code> in licenses list).</li>
       </ul>
+      ${screenshot('platform-node-locked-activations-tab.png', 'License detail — Activations tab with device rows and status')}
       <p>See ${link('/guides/platform/activations', 'Activations')}.</p>
 
       <h3>Sessions</h3>
-      <p>Live online connections with heartbeat timestamps. Shown for online-capable licenses—especially ${link('/floating-license', 'Floating')} where seats follow <em>live sessions</em>, not registered devices.</p>
+      <p>Live online connections with heartbeat timestamps. Shown for online-capable licenses—especially ${link('/floating-license', 'Floating')} where seats follow <em>live sessions</em>, and for ${link('/perpetual-license', 'Perpetual online')} / ${link('/node-locked-license', 'Node-Locked online')} monitoring.</p>
       <ul style="margin-left:1.25rem;">
         <li>Disconnect stale clients holding seats after app crash.</li>
         <li>Correlate session id with API logs for support.</li>
+        <li><strong>Live</strong> toggle and auto-refresh on global Sessions page.</li>
       </ul>
+      ${screenshot('platform-node-locked-sessions-tab.png', 'License detail — Active Sessions tab with heartbeat and disconnect')}
       <p>See ${link('/guides/platform/sessions', 'Sessions')}.</p>
+
+      <h3>Usage</h3>
+      <p><strong>Credit-Based</strong> and <strong>Usage-Based</strong> licenses only: token balance or metered counters, consumption history, and operator adjustments. See ${link('/credit-based-license', 'Credit-Based')} and ${link('/usage-based-license', 'Usage-Based')} guides.</p>
 
       <h3>Device</h3>
       <p><strong>Node-locked</strong> licenses only: bound hardware fingerprint, activation history, transfer/unbind workflows when policy allows a machine change.</p>
@@ -583,25 +611,27 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
   },
   activations: {
     title: 'Activations',
-    lead: 'Devices and environments that consumed a license seat. Global monitoring, per-license tab, block/unblock, and troubleshooting concurrent models.',
+    lead: 'Devices and environments that consumed a license seat. Global monitoring, per-license tab, block/unblock, node-locked approval, and Perpetual vs Concurrent behavior.',
     body: `
-      <p>An <strong>activation</strong> records that a specific machine, user, or environment has claimed capacity on a license. Floating and node-locked models depend on activations; perpetual online tracks them for compliance.</p>
+      <p>An <strong>activation</strong> records that a specific machine, user, or environment has claimed capacity on a license. Node-locked and concurrent models depend on activations; perpetual online tracks them for compliance and audit.</p>
+      <p>Combined walkthrough with sessions: ${link('/sessions-activations', 'Sessions & activations guide')} · ${link('/perpetual-license', 'Perpetual')} · ${link('/node-locked-license', 'Node-Locked')}.</p>
 
       <h2>Activation lifecycle</h2>
       <ol style="margin-left:1.25rem;">
-        <li><strong>Client activates</strong> — SDK <code>ActivationManager</code> or validate endpoint with hardware fingerprint / device id.</li>
-        <li><strong>Server records</strong> — activation row: license id, device info, timestamp, status.</li>
+        <li><strong>Client activates</strong> — SDK validation or <code>ActivationManager</code> with hardware fingerprint / device id.</li>
+        <li><strong>Server records</strong> — activation row: license id, device info, timestamp, status (active, pending approval, blocked).</li>
         <li><strong>Enforcement</strong> — seat limits block new activations when max reached.</li>
-        <li><strong>Heartbeat</strong> — some models tie activation to session heartbeats.</li>
+        <li><strong>Node-Locked approval</strong> — pending row until product owner approves (when binding mode requires it).</li>
         <li><strong>Block</strong> — operator blocks suspicious device; client fails on next online check.</li>
         <li><strong>Deactivate</strong> — client or operator releases seat for reuse.</li>
       </ol>
 
       <h2>Global Activations page</h2>
       <p>Sidebar: <strong>Activations</strong>. Cross-product view when you do not yet know which license key is involved.</p>
+      ${screenshot('platform-activations-global-list.png', 'Global Activations — search, filters, license key, device, status columns')}
       <ul style="margin-left:1.25rem;">
         <li><strong>Search</strong> — license key, device fingerprint, user email, machine name.</li>
-        <li><strong>Status filter</strong> — active, blocked, deactivated.</li>
+        <li><strong>Status filter</strong> — active, blocked, pending, deactivated.</li>
         <li><strong>Date presets</strong> — 7D / 30D / 90D / all / custom range for incident windows.</li>
         <li><strong>Block / unblock</strong> — force deny on next online check without deleting history.</li>
         <li><strong>Edit notes</strong> — support annotations visible to other operators.</li>
@@ -610,30 +640,37 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p>API scopes list products you own or administer.</p>
 
       <h2>Per-license Activations tab</h2>
-      <p>Faster path when support already has the license key. Same block/unblock semantics as the global list but pre-filtered to one license. Use when a customer says “seat 3 of 5 is stuck on an old laptop.”</p>
+      <p>Faster path when support already has the license key. Same block/unblock and approve semantics as the global list but pre-filtered to one license.</p>
+      ${screenshot('platform-node-locked-activations-tab.png', 'Per-license Activations tab — device rows for a single license')}
 
       <h2>By license model</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><strong>Node-locked</strong> — one primary binding; transfer workflows on Device tab.</li>
-        <li><strong>Floating / Concurrent</strong> — many activations; max concurrent enforced via sessions + activations.</li>
-        <li><strong>Perpetual online</strong> — activations for audit; offline perpetual may not create rows.</li>
-        <li><strong>Trial / Subscription</strong> — activations expire with license expiry or renewal.</li>
-      </ul>
+      <table>
+        <thead><tr><th>Model</th><th>Activations role</th><th>Typical list display</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Node-Locked</strong></td><td>Primary enforcement — one bound device; approve pending binds</td><td><code>1/1</code></td></tr>
+          <tr><td><strong>Concurrent</strong></td><td>Seat cap on registered devices</td><td><code>3/5</code></td></tr>
+          <tr><td><strong>Perpetual online</strong></td><td>Audit / optional max activations</td><td><code>2/∞</code> or capped</td></tr>
+          <tr><td><strong>Floating</strong></td><td>Device registry; seats often from sessions</td><td>Varies</td></tr>
+          <tr><td><strong>Credit-Based / Usage-Based</strong></td><td>Device tracking optional; usage on Usage tab</td><td>—</td></tr>
+          <tr><td><strong>Offline perpetual / trial</strong></td><td>May not create online rows</td><td>—</td></tr>
+        </tbody>
+      </table>
 
       <h2>Roles</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Product owner / Admin</strong> — view global list, block/unblock, per-license tab.</li>
+        <li><strong>Product owner / Admin</strong> — view global list, block/unblock, approve node-locked devices, per-license tab.</li>
         <li><strong>Member / Viewer</strong> — no activations management UI.</li>
       </ul>
 
-      <p>${link('/api/activations-sessions', 'Activations &amp; sessions API')} · ${link('/sdk/activation-session', 'SDK activation')} · ${link('/sessions-activations', 'Combined guide')} · ${link('/guides/platform/sessions', 'Sessions')}</p>
+      <p>${link('/api/activations-sessions', 'Activations &amp; sessions API')} · ${link('/sdk/activation-session', 'SDK activation')} · ${link('/guides/platform/sessions', 'Sessions')}</p>
     `,
   },
   sessions: {
     title: 'Sessions',
-    lead: 'Live online connections for heartbeat enforcement, floating concurrency, and real-time support visibility.',
+    lead: 'Live online connections for heartbeat enforcement, floating concurrency, Perpetual/Node-Locked monitoring, and real-time support visibility.',
     body: `
-      <p>A <strong>session</strong> represents an active online client connection—user, device, app version, last heartbeat. Sessions complement activations: floating licenses often limit <em>concurrent</em> sessions, not just registered devices.</p>
+      <p>A <strong>session</strong> represents an active online client connection—user, device, app version, last heartbeat. Sessions complement activations: floating licenses limit <em>concurrent</em> sessions; perpetual and node-locked online licenses use sessions for live monitoring and cleanup.</p>
+      <p>Combined walkthrough: ${link('/sessions-activations', 'Sessions & activations guide')} · ${link('/perpetual-license', 'Perpetual online')} · ${link('/node-locked-license', 'Node-Locked online')}.</p>
 
       <h2>Session lifecycle</h2>
       <ol style="margin-left:1.25rem;">
@@ -642,33 +679,40 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Concurrent check</strong> — floating model counts active sessions vs <code>maxActiveUsers</code>.</li>
         <li><strong>End</strong> — client shutdown or explicit end call releases seat.</li>
         <li><strong>Disconnect (operator)</strong> — force terminate from dashboard for stuck sessions.</li>
+        <li><strong>Cleanup</strong> — remove stale offline rows after support confirms client is gone.</li>
       </ol>
 
       <h2>Global Sessions page</h2>
-      <p>Sidebar: <strong>Sessions</strong>. NOC-style monitoring of who is online right now across floating and other heartbeat-enabled models.</p>
+      <p>Sidebar: <strong>Sessions</strong> (Active Sessions). NOC-style monitoring of who is online right now.</p>
+      ${screenshot('platform-sessions-global-list.png', 'Global Active Sessions — Live toggle, search, heartbeat age, disconnect')}
       <ul style="margin-left:1.25rem;">
+        <li><strong>Live</strong> — auto-refresh while enabled (release weekends, license migrations).</li>
         <li><strong>Online / offline filter</strong> — focus on live clients vs historical rows.</li>
         <li><strong>Search</strong> — license key, user email, machine name, app version.</li>
-        <li><strong>Auto-refresh</strong> — periodic reload during release weekends or license migrations.</li>
         <li><strong>Disconnect</strong> — remote termination; client fails on next heartbeat.</li>
-        <li><strong>Details</strong> — version string, IP/geo when collected, session id for API correlation.</li>
+        <li><strong>Details panel</strong> — version string, IP/geo when collected, session id for API correlation.</li>
       </ul>
 
       <h2>Per-license Sessions tab</h2>
-      <p>Same data as the global page scoped to one license—ideal when debugging a single floating pool key.</p>
+      <p>Same data as the global page scoped to one license—ideal for a single perpetual, node-locked, or floating key.</p>
+      ${screenshot('platform-node-locked-sessions-tab.png', 'Per-license Active Sessions tab with heartbeat and disconnect actions')}
 
       <h2>When sessions matter</h2>
-      <ul style="margin-left:1.25rem;">
-        <li><strong>Floating licenses</strong> — primary enforcement surface for seat count.</li>
-        <li><strong>Perpetual online</strong> — optional visibility and abuse detection.</li>
-        <li><strong>Subscription</strong> — detect stale clients holding seats after cancellation grace.</li>
-        <li><strong>Support</strong> — “user says they closed app but seat still in use” → disconnect here.</li>
-      </ul>
+      <table>
+        <thead><tr><th>Model</th><th>Sessions role</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Floating</strong></td><td>Primary enforcement — concurrent live sessions = seat count</td></tr>
+          <tr><td><strong>Perpetual online</strong></td><td>Visibility, abuse detection, support disconnect</td></tr>
+          <tr><td><strong>Node-Locked online</strong></td><td>One active session typical; heartbeat proves client still running</td></tr>
+          <tr><td><strong>Subscription</strong></td><td>Detect stale clients after cancellation grace</td></tr>
+          <tr><td><strong>Credit-Based / Usage-Based</strong></td><td>Optional session tracking alongside Usage tab metering</td></tr>
+        </tbody>
+      </table>
 
       <h2>Roles</h2>
       <p>Visibility: system Admin, org Admin, product owner (API-filtered). Members/Viewers do not manage sessions.</p>
 
-      <p>${link('/api/activations-sessions', 'REST topic')} · ${link('/sdk/activation-session', 'SDK sessions')} · ${link('/sessions-activations', 'Sessions &amp; activations guide')} · ${link('/guides/platform/activations', 'Activations')}</p>
+      <p>${link('/api/activations-sessions', 'REST topic')} · ${link('/sdk/activation-session', 'SDK sessions')} · ${link('/guides/platform/activations', 'Activations')}</p>
     `,
   },
   trials: {

@@ -82,6 +82,8 @@ export const DOCS_NAV: NavSection[] = [
       { id: 'floating', label: 'Floating', icon: 'ki-outline ki-people', route: '/floating-license' },
       { id: 'concurrent', label: 'Concurrent', icon: 'ki-outline ki-users', route: '/concurrent-license' },
       { id: 'node-locked', label: 'Node-locked', icon: 'ki-outline ki-lock', route: '/node-locked-license' },
+      { id: 'credit-based', label: 'Credit-Based', icon: 'ki-outline ki-wallet', route: '/credit-based-license' },
+      { id: 'usage-based', label: 'Usage-Based', icon: 'ki-outline ki-chart-simple', route: '/usage-based-license' },
     ],
   },
   {

@@ -1,0 +1,226 @@
+<div class="help-page">
+  <header class="help-page-header">
+    <h1>Usage-Based license</h1>
+    <p class="lead">
+      A <strong>Usage-Based</strong> license (<code>MeteredCount</code>, metering mode <code>Count</code>) is
+      <strong>always online</strong>. Customers share one <strong>use counter</strong> across all devices on the
+      license key. Every consume deducts <strong>quantity</strong> from the remaining uses — there is no per-feature
+      token pricing (unlike <a routerLink="/credit-based-license">Credit-Based</a>).
+    </p>
+  </header>
+
+  <div class="integration-grid">
+    <div class="integration-card">
+      <i class="ki-outline ki-chart-simple"></i>
+      <h4>Shared counter</h4>
+      <p>One “uses” balance per license key.</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-abstract-26"></i>
+      <h4>Flat deduction</h4>
+      <p>Each consume costs <code>quantity</code> (usually 1).</p>
+    </div>
+    <div class="integration-card">
+      <i class="ki-outline ki-chart-line-up"></i>
+      <h4>Usage tab</h4>
+      <p>Balance, ledger, manual top-ups (owners).</p>
+    </div>
+  </div>
+
+  <h2>When to choose Usage-Based</h2>
+  <p>
+    Choose <strong>Usage-Based</strong> when you sell a <strong>fixed number of actions</strong> and every billable
+    operation should count the same — typically <strong>one use per call</strong>. The customer starts with a balance
+    (for example 500 uses). Each time they run a metered feature, your app calls <code>ConsumeAsync</code> and the
+    server subtracts 1 use (or more if you pass a higher <code>quantity</code>).
+  </p>
+  <p>
+    Think of it like a punch card: “This license includes 500 exports.” Export #1 uses one punch, export #2 uses one
+    punch — it does not matter which export template they pick; each export costs the same.
+  </p>
+
+  <h3>Good fits</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Simple bundled SKUs</strong> — “500 PDF exports per year” or “1,000 API calls included.”</li>
+    <li><strong>Evaluation limits</strong> — “Try 50 full runs before buying a larger pack.”</li>
+    <li><strong>Flat per-event billing</strong> — every report generated, every sync job, every upload counts as one use.</li>
+    <li><strong>Operations that should not need a price table</strong> — you do not want to maintain different credit costs per feature.</li>
+  </ul>
+
+  <h3>How it behaves in LicenPro</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Dashboard label: <strong>Usage-Based</strong>. API enum: <code>MeteredCount</code>.</li>
+    <li>Balance is shown in <strong>uses</strong> (shared across all devices on the license key).</li>
+    <li><strong>No per-feature pricing</strong> — the feature name is for entitlement and audit; cost is always <code>quantity</code>.</li>
+    <li>Example: customer has 500 uses → one consume with <code>quantity: 1</code> leaves <strong>499 uses</strong>, regardless of feature name.</li>
+  </ul>
+
+  <h3>When to use Credit-Based instead</h3>
+  <p>
+    If different features should burn the wallet at <strong>different rates</strong> — a light API call costs 1 credit
+    but a heavy AI job costs 50 — use <a routerLink="/credit-based-license">Credit-Based</a> (<code>MeteredToken</code>)
+    and configure a token price per feature.
+  </p>
+
+  <h2>At a glance</h2>
+  <table>
+    <thead>
+      <tr><th>Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Backend enum</td><td><code>LicenseType.MeteredCount</code> (value <code>7</code>)</td></tr>
+      <tr><td>Dashboard label</td><td><strong>Usage-Based</strong></td></tr>
+      <tr><td>Metering mode</td><td><code>MeteringMode.Count</code></td></tr>
+      <tr><td>Balance unit</td><td><strong>uses</strong></td></tr>
+      <tr><td>Cost per consume</td><td><code>quantity</code> (1 use per unit by default)</td></tr>
+      <tr><td>Feature pricing</td><td><strong>Not used</strong> — feature name is for entitlement/audit only</td></tr>
+      <tr><td>Activation mode</td><td><strong>Online only</strong></td></tr>
+      <tr><td>Seat limit</td><td>None — wallet/counter is the limit, not device seats</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Key invariant</h2>
+  <p>
+    Balance is <strong>only</strong> checked and deducted in <code>POST /api/meter/consume</code>.
+    Validation and activation succeed even at <strong>zero uses</strong>; your app must call consume when the
+    metered action runs and handle <code>InsufficientBalance</code> (HTTP 402).
+  </p>
+
+  <h2>Create a Usage-Based license (dashboard)</h2>
+  <p>
+    Open <strong>Licenses</strong> → <strong>Generate License</strong>. Four steps:
+    <strong>Activation</strong> → <strong>License Type</strong> → <strong>Basic Info</strong> → <strong>Details</strong>.
+  </p>
+
+  <h3>Step 1 — Activation</h3>
+  <p>Select <strong>Online</strong>. Usage-Based is always-online; offline mode hides metered type cards.</p>
+
+  <h3>Step 2 — License type</h3>
+  <p>Select the <strong>Usage-Based</strong> card (“One use per action”). Description: shared use counter, manual top-ups from the dashboard.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-license-type.png" data-doc-image-alt="License Type step with Usage-Based selected" aria-label="View License Type step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-license-type.png" alt="License Type step with Usage-Based selected" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">License Type — Usage-Based (MeteredCount).</figcaption>
+  </figure>
+
+  <h3>Step 3 — Basic info</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Product</strong> and <strong>Software release</strong> (required).</li>
+    <li><strong>Issued to</strong> — end user for the release.</li>
+    <li><strong>License name</strong> — internal label.</li>
+    <li>Optional <strong>Entitlement set</strong> — restricts which feature names may be consumed.</li>
+  </ul>
+
+  <h3>Step 4 — Details</h3>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Initial uses balance</strong> (<code>initialMeterBalance</code>) — required, must be <strong>&gt; 0</strong> (e.g. 500 uses).</li>
+    <li><strong>Notes</strong> — operator context.</li>
+  </ul>
+  <p>Backend creates <code>MeterWallet &#123; mode: Count &#125;</code> and an <strong>InitialGrant</strong> ledger entry.</p>
+  <pre ngNonBindable style="margin: 0.75rem 0 1rem; padding: 1rem; background: var(--bs-gray-100, #f5f5f5); border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto;"><code>Create Usage-Based license, initial 500 uses
+└─ MeterWallet &#123; mode: Count, balance: 500 &#125;
+   └─ UsageLedger &#123; type: InitialGrant, amount: +500, balanceAfter: 500 &#125;</code></pre>
+
+  <h2>No feature pricing step</h2>
+  <p>
+    Unlike Credit-Based, Usage-Based <strong>ignores</strong> <code>FeatureMeterPricing</code>.
+    <code>ResolveCostAsync</code> sets <code>cost = quantity</code> regardless of feature name.
+    Configure entitlements if you need to restrict which features can be metered.
+  </p>
+
+  <h2>Activation &amp; sessions</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Always-online — same activation/session requirements as other online types.</li>
+    <li><strong>No activation seat cap</strong> — unlimited devices may activate the same key.</li>
+    <li>Use global <strong>Activations</strong> / <strong>Sessions</strong> pages for cross-license support views.</li>
+  </ul>
+
+  <h2>Runtime — SDK &amp; API</h2>
+  <pre ngNonBindable style="margin: 0.75rem 0 1rem; padding: 1rem; background: var(--bs-gray-100, #f5f5f5); border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto;"><code>var client = new LicenseClient(options);
+
+var result = await client.ValidateAsync();
+if (!result.IsValid) return;
+
+// Each call deducts `quantity` uses (default 1)
+var consume = await client.ConsumeAsync("ApiCall", quantity: 1);
+if (!consume.Success &amp;&amp; consume.IsInsufficientBalance)
+    ShowTopUpPrompt();
+
+var balance = await client.GetBalanceAsync(); // remaining uses</code></pre>
+  <p>
+    Read balance without deducting: <code>GET /api/meter/balance?licenseKey=...</code> (API key) or
+    dashboard <code>GET /api/meter/balance/&#123;licenseId&#125;</code>.
+  </p>
+
+  <h3>Worked example</h3>
+  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li>Create license with initial <strong>500 uses</strong>.</li>
+    <li>Consume any entitled feature ×1 → balance <strong>499</strong>.</li>
+    <li>Consume ×600 in one call → <code>InsufficientBalance</code> (402); balance unchanged at <strong>499</strong>.</li>
+    <li>Consume ×499 → balance <strong>0</strong>.</li>
+    <li>Next consume ×1 → <code>InsufficientBalance</code> (402).</li>
+    <li>Owner grants <strong>+1,000</strong> → balance <strong>1,000</strong>, ledger <code>AdminGrant</code>.</li>
+  </ol>
+  <pre ngNonBindable style="margin: 0.75rem 0 1rem; padding: 1rem; background: var(--bs-gray-100, #f5f5f5); border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto;"><code>Usage-Based, balance 100, consume quantity 3
+└─ cost = 3 → balance 97
+   └─ UsageLedger &#123; type: Consume, amount: -3, balanceAfter: 97 &#125;</code></pre>
+
+  <h2>Usage tab (license detail)</h2>
+  <p>Open a Usage-Based license → <strong>Usage</strong> tab.</p>
+  <table>
+    <thead><tr><th>Role</th><th>What you see</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product owner / Admin</strong></td><td>Remaining uses, grant form, full ledger (consumes + grants)</td></tr>
+      <tr><td><strong>End user</strong> (My Licenses)</td><td>Read-only balance; consumption history where exposed</td></tr>
+      <tr><td><strong>Member / Viewer</strong></td><td>Read-only; no grant actions</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The balance card shows “Use mode — each consume deducts one use regardless of feature.”
+    Grants require amount &gt; 0 and are recorded as <strong>AdminGrant</strong> with optional reason and external reference (invoice / PO).
+  </p>
+
+  <h2>Analytics</h2>
+  <p>
+    <code>GET /api/statistics/meter-usage</code> aggregates both metered types:
+    <code>meteredCountLicenseCount</code>, total balance, period consumption, low-balance licenses, daily trend, and top licenses.
+  </p>
+
+  <h2>Consume error codes</h2>
+  <table>
+    <thead><tr><th>ErrorCode</th><th>HTTP</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>InvalidRequest</code></td><td>400</td><td>Missing required fields</td></tr>
+      <tr><td><code>LicenseNotFound</code></td><td>404</td><td>Unknown license key</td></tr>
+      <tr><td><code>NotMeteredLicense</code></td><td>400</td><td>Not Usage-Based or Credit-Based</td></tr>
+      <tr><td><code>LicenseInvalid</code></td><td>400</td><td>Revoked / expired</td></tr>
+      <tr><td><code>FeatureNotEntitled</code></td><td>403</td><td>Feature blocked by entitlement sets</td></tr>
+      <tr><td><code>InsufficientBalance</code></td><td>402</td><td>Not enough remaining uses</td></tr>
+      <tr><td><code>ConcurrencyConflict</code></td><td>409</td><td>Retry consume</td></tr>
+    </tbody>
+  </table>
+  <p><em>Usage-Based never returns <code>PricingNotConfigured</code></em> — that applies to Credit-Based only.</p>
+
+  <h2>Usage-Based vs Credit-Based</h2>
+  <p>Use this quick guide if you are deciding between the two metered types:</p>
+  <table>
+    <thead><tr><th>Question</th><th>Usage-Based</th><th><a routerLink="/credit-based-license">Credit-Based</a></th></tr></thead>
+    <tbody>
+      <tr><td>What are you selling?</td><td>A <strong>use counter</strong> (e.g. “500 exports”)</td><td>A <strong>credit wallet</strong> (e.g. “10,000 credits”)</td></tr>
+      <tr><td>Cost per action</td><td><strong>Flat</strong> — 1 use per consume (unless you pass a higher quantity)</td><td><strong>Variable</strong> — each feature has its own token cost</td></tr>
+      <tr><td>Setup before first consume</td><td>Create license with initial use count only</td><td>Set <code>TokenCost</code> per feature, then consume</td></tr>
+      <tr><td>Best analogy</td><td>Punch card — every action uses one punch</td><td>Prepaid wallet — different services cost different amounts</td></tr>
+    </tbody>
+  </table>
+
+  <section class="next-steps-section" style="margin-top: 2rem;">
+    <h2>See also</h2>
+    <div class="integration-grid">
+      <a routerLink="/credit-based-license" class="integration-card"><i class="ki-outline ki-wallet"></i><h4>Credit-Based</h4><p>Token wallet</p></a>
+      <a routerLink="/guides/platform/licenses" class="integration-card"><i class="ki-outline ki-key"></i><h4>Licenses guide</h4><p>Vendor workspace</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions &amp; Activations</h4><p>Monitoring</p></a>
+      <a routerLink="/sdk/features-usage" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>SDK features &amp; usage</h4><p>ConsumeAsync</p></a>
+    </div>
+  </section>
+</div>

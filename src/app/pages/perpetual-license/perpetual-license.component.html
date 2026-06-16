@@ -2,8 +2,9 @@
   <header class="help-page-header">
     <h1>Perpetual license</h1>
     <p class="lead">
-      A <strong>perpetual</strong> license grants the right to use the software without a recurring subscription term.
-      You sell “buy once, use forever” (optionally with maintenance expiry), and choose <strong>online</strong> or <strong>offline</strong> enforcement at issuance.
+      A <strong>perpetual</strong> license grants long-term use without a subscription term. Choose <strong>online</strong>
+      (live validation, activations, and sessions in the dashboard) or <strong>offline</strong> (signed <code>license.bin</code> for air-gapped installs).
+      Online perpetual is ideal when you need real-time revocation and usage visibility.
     </p>
   </header>
 
@@ -11,89 +12,188 @@
     <div class="integration-card">
       <i class="ki-outline ki-shield-tick"></i>
       <h4>Long-term entitlement</h4>
-      <p>No renewal cycle unless you add an optional end date.</p>
+      <p>No renewal cycle unless you set optional expiry.</p>
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-wifi"></i>
       <h4>Online or offline</h4>
-      <p>Perpetual online vs offline mode in the create wizard.</p>
+      <p>Step 1 of the create wizard — Activation mode.</p>
     </div>
     <div class="integration-card">
-      <i class="ki-outline ki-file-down"></i>
-      <h4>license.bin</h4>
-      <p>Signed file for offline-capable deployments.</p>
+      <i class="ki-outline ki-people"></i>
+      <h4>Multi-device</h4>
+      <p>Online perpetual can show many activations (∞ limit when unset).</p>
     </div>
   </div>
 
-  <h2>Business model</h2>
-  <p>Perpetual fits classic software economics: customer pays once (or pays for a version), vendor delivers ongoing value through optional maintenance, support contracts, or upgrade SKUs.</p>
+  <h2>Create a perpetual license (dashboard)</h2>
+  <p>
+    <strong>Licenses</strong> → <strong>Generate License</strong>. Four-step wizard:
+    <strong>Activation</strong> → <strong>License Type</strong> → <strong>Basic Info</strong> → <strong>Details</strong>.
+  </p>
+
+  <h3>Step 1 — Activation mode</h3>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>One-time license fee</strong> — desktop tools, engineering software, perpetual ERP modules.</li>
-    <li><strong>Perpetual + maintenance</strong> — optional expiry date for updates/support while use rights continue (policy choice).</li>
-    <li><strong>Channel / OEM</strong> — issued-to org label; many seats under one commercial deal.</li>
-    <li><strong>Post-trial conversion</strong> — evaluator upgrades from Trial to perpetual paid key.</li>
+    <li><strong>Online</strong> — SDK calls the API on validation; activations and sessions are tracked. Revoke a device from the dashboard and the next check fails immediately.</li>
+    <li><strong>Offline</strong> — distribute <code>license.bin</code>; daily use does not require API connectivity. Not available for all product access types (Opened products may restrict to offline perpetual only).</li>
   </ul>
 
-  <h2>Benefits</h2>
+  <h3>Step 2 — License type</h3>
+  <p>Select <strong>Perpetual</strong> — multi-user, indefinite use; works online or offline depending on step 1.</p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-license-type.png" data-doc-image-alt="Generate License License Type step showing Perpetual and Node-Locked cards" aria-label="View License Type step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-license-type.png" alt="Generate License License Type step showing Perpetual and Node-Locked cards" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">License Type — select Perpetual (or compare with Node-Locked).</figcaption>
+  </figure>
+
+  <h3>Step 3 — Basic info</h3>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>For vendors</strong> — simple SKU story; works offline for air-gapped customers; RSA-signed files reduce piracy vs raw keys alone.</li>
-    <li><strong>For customers</strong> — predictable cost; offline mode avoids dependency on your uptime for daily work.</li>
-    <li><strong>For support</strong> — online perpetual shows activations in dashboard; revoke compromised keys without redeploying entire product.</li>
+    <li><strong>Product</strong> and <strong>Software release</strong> (required)</li>
+    <li><strong>Issued to</strong> — for perpetual, often auto-assigned or open access depending on product type. When set, the SDK <code>UserName</code> in the license file must match for online validation.</li>
+    <li><strong>License name</strong> (required)</li>
   </ul>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-license-step-basic-info.png" data-doc-image-alt="Generate License Basic Info: product, release, license name" aria-label="View Basic Info step screenshot full size">
+      <img src="assets/docs/platform-create-license-step-basic-info.png" alt="Generate License Basic Info: product, release, license name" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Basic Info — product and release context.</figcaption>
+  </figure>
 
-  <h2>Logic of use</h2>
-  <p><strong>Online perpetual</strong> — app validates with LicenPro on startup (or periodically). Server records device activations and optional live sessions. Revocation and seat limits apply in real time.</p>
-  <p><strong>Offline perpetual</strong> — app validates <code>license.bin</code> locally with embedded public key. No activation rows unless customer later goes online. Best for factories, labs, or regions with no stable internet.</p>
-  <p><strong>Open perpetual</strong> (product/access pattern) — key may work for any user with the file; “issued to” can show as open access in UI.</p>
+  <h3>Step 4 — Details</h3>
+  <p>
+    Perpetual licenses do not show <strong>Device binding mode</strong> (that is node-locked only).
+    Configure optional <strong>expiration</strong> (maintenance window), <strong>entitlement sets</strong>, and <strong>notes</strong>, then generate.
+  </p>
 
-  <h2>Example lifecycle</h2>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-abstract-26" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: Engineering firm — 50 offline seats</span>
-      <p>Vendor sells 50 perpetual offline licenses to a plant. Operator issues 50 keys + files. Installers copy <code>license.bin</code> to each workstation. Apps never call the API during normal use. Annual support renewal is a separate subscription or manual expiry on maintenance-only keys if the vendor uses that pattern.</p>
-    </div>
-  </div>
+  <h2>Licenses list — perpetual vs node-locked</h2>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Column</th><th>Perpetual (example)</th><th>Node-Locked (example)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Type</strong></td><td>Perpetual badge</td><td>NodeLocked badge</td></tr>
+      <tr><td><strong>Mode</strong></td><td>Online / Offline</td><td>Online / Offline</td></tr>
+      <tr><td><strong>Expiration</strong></td><td>Often ∞ (no expiry)</td><td>Often Never</td></tr>
+      <tr><td><strong>Activations</strong></td><td>e.g. <code>2 / ∞</code> — many devices allowed</td><td>e.g. <code>1 / 1</code> — one bound device</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-licenses-list.png" data-doc-image-alt="Licenses list: Perpetual with 2/infinity activations and NodeLocked with 1/1" aria-label="View licenses list screenshot full size">
+      <img src="assets/docs/platform-licenses-list.png" alt="Licenses list: Perpetual with 2/infinity activations and NodeLocked with 1/1" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Licenses list — activation counts differ by type.</figcaption>
+  </figure>
+
+  <h2>Machine workflow (online perpetual)</h2>
+  <ol style="margin-left:1.25rem;">
+    <li>Distribute license key + <code>license.bin</code> + embedded public key.</li>
+    <li>App calls <code>LicenseClient.ValidateAsync</code> or <strong>Validate License</strong> in the WinForms sample.</li>
+    <li>Server checks signature, status, expiration, optional <code>UserName</code> / issued-to match, and device block list.</li>
+    <li>On success, SDK creates an <strong>activation</strong> record (first time per device) and a live <strong>session</strong>.</li>
+    <li>Heartbeats keep the session online while the app runs; disconnect on exit.</li>
+  </ol>
+
   <div class="help-callout info help-callout--plain">
     <i class="ki-outline ki-wifi" aria-hidden="true"></i>
     <div>
-      <span class="callout-title">Scenario: SaaS-adjacent desktop — online perpetual</span>
-      <p>Customer buys perpetual with online mode. Each install activates a device; dashboard shows 12 active devices. IT revokes one machine from Activations tab after laptop loss. Next validation on that device fails without affecting other seats.</p>
+      <span class="callout-title">Revocation</span>
+      <p>Block or deactivate a device from the license <strong>Activations</strong> tab. The next online validation or heartbeat on that machine fails with a device-blocked or invalid message — other activations stay valid.</p>
     </div>
   </div>
 
-  <h2>Lifecycle stages</h2>
-  <ol style="margin-left:1.25rem;">
-    <li><strong>Issue</strong> — type Perpetual; pick online/offline; product + release.</li>
-    <li><strong>Distribute</strong> — key + <code>license.bin</code>.</li>
-    <li><strong>Activate</strong> — online: server activation; offline: local file import.</li>
-    <li><strong>Operate</strong> — monitor Activations/Sessions if online.</li>
-    <li><strong>Revoke / transfer</strong> — license Overview when contract ends or user changes.</li>
-    <li><strong>Expire</strong> — only if you set optional expiry (e.g. maintenance window).</li>
-  </ol>
-
-  <h2>Dashboard workflow</h2>
-  <ol style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Prerequisites: product, release, RSA keys (<a routerLink="/rsa-keys">RSA keys</a>).</li>
-    <li><strong>Licenses</strong> → Create → Perpetual → online or offline mode.</li>
-    <li>Detail tabs: <strong>Overview</strong>; <strong>Activations</strong> / <strong>Sessions</strong> when online.</li>
-  </ol>
-  <p><a routerLink="/first-license">First license walkthrough</a> · <a routerLink="/guides/platform/licenses">Licenses (vendor workspace)</a></p>
-
-  <h2>Compare with other models</h2>
+  <h2>License details — Overview tab</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>vs <a routerLink="/subscription-license">Subscription</a> — no automatic term renewal; no recurring expiry unless you set one.</li>
-    <li>vs <a routerLink="/trial-license">Trial</a> — perpetual is paid long-term; trial is evaluation-only.</li>
-    <li>vs <a routerLink="/floating-license">Floating</a> / <a routerLink="/concurrent-license">Concurrent</a> — perpetual is usually per-user or per-device, not a shared seat pool.</li>
+    <li><strong>License type</strong> — Perpetual</li>
+    <li><strong>Validation mode</strong> — Online or Offline</li>
+    <li><strong>Expiration</strong> — No expiration (∞) unless you set a date</li>
+    <li><strong>Usage statistics</strong> — active devices vs max (unlimited when max not set)</li>
+    <li><strong>Online activity</strong> — shortcut counts for Activations and Active Sessions</li>
+  </ul>
+  <p>Perpetual online licenses do not show Device Binding fields (no hardware binding mode).</p>
+
+  <h2>Activations tab</h2>
+  <p>
+    Each row is a <strong>device that validated or activated</strong> this license key. Online perpetual may have many rows;
+    there is no single-machine lock unless you set <strong>max activations</strong> on create.
+  </p>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Column</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Device</strong></td><td>Hostname and hardware fingerprint</td></tr>
+      <tr><td><strong>User</strong></td><td>OS / SDK user at activation</td></tr>
+      <tr><td><strong>IP</strong></td><td>Client IP when activated</td></tr>
+      <tr><td><strong>Activated</strong></td><td>First-seen time for this device</td></tr>
+      <tr><td><strong>Status</strong></td><td>Active — device may validate; Blocked — denied on next check</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-activations-tab.png" data-doc-image-alt="License Activations tab showing device rows (same layout for Perpetual and Node-Locked)" aria-label="View Activations tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-activations-tab.png" alt="License Activations tab showing device rows" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Activations tab — same UI for all online license types.</figcaption>
+  </figure>
+
+  <h2>Active Sessions tab (online only)</h2>
+  <p>
+    Lists apps currently connected with a live heartbeat. Multiple sessions can exist when several users run the app at once
+    (subject to max concurrent seats if configured).
+  </p>
+  <table class="doc-table" style="width:100%; margin: 1rem 0;">
+    <thead>
+      <tr><th>Column</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>User</strong></td><td>Session identity + app version</td></tr>
+      <tr><td><strong>Device</strong></td><td>Machine name and OS</td></tr>
+      <tr><td><strong>IP Address</strong></td><td>Current connection IP (masked in UI)</td></tr>
+      <tr><td><strong>Connected</strong></td><td>Session start time</td></tr>
+      <tr><td><strong>Heartbeat</strong></td><td>Last SDK ping — stale heartbeats mark session offline</td></tr>
+    </tbody>
+  </table>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-sessions-tab.png" data-doc-image-alt="License Active Sessions tab with User, Device, IP, Connected, Heartbeat columns" aria-label="View Active Sessions tab screenshot full size">
+      <img src="assets/docs/platform-node-locked-sessions-tab.png" alt="License Active Sessions tab with User, Device, IP, Connected, Heartbeat columns" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Active Sessions — live connections for this license.</figcaption>
+  </figure>
+
+  <h2>Offline perpetual workflow</h2>
+  <ol style="margin-left:1.25rem;">
+    <li>Create with <strong>Offline</strong> activation mode.</li>
+    <li>Customer imports <code>license.bin</code>; SDK verifies RSA signature locally.</li>
+    <li>First online validation may still be required once to bootstrap cache (SDK-dependent).</li>
+    <li>Dashboard may show fewer live sessions; Device Binding tab is not used.</li>
+  </ol>
+
+  <h2>Global monitoring</h2>
+  <p>
+    Sidebar <strong>Activations</strong> and <strong>Sessions</strong> aggregate all licenses.
+    Filter by device, user, or IP for support. See <a routerLink="/sessions-activations">Sessions &amp; Activations</a>.
+  </p>
+  <figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-sessions-global-list.png" data-doc-image-alt="Global Active Sessions page listing sessions across all licenses" aria-label="View global Sessions page screenshot full size">
+      <img src="assets/docs/platform-sessions-global-list.png" alt="Global Active Sessions page listing sessions across all licenses" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Global Sessions — all products; license name links to detail.</figcaption>
+  </figure>
+
+  <h2>Compare with node-locked</h2>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>Perpetual online</strong> — many devices possible; focus on Activations + Sessions.</li>
+    <li><strong>Node-locked</strong> — one hardware binding; focus on Device Binding tab + binding mode at create.</li>
+    <li>See <a routerLink="/node-locked-license">Node-locked license</a> for Auto-bind and approval flows.</li>
   </ul>
 
   <section class="next-steps-section" style="margin-top: 2rem;">
     <h2>See also</h2>
     <div class="integration-grid">
-      <a routerLink="/trial-license" class="integration-card"><i class="ki-outline ki-timer"></i><h4>Trial</h4><p>Before perpetual</p></a>
-      <a routerLink="/rsa-keys" class="integration-card"><i class="ki-outline ki-key"></i><h4>RSA keys</h4><p>Signing</p></a>
-      <a routerLink="/api/licenses" class="integration-card"><i class="ki-outline ki-data"></i><h4>Licenses API</h4><p>REST</p></a>
-      <a routerLink="/sdk/license-client" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>LicenseClient</h4><p>SDK</p></a>
+      <a routerLink="/node-locked-license" class="integration-card"><i class="ki-outline ki-lock"></i><h4>Node-locked</h4><p>One machine</p></a>
+      <a routerLink="/sessions-activations" class="integration-card"><i class="ki-outline ki-chart-line"></i><h4>Sessions &amp; Activations</h4><p>Lifecycle</p></a>
+      <a routerLink="/first-license" class="integration-card"><i class="ki-outline ki-plus-square"></i><h4>First license</h4><p>Wizard</p></a>
+      <a routerLink="/sdk/license-client" class="integration-card"><i class="ki-outline ki-microsoft"></i><h4>LicenseClient</h4><p>SDK API</p></a>
     </div>
   </section>
 </div>

@@ -59,6 +59,9 @@ export const routes: Routes = [
       { path: 'floating-license', loadComponent: () => import('./pages/floating-license/floating-license.component').then((m) => m.FloatingLicenseComponent) },
       { path: 'concurrent-license', loadComponent: () => import('./pages/concurrent-license/concurrent-license.component').then((m) => m.ConcurrentLicenseComponent) },
       { path: 'node-locked-license', loadComponent: () => import('./pages/node-locked-license/node-locked-license.component').then((m) => m.NodeLockedLicenseComponent) },
+      { path: 'credit-based-license', loadComponent: () => import('./pages/credit-based-license/credit-based-license.component').then((m) => m.CreditBasedLicenseComponent) },
+      { path: 'usage-based-license', loadComponent: () => import('./pages/usage-based-license/usage-based-license.component').then((m) => m.UsageBasedLicenseComponent) },
+      { path: 'metered-license', redirectTo: 'credit-based-license', pathMatch: 'full' },
       {
         path: 'sessions-activations',
         loadComponent: () =>
