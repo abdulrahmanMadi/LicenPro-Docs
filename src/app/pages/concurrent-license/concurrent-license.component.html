@@ -26,60 +26,95 @@
     </div>
   </div>
 
-  <h2>Business model</h2>
-  <p>Concurrent is the familiar “N simultaneous users” license sold to teams and SMBs—simpler than enterprise floating servers but same commercial idea: shared key, capped simultaneous use.</p>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>Team license</strong> — “5 concurrent users” for a small design team.</li>
-    <li><strong>Classroom / lab</strong> — 30 machines, 15 concurrent seats; students rotate.</li>
-    <li><strong>Branch office</strong> — one key per office with concurrent cap vs named users.</li>
-    <li><strong>Mid-market alternative to Floating</strong> — activation-based enforcement without session-only semantics.</li>
-  </ul>
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
 
-  <h2>Benefits</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>For vendors</strong> — clear seat metric on Activations tab; block rogue devices individually.</li>
-    <li><strong>For customers</strong> — share one license key; seats free when colleagues close the app (per deactivation policy).</li>
-    <li><strong>vs Floating</strong> — activations persist until released—better when you need device-level audit trail per seat.</li>
-  </ul>
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Concurrent license — for product owners</h2>
+    <p>
+      Issue a shared team key with a <strong>max active users</strong> cap. Seats are enforced on
+      <strong>device activations</strong>, not live sessions alone. Use this when you want a device-level audit trail
+      and seats that persist until deactivation.
+    </p>
 
-  <h2>Logic of use (how seats work)</h2>
-  <p>When max active users = 5, the server allows up to <strong>5 device activations</strong> on the license. Each new machine activates until the cap is reached; further activations fail until a seat frees.</p>
-  <p><strong>Live sessions</strong> still appear on the Sessions tab for online concurrent licenses—they show who is connected <em>right now</em>, but <strong>seat enforcement uses activations</strong>, not session count alone.</p>
-  <p>Concurrent can run with <strong>online validation</strong> (typical) so revocation and compliance apply in real time. It is not the same as Floating’s “always online + session-only seats.”</p>
+    <h3>When to choose Concurrent</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li><strong>Team license</strong> — “5 simultaneous users” for a design team.</li>
+      <li><strong>Classroom / lab</strong> — many machines, fewer concurrent seats.</li>
+      <li><strong>Mid-market alternative to Floating</strong> — activation-based seats without session-only semantics.</li>
+    </ul>
 
-  <h2>Example lifecycle</h2>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-users" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: 5-seat team license</span>
-      <p>Startup buys Concurrent, max 5. Five engineers activate on five laptops Monday. Sixth engineer fails until one deactivates or IT removes an activation from Activations tab. Engineer closes app and client deactivates → sixth engineer can activate.</p>
-    </div>
-  </div>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-monitor" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: Block stolen laptop</span>
-      <p>IT sees unknown device on Activations list, blocks activation. Stolen machine fails on next online check without revoking entire team key.</p>
-    </div>
-  </div>
+    <h3>Issue a license (dashboard)</h3>
+    <ol style="margin-left:1.25rem;">
+      <li><strong>Licenses</strong> → <strong>Generate License</strong>.</li>
+      <li>Step 1 — choose <strong>Online</strong> (typical) or <strong>Offline</strong> activation mode.</li>
+      <li>Step 2 — select <strong>Concurrent</strong> and set <strong>Max active users</strong> (seat cap).</li>
+      <li>Steps 3–4 — product, release, issued-to (optional), entitlements, notes → generate.</li>
+    </ol>
 
-  <h2>Lifecycle stages</h2>
-  <ol style="margin-left:1.25rem;">
-    <li><strong>Issue</strong> — type Concurrent + max active users.</li>
-    <li><strong>Distribute</strong> — shared team key.</li>
-    <li><strong>Activate</strong> — each device consumes one activation seat.</li>
-    <li><strong>Operate</strong> — monitor Activations tab; Sessions for live view.</li>
-    <li><strong>Release seat</strong> — client deactivation or operator block/remove.</li>
-    <li><strong>Revoke</strong> — disable whole license from Overview.</li>
-  </ol>
+    <h3>Operate &amp; support</h3>
+    <ul class="guide-checklist">
+      <li><strong>Activations tab</strong> — authoritative seat counter (<code>N / max</code>).</li>
+      <li><strong>Sessions tab</strong> — who is online now (support visibility; does not free seats by itself).</li>
+      <li><strong>Deactivate</strong> a device activation to free a seat for another machine.</li>
+      <li><strong>Block device</strong> — deny one rogue laptop without revoking the whole team key.</li>
+      <li><strong>Revoke license</strong> — disable the entire key from Overview.</li>
+    </ul>
+    <p>Global views: <code>/dashboard/activations</code> and <code>/dashboard/sessions</code>.</p>
 
-  <h2>Dashboard workflow</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Create → Concurrent → max active users in step 2.</li>
-    <li>License detail → <strong>Activations</strong> tab (seat enforcement).</li>
-    <li><strong>Sessions</strong> tab — who is online now.</li>
-    <li>Global <code>/dashboard/activations</code> for cross-license support.</li>
-  </ul>
+    <h3>API automation</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Create: <code>POST /api/licenses</code> with <code>type: Concurrent</code> and <code>maxActiveUsersCount</code>.</li>
+      <li>Activate: <code>POST /api/activations</code> (SDK, API key).</li>
+      <li>Deactivate seat: <code>DELETE /api/activations/current</code> or block from dashboard.</li>
+    </ul>
+    <p>See <a routerLink="/guides/platform/activations">Activations platform guide</a> and <a routerLink="/api/activations-sessions">REST API</a>.</p>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Concurrent license — for end users</h2>
+    <p>
+      You receive a <strong>shared license key</strong> (and usually <code>license.bin</code>) from your organization.
+      Each computer that runs the app consumes one <strong>activation seat</strong> until the app deactivates or IT removes the device.
+    </p>
+
+    <h3>What you need</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>License key and signed license file from your admin.</li>
+      <li>Product <strong>public key</strong> and API endpoint configured in the app (integrator responsibility).</li>
+      <li>Network access if the license uses <strong>online validation</strong>.</li>
+    </ul>
+
+    <h3>First run</h3>
+    <ol style="margin-left:1.25rem;">
+      <li>Install the app and import the license file or enter the key.</li>
+      <li>Validate / activate — the server registers this device as one seat.</li>
+      <li>While the app runs online, a <strong>session heartbeat</strong> may show you as “online” in admin tools.</li>
+      <li>On exit, use the app’s deactivate action if available so the seat frees for a colleague.</li>
+    </ol>
+
+    <h3>Limits</h3>
+    <p>
+      When all seats are in use, the next device gets <strong>Max activations reached</strong>.
+      Closing the app without deactivating may keep the seat occupied until an admin clears it.
+    </p>
+
+    <h3>Troubleshooting</h3>
+    <table class="doc-table" style="width:100%; margin: 1rem 0;">
+      <thead>
+        <tr><th>Message</th><th>What it means</th><th>What to do</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>MaxActivationsReached</strong></td><td>Seat pool full</td><td>Ask a teammate to deactivate, or contact IT</td></tr>
+        <tr><td><strong>DeviceBlocked</strong></td><td>Admin blocked this machine</td><td>Contact support</td></tr>
+        <tr><td><strong>LicenseInvalid / revoked</strong></td><td>Key disabled</td><td>Request a new key from vendor</td></tr>
+        <tr><td><strong>LicenseExpired</strong></td><td>Term ended</td><td>Renew or request updated license</td></tr>
+      </tbody>
+    </table>
+  </section>
 
   <h2>Concurrent vs Floating</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">

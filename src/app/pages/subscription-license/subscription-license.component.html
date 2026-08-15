@@ -3,7 +3,8 @@
     <h1>Subscription license</h1>
     <p class="lead">
       A <strong>subscription</strong> license grants access for a <strong>defined term</strong>—monthly, annual, or custom.
-      Access ends when the term expires without renewal. Subscriptions are <strong>online-first</strong> so billing, revocation, and compliance stay aligned with server state.
+      Access ends when the term expires without renewal. Choose <strong>online</strong> or <strong>offline</strong> validation at issue time;
+      online mode enables real-time revocation and session visibility.
     </p>
   </header>
 
@@ -20,63 +21,83 @@
     </div>
     <div class="integration-card">
       <i class="ki-outline ki-wifi"></i>
-      <h4>Online-first</h4>
-      <p>Server reflects payment and revocation.</p>
+      <h4>Online or offline</h4>
+      <p>Validation mode set at issue — not always-online.</p>
     </div>
   </div>
 
-  <h2>Business model</h2>
-  <p>Subscription is the default for SaaS and recurring revenue: customer pays per period; vendor delivers continuous service and feature updates.</p>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>Monthly / annual SaaS</strong> — tiered plans via entitlement sets (Basic, Pro, Enterprise).</li>
-    <li><strong>Seat-based SaaS</strong> — combine with max activations per subscriber.</li>
-    <li><strong>Maintenance subscription</strong> — updates/support while perpetual use right continues elsewhere.</li>
-    <li><strong>Usage + subscription</strong> — optional feature usage telemetry on top of time term.</li>
-  </ul>
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
 
-  <h2>Benefits</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>For vendors</strong> — predictable recurring revenue; instant revoke on churn; analytics on active subscribers.</li>
-    <li><strong>For customers</strong> — lower entry cost; cancel at term end.</li>
-    <li><strong>For finance</strong> — expiry dates map to invoice cycles; extend via billing or dashboard after payment.</li>
-  </ul>
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Subscription license — for product owners</h2>
+    <p>
+      Issue a time-limited <strong>License</strong> record (<code>type: Subscription</code>) with an
+      <strong>expiration date</strong>. This is separate from your own LicenPro platform plan (Free/Pro) —
+      it is the entitlement you sell to <em>your</em> customers.
+    </p>
 
-  <h2>Logic of use</h2>
-  <p>Subscription stores <strong>expiry</strong> (from duration at create or explicit date). Online validation checks server: expired, revoked, or past-due subscriptions fail even if local file still exists. Renew by extending expiry—customer app sees new term on next validate.</p>
-  <p>Pair renewals with <a routerLink="/webhooks">Webhooks</a> or billing integration so payment success automatically extends the license row.</p>
+    <h3>Issue a license (dashboard)</h3>
+    <ol style="margin-left:1.25rem;">
+      <li><strong>Licenses</strong> → <strong>Generate License</strong> → type <strong>Subscription</strong>.</li>
+      <li>Set duration or explicit <strong>expiration date</strong>.</li>
+      <li>Choose <strong>Online</strong> or <strong>Offline</strong> validation.</li>
+      <li>Optional: <strong>Issued to</strong>, entitlements, max activations.</li>
+    </ol>
 
-  <h2>Example lifecycle</h2>
+    <h3>Renewals &amp; churn</h3>
+    <ul class="guide-checklist">
+      <li><strong>Extend expiry</strong> after payment (dashboard edit or API).</li>
+      <li><strong>Revoke immediately</strong> on chargeback or policy violation.</li>
+      <li>Automate renewals via <a routerLink="/webhooks">Webhooks</a> + billing integration.</li>
+      <li>Monitor Activations/Sessions when online validation is enabled.</li>
+    </ul>
+
+    <h3>API automation</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Create: <code>POST /api/licenses</code> with <code>type: Subscription</code> and <code>expirationDate</code>.</li>
+      <li>Update term: <code>PUT /api/licenses/&#123;id&#125;</code> — extend <code>expirationDate</code>.</li>
+      <li>Revoke: <code>POST /api/licenses/&#123;id&#125;/revoke</code>.</li>
+    </ul>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Subscription license — for end users</h2>
+    <p>
+      You receive a license key (and usually <code>license.bin</code>) valid until the
+      <strong>subscription end date</strong>. After expiry, validation fails until your vendor renews the term.
+    </p>
+
+    <h3>During the term</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Install the app and activate with the key/file provided at purchase.</li>
+      <li>Online subscriptions may show renewal reminders before expiry.</li>
+      <li>Renewal extends the date on the server — you typically do not need a new file.</li>
+    </ul>
+
+    <h3>Troubleshooting</h3>
+    <table class="doc-table" style="width:100%; margin: 1rem 0;">
+      <thead>
+        <tr><th>Message</th><th>Meaning</th><th>What to do</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>LicenseExpired</strong></td><td>Term ended</td><td>Renew subscription with vendor</td></tr>
+        <tr><td><strong>LicenseInvalid</strong></td><td>Revoked or disabled</td><td>Contact billing support</td></tr>
+        <tr><td>Validation works but features missing</td><td>Entitlement set limits</td><td>Upgrade plan with vendor</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-calendar-tick" aria-hidden="true"></i>
+    <i class="ki-outline ki-information-2" aria-hidden="true"></i>
     <div>
-      <span class="callout-title">Scenario: Annual SaaS plan</span>
-      <p>Customer subscribes Jan 1. Operator issues Subscription, 365 days, entitlement “Pro”. App validates online monthly. Dec 15: renewal email. Jan 1 payment succeeds → webhook extends expiry +365 days. If payment fails → expiry Jan 1 → app shows renew screen.</p>
+      <span class="callout-title">Not the same as LicenPro Free/Pro</span>
+      <p>Your vendor’s <strong>Subscription license type</strong> controls access to <em>their product</em>. Your LicenPro dashboard plan (Free/Pro) controls how many products and licenses <em>you</em> can create on the platform.</p>
     </div>
   </div>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-shield-cross" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: Immediate churn revoke</span>
-      <p>Customer cancels mid-term with no grace. Support revokes license from Overview. Next online validation fails even before calendar expiry.</p>
-    </div>
-  </div>
-
-  <h2>Lifecycle stages</h2>
-  <ol style="margin-left:1.25rem;">
-    <li><strong>Issue</strong> — type Subscription + term.</li>
-    <li><strong>Active</strong> — within subscription window.</li>
-    <li><strong>Expiring soon</strong> — renewal campaigns.</li>
-    <li><strong>Renew</strong> — extend expiry after payment.</li>
-    <li><strong>Expired</strong> — term ended without renewal.</li>
-    <li><strong>Revoked</strong> — forced stop (fraud, chargeback).</li>
-  </ol>
-
-  <h2>Dashboard workflow</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Create wizard → Subscription → duration or expiry in step 2.</li>
-    <li>Monitor Activations/Sessions for seat enforcement.</li>
-    <li>Edit expiry for manual renewals; Analytics for subscriber health.</li>
-  </ul>
 
   <h2>Compare with other models</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">

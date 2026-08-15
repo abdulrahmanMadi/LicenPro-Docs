@@ -27,6 +27,38 @@
     </div>
   </div>
 
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
+
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Credit-Based license — for product owners</h2>
+    <ul class="guide-checklist">
+      <li>Issue with <strong>initial credit balance</strong> and online validation (always online).</li>
+      <li>Set <strong>per-feature token pricing</strong> via <code>PUT /api/meter/features/&#123;featureId&#125;/pricing</code>.</li>
+      <li>Top up, adjust, set low-balance threshold, and reconcile from the license <strong>Usage</strong> tab or meter API.</li>
+      <li>Inspect ledger for consumes, grants, and idempotent replays.</li>
+      <li>No activation seat cap — many devices share one wallet.</li>
+    </ul>
+    <p>Detailed wizard steps, pricing, and operator API routes are documented below.</p>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Credit-Based license — for end users</h2>
+    <p>
+      Your organization shares a license key with a <strong>credit wallet</strong>. The app stays valid even at
+      zero credits, but <strong>billable features fail</strong> until credits are added.
+    </p>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Activate once — validation does not deduct credits.</li>
+      <li>Each paid action (export, render, API call) spends credits per feature pricing.</li>
+      <li><strong>Insufficient balance</strong> — contact your admin to purchase more credits.</li>
+      <li>Check remaining balance in-app if the integrator exposed <code>GetBalanceAsync</code>.</li>
+    </ul>
+  </section>
+
   <h2>When to choose Credit-Based</h2>
   <p>
     Choose <strong>Credit-Based</strong> when you sell a <strong>pre-paid pool of credits</strong> and different

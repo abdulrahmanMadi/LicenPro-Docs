@@ -25,59 +25,85 @@
     </div>
   </div>
 
-  <h2>Business model</h2>
-  <p>Floating targets organizations that buy <strong>concurrent capacity</strong> rather than named users or installs—classic CAD, PLM, and license-server economics at scale.</p>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>Enterprise concurrent deal</strong> — “100 simultaneous users” for entire company.</li>
-    <li><strong>Site license + cap</strong> — one key for a campus; server enforces concurrency.</li>
-    <li><strong>Department pool</strong> — issued-to org label; IT shares one key internally.</li>
-    <li><strong>High churn usage</strong> — users open/close app often; seats recycle on disconnect.</li>
-  </ul>
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
 
-  <h2>Benefits</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li><strong>For vendors</strong> — sell higher concurrent tiers; accurate real-time usage via Sessions page.</li>
-    <li><strong>For customers</strong> — fewer keys to manage; pay for peak concurrency not headcount.</li>
-    <li><strong>For enforcement</strong> — session heartbeats free seats within seconds of app exit (vs long-lived activation rows).</li>
-  </ul>
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Floating license — for product owners</h2>
+    <p>
+      Sell a <strong>concurrent seat pool</strong> enforced by <strong>live SDK sessions</strong> (connect + heartbeat).
+      Floating is <strong>always online</strong> — there is no offline mode. The Activations tab is hidden; use Sessions for seat math.
+    </p>
 
-  <h2>Logic of use (how seats work)</h2>
-  <p>LicenPro counts <strong>live SDK sessions</strong> against <strong>max active users</strong>. When a user starts the app, validation opens a session; heartbeat keeps it alive. When the app exits or heartbeat stops, the seat returns to the pool.</p>
-  <p><strong>Activations tab is hidden</strong> for floating—seats are not tracked via device activation count. Use <strong>Sessions</strong> tab and <code>/dashboard/sessions</code> for operations.</p>
-  <p>This differs from <a routerLink="/concurrent-license">Concurrent</a>, which enforces seats on <strong>device activations</strong> instead of live sessions.</p>
+    <h3>When to choose Floating</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li><strong>Enterprise concurrent deal</strong> — “100 simultaneous users” company-wide.</li>
+      <li><strong>High seat churn</strong> — users open/close the app often; seats recycle on disconnect.</li>
+      <li><strong>Site / department pool</strong> — one org key, server enforces concurrency.</li>
+    </ul>
 
-  <h2>Example lifecycle</h2>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-people" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: 25-seat engineering pool</span>
-      <p>Vendor sells Floating, max 25. Company deploys one license key to all workstations. Monday 10:00 — 25 designers online, 26th user gets “pool full”. Designer closes app → session ends within heartbeat interval → 26th user succeeds.</p>
-    </div>
-  </div>
-  <div class="help-callout info help-callout--plain">
-    <i class="ki-outline ki-shield-cross" aria-hidden="true"></i>
-    <div>
-      <span class="callout-title">Scenario: Stuck session</span>
-      <p>Crash leaves ghost session. IT opens Sessions page, disconnects stale row. Seat immediately available without reissuing license.</p>
-    </div>
-  </div>
+    <h3>Issue a license (dashboard)</h3>
+    <ol style="margin-left:1.25rem;">
+      <li><strong>Licenses</strong> → <strong>Generate License</strong>.</li>
+      <li>Step 2 — select <strong>Floating</strong>; online mode is forced.</li>
+      <li>Set <strong>Max active users</strong> = concurrent session cap.</li>
+      <li>Complete product, release, entitlements → generate and distribute one org key.</li>
+    </ol>
 
-  <h2>Lifecycle stages</h2>
-  <ol style="margin-left:1.25rem;">
-    <li><strong>Issue</strong> — type Floating + max active users.</li>
-    <li><strong>Distribute</strong> — single org-wide key (+ optional <code>license.bin</code>).</li>
-    <li><strong>Connect</strong> — each running app holds one session seat.</li>
-    <li><strong>Heartbeat</strong> — maintains seat while app runs.</li>
-    <li><strong>Disconnect</strong> — app exit or operator disconnect frees seat.</li>
-    <li><strong>Revoke</strong> — entire pool disabled from license Overview.</li>
-  </ol>
+    <h3>Operate &amp; support</h3>
+    <ul class="guide-checklist">
+      <li><strong>Sessions tab</strong> — real-time pool usage vs cap.</li>
+      <li><strong>Force disconnect</strong> — free a stuck seat after crash (no reissue).</li>
+      <li><strong>Session cleanup</strong> — stale heartbeats mark sessions offline and release seats.</li>
+      <li><strong>Revoke license</strong> — disables entire pool from Overview.</li>
+    </ul>
+    <p>Monitor globally at <code>/dashboard/sessions</code>.</p>
 
-  <h2>Dashboard workflow</h2>
-  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
-    <li>Create → Floating → set max active users.</li>
-    <li>Monitor <code>/dashboard/sessions</code> and license <strong>Sessions</strong> tab.</li>
-    <li>Disconnect stale sessions; no Activations tab for seat math.</li>
-  </ul>
+    <h3>API automation</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Create: <code>POST /api/licenses</code> with <code>type: Floating</code>.</li>
+      <li>Connect: <code>POST /api/sessions/connect</code> — consumes one seat while session is live.</li>
+      <li>Heartbeat: <code>POST /api/sessions/heartbeat</code> — keeps seat alive.</li>
+      <li>Disconnect: <code>POST /api/sessions/disconnect</code> or operator force-disconnect.</li>
+    </ul>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Floating license — for end users</h2>
+    <p>
+      Your organization shares <strong>one license key</strong>. Only <em>N</em> people can run the app
+      <strong>at the same time</strong>. When you close the app, your seat returns to the pool within a heartbeat interval.
+    </p>
+
+    <h3>Requirements</h3>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Continuous network access to the LicenPro API (always online).</li>
+      <li>License key / file from IT — same key for all users in the pool.</li>
+    </ul>
+
+    <h3>While the app runs</h3>
+    <ol style="margin-left:1.25rem;">
+      <li>App validates and <strong>connects a session</strong> — occupies one pool seat.</li>
+      <li>Periodic <strong>heartbeats</strong> keep the seat reserved.</li>
+      <li>Graceful exit sends disconnect and frees the seat quickly.</li>
+    </ol>
+
+    <h3>Troubleshooting</h3>
+    <table class="doc-table" style="width:100%; margin: 1rem 0;">
+      <thead>
+        <tr><th>Message</th><th>Meaning</th><th>What to do</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>MaxConcurrentSessionsReached</strong></td><td>Pool full</td><td>Wait for a colleague to exit, or ask IT to disconnect stale sessions</td></tr>
+        <tr><td><strong>RateLimited</strong></td><td>Too many heartbeats</td><td>Wait — session usually stays valid</td></tr>
+        <tr><td><strong>SessionNotFound</strong></td><td>Server dropped session</td><td>Restart app to reconnect</td></tr>
+        <tr><td>Network errors</td><td>Cannot reach server</td><td>Floating cannot work offline — restore connectivity</td></tr>
+      </tbody>
+    </table>
+  </section>
 
   <h2>Floating vs Concurrent</h2>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">

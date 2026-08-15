@@ -26,6 +26,42 @@
     </div>
   </div>
 
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
+
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Perpetual license — for product owners</h2>
+    <p>
+      Grant long-term use without a subscription renewal cycle. Choose <strong>online</strong> validation for
+      live revocation and dashboard visibility, or <strong>offline</strong> for air-gapped installs with RSA-signed
+      <code>license.bin</code> files.
+    </p>
+    <ul class="guide-checklist">
+      <li>Issue via <strong>Licenses → Generate License</strong> → Perpetual.</li>
+      <li>Configure product RSA keys before distributing license files.</li>
+      <li>Monitor <strong>Activations</strong> and <strong>Sessions</strong> for online perpetual.</li>
+      <li>Block or deactivate individual devices without revoking the whole key.</li>
+      <li>Revoke entire license from Overview when needed.</li>
+    </ul>
+    <p>Optional <strong>Issued to</strong> + online mode enforces credential match on validation.</p>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Perpetual license — for end users</h2>
+    <p>
+      You receive a <strong>license key</strong> and <code>license.bin</code> (plus the product public key from your vendor).
+      Perpetual means no automatic expiry unless the vendor set an optional maintenance date.
+    </p>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li><strong>Online perpetual</strong> — app validates against the server; supports activations and live sessions.</li>
+      <li><strong>Offline perpetual</strong> — app validates locally after signature check; no daily internet required.</li>
+    </ul>
+    <p>Common errors: <strong>signature mismatch</strong> (wrong public key), <strong>device blocked</strong>, <strong>credential mismatch</strong> (issued-to user).</p>
+  </section>
+
   <h2>Create a perpetual license (dashboard)</h2>
   <p>
     <strong>Licenses</strong> → <strong>Generate License</strong>. Four-step wizard:

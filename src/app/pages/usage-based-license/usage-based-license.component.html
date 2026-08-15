@@ -27,6 +27,37 @@
     </div>
   </div>
 
+  <nav class="guide-audience-nav" aria-label="Guide sections">
+    <span class="guide-audience-nav__label">Jump to:</span>
+    <a href="#product-owner-guide" class="guide-audience-nav__link guide-audience-nav__link--owner">Product owner guide</a>
+    <a href="#end-user-guide" class="guide-audience-nav__link guide-audience-nav__link--user">End user guide</a>
+  </nav>
+
+  <section id="product-owner-guide" class="guide-audience-section guide-audience-section--owner">
+    <h2>Usage-Based license — for product owners</h2>
+    <ul class="guide-checklist">
+      <li>Issue with <strong>initial use balance</strong> — no per-feature pricing required.</li>
+      <li>Grant or adjust balance from the <strong>Usage</strong> tab or meter API (<code>POST /api/meter/grant</code>, <code>adjust</code>).</li>
+      <li>Review ledger and run reconciliation to verify wallet vs entries.</li>
+      <li>Entitlement sets restrict which feature names can be consumed.</li>
+      <li>Always online — no offline Usage-Based mode.</li>
+    </ul>
+    <p>Detailed wizard and API examples are documented below.</p>
+  </section>
+
+  <section id="end-user-guide" class="guide-audience-section guide-audience-section--user">
+    <h2>Usage-Based license — for end users</h2>
+    <p>
+      Your license includes a fixed number of <strong>uses</strong> shared across your team’s devices.
+      The app remains licensed at zero uses, but metered actions stop with <strong>insufficient balance</strong>.
+    </p>
+    <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+      <li>Each billable action typically costs <strong>1 use</strong> (integrator may pass higher quantity).</li>
+      <li>When uses run out, ask your admin for a top-up or plan upgrade.</li>
+      <li>View remaining uses in-app if the vendor exposed balance UI.</li>
+    </ul>
+  </section>
+
   <h2>When to choose Usage-Based</h2>
   <p>
     Choose <strong>Usage-Based</strong> when you sell a <strong>fixed number of actions</strong> and every billable

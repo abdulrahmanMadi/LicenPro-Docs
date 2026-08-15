@@ -21,6 +21,8 @@ const STATIC_PAGE_TITLES: Record<string, string> = {
   '/floating-license': 'Floating license',
   '/concurrent-license': 'Concurrent license',
   '/node-locked-license': 'Node-locked license',
+  '/credit-based-license': 'Credit-Based license',
+  '/usage-based-license': 'Usage-Based license',
   '/sessions-activations': 'Sessions & activations',
   '/webhooks': 'Webhooks',
   '/changelog': 'Changelog',
