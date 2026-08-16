@@ -402,6 +402,65 @@ article.help-page.doc-topic-page .doc-topic-body img {
   tr:last-child td { border-bottom: none; }
 }
 
+/* License-model and guide comparison tables (class="doc-table") */
+.help-page table,
+.help-page .doc-table,
+article.help-page table,
+article.help-page .doc-table {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--background, #fff);
+
+  thead {
+    display: table-header-group;
+  }
+
+  tbody {
+    display: table-row-group;
+  }
+
+  tr {
+    display: table-row;
+  }
+
+  th,
+  td {
+    display: table-cell;
+    text-align: left;
+    vertical-align: top;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+
+  th:last-child,
+  td:last-child {
+    border-right: none;
+  }
+
+  th {
+    font-weight: 600;
+    color: var(--foreground);
+    background: var(--sidebar-bg, #f8fafc);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:nth-child(even) td {
+    background: rgba(15, 23, 42, 0.02);
+  }
+}
+
 /* API endpoint cards (injected topic HTML) */
 .doc-topic-body .api-endpoint,
 .help-page .api-endpoint {
@@ -804,12 +863,9 @@ a.doc-inline-link {
   }
 }
 
-.guide-audience-nav__link--owner {
-  border-left: 3px solid #2563eb;
-}
-
+.guide-audience-nav__link--owner,
 .guide-audience-nav__link--user {
-  border-left: 3px solid #059669;
+  border-left: 1px solid var(--border);
 }
 
 .guide-audience-section {
@@ -839,7 +895,6 @@ a.doc-inline-link {
 }
 
 .guide-audience-section--owner {
-  border-left: 4px solid #2563eb;
   background: rgba(37, 99, 235, 0.04);
 
   > h2:first-child::before {
@@ -850,7 +905,6 @@ a.doc-inline-link {
 }
 
 .guide-audience-section--user {
-  border-left: 4px solid #059669;
   background: rgba(5, 150, 105, 0.04);
 
   > h2:first-child::before {

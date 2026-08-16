@@ -95,7 +95,7 @@
   </p>
 
   <h2>At a glance</h2>
-  <table>
+  <table class="doc-table">
     <thead>
       <tr><th>Property</th><th>Value</th></tr>
     </thead>
@@ -195,7 +195,7 @@ var balance = await client.GetBalanceAsync();</code></pre>
   </p>
 
   <h3>Consume request</h3>
-  <table>
+  <table class="doc-table">
     <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
     <tbody>
       <tr><td><code>licenseKey</code></td><td>Yes</td><td>Customer license key</td></tr>
@@ -219,7 +219,7 @@ var balance = await client.GetBalanceAsync();</code></pre>
 
   <h2>Usage tab (license detail)</h2>
   <p>Open a Credit-Based license → <strong>Usage</strong> tab.</p>
-  <table>
+  <table class="doc-table">
     <thead><tr><th>Role</th><th>What you see</th></tr></thead>
     <tbody>
       <tr><td><strong>Product owner / Admin</strong></td><td>Remaining balance, <strong>Grant balance</strong> form (amount, reason, external reference), full usage ledger</td></tr>
@@ -238,7 +238,7 @@ var balance = await client.GetBalanceAsync();</code></pre>
   </p>
 
   <h2>Consume error codes</h2>
-  <table>
+  <table class="doc-table">
     <thead><tr><th>ErrorCode</th><th>HTTP</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td><code>InvalidRequest</code></td><td>400</td><td>Missing key, feature, or idempotency key</td></tr>
@@ -255,7 +255,7 @@ var balance = await client.GetBalanceAsync();</code></pre>
 
   <h2>Credit-Based vs Usage-Based</h2>
   <p>Use this quick guide if you are deciding between the two metered types:</p>
-  <table>
+  <table class="doc-table">
     <thead><tr><th>Question</th><th>Credit-Based</th><th><a routerLink="/usage-based-license">Usage-Based</a></th></tr></thead>
     <tbody>
       <tr><td>What are you selling?</td><td>A <strong>credit wallet</strong> (e.g. “10,000 credits”)</td><td>A <strong>number of actions</strong> (e.g. “500 exports”)</td></tr>
