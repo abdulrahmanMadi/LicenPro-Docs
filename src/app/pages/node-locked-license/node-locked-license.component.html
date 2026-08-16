@@ -181,10 +181,11 @@
   <div class="help-callout help-callout--plain">
     <i class="ki-outline ki-wifi-square" aria-hidden="true"></i>
     <div>
-      <span class="callout-title">Offline licenses cannot be monitored this way</span>
+      <span class="callout-title">Offline licenses are only partly covered</span>
       <p>
-        Detection depends on the machine reaching the server. A purely offline node-locked license validates locally and never reports in,
-        so sharing attempts on it are invisible. Use <strong>online</strong> validation if you need this visibility.
+        An offline license still checks in with the server the first time it runs on a machine, so a copied license usually shows up as an
+        attempt on that first launch. After that it validates locally and stops reporting in — and nothing is recorded at all if the other
+        machine was offline during its first launch. Use <strong>online</strong> validation if you need continuous visibility.
       </p>
     </div>
   </div>
