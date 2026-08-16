@@ -97,6 +97,10 @@ export const API_TOPICS: Record<string, DocTopic> = {
       <p>Regenerate license file.</p></div>
       <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/Licenses/{id}/revoke</code></div>
       <p>Revoke license.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/Licenses/{id}/access-attempts</code></div>
+      <p>Node-locked sharing detection. Lists machines denied because the license is bound elsewhere, with attempted and bound hardware IDs, IP, entry point and attempt counts, plus summary totals. Product owner or Admin only — this is the one route that returns unmasked device and network detail.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/Licenses/{id}/access-attempts/{attemptId}/acknowledge</code></div>
+      <p>Mark one attempt as reviewed. Returns the refreshed summary. Product owner or Admin only.</p></div>
       <p>Additional routes cover hardware binding, transfers, and pending bindings; explore responses from your host under the same prefix.</p>
       <p>${L('/guides/platform/licenses', 'Vendor licenses guide')} · ${L('/sdk/license-client', 'SDK LicenseClient')}</p>
     `,

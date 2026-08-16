@@ -43,6 +43,7 @@
       <li>Review pending bindings on the <strong>Device Binding</strong> tab — Approve or Reject.</li>
       <li>Transfer hardware via Device Binding when users replace laptops.</li>
       <li>Block rogue devices from Activations without revoking the license.</li>
+      <li>Watch <strong>Unauthorized Access Attempts</strong> on Device Binding — you are notified when another machine tries a license that is already bound.</li>
     </ul>
     <p>Dashboard walkthrough with screenshots continues below.</p>
   </section>
@@ -153,6 +154,45 @@
   <h3>Second machine (same license file)</h3>
   <p>Validation fails with a <strong>hardware mismatch</strong> message — the license is already bound to the first fingerprint.</p>
 
+  <h2>License sharing detection</h2>
+  <p>
+    Blocking the second machine is only half the story: as the product owner you also want to know it happened. Whenever a bound
+    node-locked license is presented from a different machine, LicenPro records the attempt and sends you an in-app notification.
+    The end user's experience does not change — they still see the same hardware mismatch message, and nothing is revoked automatically.
+  </p>
+  <ul style="margin: 0.5rem 0 1rem 1.25rem;">
+    <li><strong>What triggers it</strong> — a license whose binding status is <strong>Bound</strong> is used from a fingerprint other than the bound one, during validation, activation, or session connect.</li>
+    <li><strong>What you see</strong> — the attempting hardware ID, the machine it should be bound to, device name, IP address, which entry point was used, how many times that machine has tried, and when.</li>
+    <li><strong>Who sees it</strong> — product owners only. End users and other product members cannot read these records.</li>
+    <li><strong>How often you are alerted</strong> — once per offending machine per day. A client stuck retrying in a loop will not flood your notifications; the attempt counter keeps rising in the background.</li>
+    <li><strong>Review</strong> — mark an attempt as reviewed once you have looked into it. The warning banner clears, but the record and its counter stay.</li>
+  </ul>
+  <div class="help-callout warning help-callout--plain">
+    <i class="ki-outline ki-information-2" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">An attempt is a signal, not a verdict</span>
+      <p>
+        A new machine on a bound license looks the same whether the user shared their license or simply replaced their laptop or
+        reinstalled Windows. Contact the user before acting. The usual fix for a genuine hardware change is <strong>device transfer</strong>
+        or <strong>unbind</strong>, not revocation.
+      </p>
+    </div>
+  </div>
+  <div class="help-callout help-callout--plain">
+    <i class="ki-outline ki-wifi-square" aria-hidden="true"></i>
+    <div>
+      <span class="callout-title">Offline licenses cannot be monitored this way</span>
+      <p>
+        Detection depends on the machine reaching the server. A purely offline node-locked license validates locally and never reports in,
+        so sharing attempts on it are invisible. Use <strong>online</strong> validation if you need this visibility.
+      </p>
+    </div>
+  </div>
+  <p>
+    A wrong <strong>Issued to</strong> value is a different failure: it is rejected earlier as a <strong>credential mismatch</strong> and is
+    not counted as a sharing attempt. Sharing detection covers the case where the credentials are correct but the machine is not.
+  </p>
+
   <h2>License details — Overview tab</h2>
   <p>Use Overview for license metadata and binding summary:</p>
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
@@ -178,6 +218,7 @@
     <li><strong>Pending state</strong> — requested hardware ID with <strong>Approve Device</strong> / <strong>Reject</strong> (product owner only)</li>
     <li><strong>Activation history</strong> — table of Activated / Deactivated / Transferred events with IP and timestamp</li>
     <li><strong>Unbind / transfer</strong> — reset binding for legitimate hardware moves (owner actions)</li>
+    <li><strong>Unauthorized Access Attempts</strong> — machines that were denied because the license is bound elsewhere, with attempted and bound hardware IDs, IP, entry point, attempt count and timestamps. A badge on the tab and a banner on the license show how many you have not reviewed yet; <strong>Mark as reviewed</strong> clears them (owner only).</li>
   </ul>
   <figure class="doc-figure doc-figure-card">
     <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-node-locked-device-binding.png" data-doc-image-alt="Node-Locked Device Binding tab: activated device, hardware ID, activation history" aria-label="View Device Binding tab screenshot full size">

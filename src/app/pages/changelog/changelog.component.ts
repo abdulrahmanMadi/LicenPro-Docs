@@ -21,6 +21,41 @@ interface ChangelogEntry {
 export class ChangelogComponent {
   changelog: ChangelogEntry[] = [
     {
+      version: '2.6.0',
+      date: 'August 16, 2026',
+      type: 'minor',
+      highlights: [
+        'License sharing detection for node-locked licenses',
+        'Unauthorized Access Attempts on the Device Binding tab',
+        'In-app alerts for product owners when a license is used from another machine'
+      ],
+      changes: [
+        {
+          category: 'added',
+          items: [
+            'Node-locked licenses now record every machine denied because the license is bound elsewhere',
+            'Unauthorized Access Attempts card on the license Device Binding tab, showing attempted and bound hardware IDs, IP address, entry point, attempt count and timestamps',
+            'In-app notification to product owners on the first attempt from each unrecognized machine',
+            'Mark attempts as reviewed to clear the license warning banner and tab badge',
+            'API: GET /api/Licenses/{id}/access-attempts and POST /api/Licenses/{id}/access-attempts/{attemptId}/acknowledge'
+          ]
+        },
+        {
+          category: 'security',
+          items: [
+            'Access-attempt detail is restricted to product owners and administrators; hardware IDs stay masked in logs and notification text',
+            'Owner alerts are throttled to one per offending machine per day, so a client retrying in a loop cannot flood notifications'
+          ]
+        },
+        {
+          category: 'improved',
+          items: [
+            'Detection is observational only — validation error codes, client messages and binding state are unchanged, and nothing is revoked automatically'
+          ]
+        }
+      ]
+    },
+    {
       version: '2.5.0',
       date: 'January 10, 2026',
       type: 'minor',

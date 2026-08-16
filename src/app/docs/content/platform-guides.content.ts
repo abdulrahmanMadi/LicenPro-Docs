@@ -492,7 +492,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Subscription</strong> — recurring term; renew or revoke on churn.</li>
         <li><strong>Floating</strong> — shared pool; seats enforced by <em>live sessions</em>; always online.</li>
         <li><strong>Concurrent</strong> — shared team key; seats enforced by <em>device activations</em>.</li>
-        <li><strong>Node-locked</strong> — one machine per license; hardware bind + transfer; auto-bind or owner approval.</li>
+        <li><strong>Node-locked</strong> — one machine per license; hardware bind + transfer; auto-bind or owner approval; sharing attempts from other machines are recorded and reported to the owner.</li>
         <li><strong>Credit-Based</strong> (<code>MeteredToken</code>) — online-only; shared credit wallet; per-feature token pricing. ${link('/credit-based-license', 'Full guide')}.</li>
         <li><strong>Usage-Based</strong> (<code>MeteredCount</code>) — online-only; shared use counter; one use per consume. ${link('/usage-based-license', 'Full guide')}.</li>
       </ul>
@@ -587,7 +587,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p><strong>Credit-Based</strong> and <strong>Usage-Based</strong> licenses only: token balance or metered counters, consumption history, and operator adjustments. See ${link('/credit-based-license', 'Credit-Based')} and ${link('/usage-based-license', 'Usage-Based')} guides.</p>
 
       <h3>Device</h3>
-      <p><strong>Node-locked</strong> licenses only: bound hardware fingerprint, activation history, transfer/unbind workflows when policy allows a machine change.</p>
+      <p><strong>Node-locked</strong> licenses only: bound hardware fingerprint, activation history, transfer/unbind workflows when policy allows a machine change, and an <strong>Unauthorized Access Attempts</strong> card listing machines denied because the license is bound elsewhere. Attempts carry the attempted and bound hardware IDs, IP, entry point and a per-machine counter; product owners are notified in-app once per offending machine per day and can mark each one reviewed. See ${link('/node-locked-license', 'Node-locked license sharing detection')}.</p>
 
       <h2>License status lifecycle</h2>
       <ul style="margin-left:1.25rem;">
