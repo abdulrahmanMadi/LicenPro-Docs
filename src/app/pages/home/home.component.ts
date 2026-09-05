@@ -31,7 +31,7 @@ import { getHomeCards, type HomeCard } from '../../docs/content/home.content';
             <i class="ki-outline ki-support"></i>
             <span>{{ 'docs.home.help.support' | t }}</span>
           </a>
-          <a href="https://github.com/LicenPro" class="help-item">
+          <a href="https://github.com/abdulrahmanMadi/LicenPro-Docs" class="help-item">
             <i class="ki-outline ki-github"></i>
             <span>{{ 'docs.home.help.github' | t }}</span>
           </a>

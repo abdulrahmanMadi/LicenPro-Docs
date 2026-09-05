@@ -20,7 +20,7 @@
   height: 100%;
   min-height: 0;
   background: var(--sidebar-bg);
-  border-right: 1px solid var(--border);
+  border-inline-end: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -30,6 +30,12 @@
     padding: 24px 20px 12px;
     display: flex;
     align-items: center;
+    justify-content: center;
+
+    .docs-brand {
+      display: inline-flex;
+      justify-content: center;
+    }
     
     .docs-logo-img {
       height: 40px;
@@ -109,7 +115,7 @@
 
       .docs-search-icon {
         position: absolute;
-        left: 14px;
+        inset-inline-start: 14px;
         font-size: 1.1rem;
         color: var(--muted-foreground);
         pointer-events: none;
@@ -117,7 +123,7 @@
 
       .docs-search-clear {
         position: absolute;
-        right: 6px;
+        inset-inline-end: 6px;
         top: 50%;
         transform: translateY(-50%);
         width: 30px;
@@ -153,13 +159,14 @@
         background: var(--background);
         border: 1px solid var(--border);
         border-radius: 9999px;
-        padding: 0 14px 0 40px;
+        padding-block: 0;
+        padding-inline: 40px 14px;
         font-size: 0.875rem;
         color: var(--foreground);
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
         &.has-clear {
-          padding-right: 40px;
+          padding-inline-end: 40px;
         }
 
         &::placeholder {
@@ -181,7 +188,8 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 4px 14px 24px 18px;
+    padding-block: 4px 24px;
+    padding-inline: 18px 14px;
     -webkit-overflow-scrolling: touch;
 
     /* Remove all list bullets/markers (browser defaults look like “dots”) */
@@ -212,9 +220,9 @@
 
     .docs-nav-group-track {
       position: relative;
-      margin-left: 4px;
-      padding-left: 0;
-      border-left: none;
+      margin-inline-start: 4px;
+      padding-inline-start: 0;
+      border-inline-start: none;
     }
 
     /* Smooth expand/collapse for section items and nested API branches */
@@ -259,14 +267,15 @@
       width: 100%;
       min-height: 36px;
       margin: 0;
-      padding: 9px 8px 9px 4px;
+      padding: 9px 8px;
+      padding-inline: 4px 8px;
       display: flex;
       align-items: center;
       gap: 10px;
       border: none;
       background: transparent;
       cursor: pointer;
-      text-align: left;
+      text-align: start;
       font: inherit;
       color: inherit;
       border-radius: 10px;
@@ -327,9 +336,10 @@
     .docs-nav-items {
       list-style: none !important;
       position: relative;
-      margin: 2px 0 0 10px;
+      margin: 2px 0 0;
+      margin-inline-start: 10px;
       padding: 0;
-      border-left: none;
+      border-inline-start: none;
 
       li {
         list-style: none !important;
@@ -348,12 +358,12 @@
     .docs-nav-tree-leaf,
     .docs-nav-tree-branch {
       position: relative;
-      padding-left: 14px;
+      padding-inline-start: 14px;
 
       &::before {
         content: '';
         position: absolute;
-        left: 0;
+        inset-inline-start: 0;
         top: 0;
         width: 1px;
         height: 100%;
@@ -371,7 +381,8 @@
 
     .docs-nav-tree-leaf .docs-nav-link {
       position: relative;
-      padding: 10px 12px 10px 10px;
+      padding: 10px 12px;
+      padding-inline: 10px 12px;
       margin-bottom: 4px;
       gap: 12px;
       align-items: center;
@@ -380,7 +391,7 @@
       &::before {
         content: '';
         position: absolute;
-        left: -14px;
+        inset-inline-start: -14px;
         top: 50%;
         width: 14px;
         height: 1px;
@@ -393,7 +404,7 @@
     }
 
     .docs-nav-tree-leaf--nested .docs-nav-link::before {
-      left: -14px;
+      inset-inline-start: -14px;
       width: 12px;
     }
 
@@ -490,11 +501,12 @@
       width: 100%;
       min-height: 36px;
       margin: 0;
-      padding: 9px 8px 9px 6px;
+      padding: 9px 8px;
+      padding-inline: 6px 8px;
       border: none;
       background: transparent;
       cursor: pointer;
-      text-align: left;
+      text-align: start;
       font: inherit;
       color: inherit;
       border-radius: 10px;
@@ -503,7 +515,7 @@
       &::before {
         content: '';
         position: absolute;
-        left: -14px;
+        inset-inline-start: -14px;
         top: 50%;
         width: 14px;
         height: 1px;
@@ -576,7 +588,7 @@
       position: relative;
       padding: 2px 0 0 0;
       margin: 0;
-      border-left: none;
+      border-inline-start: none;
 
       > li:last-child .docs-nav-link {
         margin-bottom: 0;
@@ -648,9 +660,15 @@
     font-size: 0.875rem;
     color: var(--muted-foreground);
 
-    i.ki-right {
+    i.ki-right,
+    .docs-breadcrumb-sep {
       font-size: 0.65rem;
       opacity: 0.65;
+    }
+
+    :host-context(html[dir='rtl']) & .docs-breadcrumb-sep,
+    :host-context(html[dir='rtl']) & i.ki-right {
+      transform: scaleX(-1);
     }
 
     span.active {
@@ -765,7 +783,8 @@
   min-width: 220px;
   max-width: 280px;
   flex-shrink: 0;
-  padding: 48px 24px 48px 8px;
+  padding-block: 48px;
+  padding-inline: 8px 24px;
   overflow-y: auto;
   overflow-x: hidden;
   position: sticky;
@@ -782,7 +801,7 @@
     letter-spacing: 0.06em;
     color: var(--foreground);
     margin-bottom: 16px;
-    padding-left: 4px;
+    padding-inline-start: 4px;
   }
 
   .docs-toc-nav {
@@ -790,7 +809,7 @@
       list-style: none;
       padding: 0;
       margin: 0;
-      border-left: 1px solid var(--border);
+      border-inline-start: 1px solid var(--border);
     }
 
     li {
@@ -799,15 +818,19 @@
 
     .docs-toc-link {
       display: block;
-      padding: 7px 12px 7px 16px;
-      margin-left: -1px;
+      padding-block: 7px;
+      padding-inline: 16px 12px;
+      margin-inline-start: -1px;
       font-size: 0.875rem;
       line-height: 1.35;
       color: var(--muted-foreground);
       text-decoration: none;
       transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
-      border-radius: 0 8px 8px 0;
-      border-left: 2px solid transparent;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+      border-start-end-radius: 8px;
+      border-end-end-radius: 8px;
+      border-inline-start: 2px solid transparent;
 
       &:hover {
         color: var(--foreground);
@@ -815,7 +838,7 @@
       }
 
       &.toc-lvl3 {
-        padding-left: 26px;
+        padding-inline-start: 26px;
         font-size: 0.8125rem;
         opacity: 0.95;
       }
@@ -824,7 +847,7 @@
         color: var(--primary);
         font-weight: 600;
         background: var(--accent);
-        border-left-color: var(--primary);
+        border-inline-start-color: var(--primary);
       }
     }
   }
@@ -860,7 +883,7 @@
   .docs-sidebar {
     position: fixed;
     top: 104px;
-    left: 0;
+    inset-inline-start: 0;
     bottom: 0;
     width: min(280px, calc(100vw - 16px));
     max-height: calc(100dvh - 104px);
@@ -1011,4 +1034,21 @@
 
 .hidden {
   display: none !important;
+}
+
+:host-context(html[dir='rtl']) {
+  .docs-nav-section-label {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  @media (max-width: 768px) {
+    .docs-sidebar {
+      transform: translateX(100%);
+
+      &.open {
+        transform: translateX(0);
+      }
+    }
+  }
 }
