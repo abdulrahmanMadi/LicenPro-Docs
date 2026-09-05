@@ -47,19 +47,19 @@
   <ul style="margin: 0.5rem 0 1rem 1.25rem;">
     <li><strong>Already invited?</strong> Accept the email invitation or open the pending invite in the dashboard—do not create a duplicate org unless you intentionally need a separate tenant.</li>
     <li><strong>New vendor?</strong> Register at <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>, then create your first organization below.</li>
-    <li><strong>Plan limits</strong> — the number of organizations you can create depends on your subscription; if the <strong>Create Organization</strong> button is hidden, upgrade or use an existing tenant.</li>
+    <li><strong>Plan limits</strong> — the number of institutions you can create depends on your subscription; if the <strong>Create Institution</strong> button is hidden, upgrade or use an existing tenant.</li>
   </ul>
 
-  <h2>Step-by-step: Create Organization</h2>
+  <h2>Step-by-step: Create Institution</h2>
   <p>
-    Open <strong>Organizations</strong> in the dashboard sidebar (<code>/dashboard/organizations</code>) and click
-    <strong>Create Organization</strong>. The modal wizard has two steps—<strong>Identity</strong> and <strong>Branding</strong>—then
-    <strong>Establish Organization</strong> saves the tenant.
+    Open <strong>Institutions</strong> in the dashboard sidebar (<code>/dashboard/organizations</code>) and click
+    <strong>Create Institution</strong>. The modal wizard has two steps—<strong>Identity</strong> and <strong>Branding</strong>—then
+    <strong>Establish Institution</strong> saves the tenant.
   </p>
 
   <figure class="doc-figure doc-figure-card">
-    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-organization.png" data-doc-image-alt="Create Organization modal step 1 Identity: organization name, website, and default entry role" aria-label="View Create Organization screenshot full size">
-      <img src="assets/docs/platform-create-organization.png" alt="Create Organization modal step 1 Identity: organization name, website, and default entry role" loading="lazy" decoding="async" />
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/platform-create-organization.png" data-doc-image-alt="Create Institution modal step 1 Identity: institution name, website, and default entry role" aria-label="View Create Institution screenshot full size">
+      <img src="assets/docs/platform-create-organization.png" alt="Create Institution modal step 1 Identity: institution name, website, and default entry role" loading="lazy" decoding="async" />
     </button>
     <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
   </figure>
@@ -72,7 +72,7 @@
         <p>
           Use <a href="https://app.licenpro.tech" target="_blank" rel="noopener noreferrer">app.licenpro.tech</a>
           with email/password or your configured identity provider. After login you land on the dashboard home;
-          open <strong>Organizations</strong> from the left menu.
+          open <strong>Institutions</strong> from the left menu.
         </p>
       </div>
     </div>
@@ -82,7 +82,7 @@
       <div class="step-content">
         <h3>Step 1 — Identity</h3>
         <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-          <li><strong>Organization name</strong> (required) — public display name for your company or team (e.g. <em>Roland Corp Digital</em>).</li>
+          <li><strong>Institution name</strong> (required) — public display name for your company or team (e.g. <em>Roland Corp Digital</em>).</li>
           <li><strong>Official website</strong> (optional) — your company URL; shown on the organization profile.</li>
           <li><strong>Default entry role</strong> — applied when someone joins without a role on the invitation:
             <ul style="margin: 0.5rem 0; padding-left: 1.25rem;">
@@ -101,17 +101,17 @@
       <div class="step-content">
         <h3>Step 2 — Branding</h3>
         <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-          <li><strong>Organization logo</strong> (optional) — JPEG, PNG, GIF, or WebP; appears on the organization overview hero.</li>
-          <li><strong>Organization description</strong> (optional) — rich text summary of your team or mission; shown on the overview tab.</li>
+          <li><strong>Institution logo</strong> (optional) — JPEG, PNG, GIF, or WebP; appears on the institution overview hero.</li>
+          <li><strong>Institution description</strong> (optional) — rich text summary of your team or mission; shown on the overview tab.</li>
         </ul>
-        <p>Click <strong>Establish Organization</strong>. You become the <strong>Owner</strong> of the new tenant.</p>
+        <p>Click <strong>Establish Institution</strong>. You become the <strong>Owner</strong> of the new tenant.</p>
       </div>
     </div>
 
     <div class="step-item active">
       <div class="step-number">4</div>
       <div class="step-content">
-        <h3>Open the organization workspace</h3>
+        <h3>Open the institution workspace</h3>
         <p>
           From the organizations list, open your tenant. The URL is
           <code>/dashboard/organization/:orgId</code> with tabs below. The <strong>Overview</strong> page shows logo,
@@ -121,7 +121,7 @@
     </div>
   </div>
 
-  <h2>Organization workspace tabs</h2>
+  <h2>Institution workspace tabs</h2>
   <div class="integration-grid">
     <div class="integration-card">
       <i class="ki-outline ki-element-11"></i>
@@ -166,7 +166,7 @@
   </ul>
   <p>
     When inviting someone, pick a role on the invitation or rely on the <strong>default entry role</strong> you set during creation.
-    Deeper reference: <a routerLink="/guides/platform/organizations">Organizations</a> platform guide.
+    Deeper reference: <a routerLink="/guides/platform/organizations">Institutions</a> platform guide.
   </p>
 
   <h2>Invite your team (optional)</h2>
@@ -191,7 +191,7 @@
   <p>
     Operator JWT calls can manage organizations via <code>/api/organizations</code> and related membership routes
     (create tenant, list members, invite, accept invitation). See
-    <a routerLink="/api/organizations">Organizations API</a> and <a routerLink="/api/auth-users">Auth &amp; users</a>.
+    <a routerLink="/api/organizations">Institutions API</a> and <a routerLink="/api/auth-users">Auth &amp; users</a>.
   </p>
 
   <h2 style="margin-top: 4rem;">What&apos;s next?</h2>
@@ -208,7 +208,7 @@
     </a>
     <a routerLink="/guides/platform/organizations" class="integration-card">
       <i class="ki-outline ki-briefcase"></i>
-      <h4>Organizations guide</h4>
+      <h4>Institutions guide</h4>
       <p>Platform reference for tenants.</p>
     </a>
   </div>

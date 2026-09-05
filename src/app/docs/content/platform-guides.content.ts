@@ -55,20 +55,20 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <h2>Phase 1 — Configure (dashboard)</h2>
       <p>This is the left side of the diagram: everything you do before a customer machine ever runs your app.</p>
       <ol style="margin-left:1.25rem;">
-        <li><strong>Organization</strong> — tenant boundary for members, invitations, and products.</li>
+        <li><strong>Institution</strong> — tenant boundary for members, invitations, and products.</li>
         <li><strong>Product</strong> — anchor for API keys, releases, entitlements, and every issued license.</li>
         <li><strong>Releases</strong> — version lines so licenses and update checks target a specific build or channel.</li>
         <li><strong>Features &amp; entitlement sets</strong> — optional packaging of capabilities into SKUs you assign to licenses.</li>
         <li><strong>RSA keys</strong> — generate per product before issuing licenses; only the public key is distributed to apps.</li>
         <li><strong>Licenses</strong> — choose model (perpetual, trial, subscription, floating, concurrent, node-locked, credit-based, usage-based, …), set limits, export <code>license.bin</code> and the license key.</li>
       </ol>
-      <p>Deeper reads: ${link('/guides/platform/organizations', 'Organizations')} · ${link('/first-organization', 'First organization')} · ${link('/guides/platform/products', 'Products')} · ${link('/guides/platform/releases', 'Releases')} · ${link('/guides/platform/features-entitlements', 'Features &amp; entitlements')} · ${link('/rsa-keys', 'RSA keys')} · ${link('/guides/platform/licenses', 'Licenses (vendor)')} · ${link('/first-product', 'First product')} · ${link('/first-license', 'First license')}.</p>
+      <p>Deeper reads: ${link('/guides/platform/organizations', 'Institutions')} · ${link('/first-organization', 'First institution')} · ${link('/guides/platform/products', 'Products')} · ${link('/guides/platform/releases', 'Releases')} · ${link('/guides/platform/features-entitlements', 'Features &amp; entitlements')} · ${link('/rsa-keys', 'RSA keys')} · ${link('/guides/platform/licenses', 'Licenses (vendor)')} · ${link('/first-product', 'First product')} · ${link('/first-license', 'First license')}.</p>
 
       <h2>Dashboard navigation map</h2>
       <p>Main sidebar areas and where to read more:</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>Home</strong> (<code>/dashboard</code>) — KPI widgets, recent licenses/products.</li>
-        <li><strong>Organizations</strong> — ${link('/guides/platform/organizations', 'Organizations guide')} · tabs: Overview, Products, Members, Invitations, Audit, Settings.</li>
+        <li><strong>Institutions</strong> — ${link('/guides/platform/organizations', 'Institutions guide')} · tabs: Overview, Products, Members, Invitations, Audit, Settings.</li>
         <li><strong>Products</strong> — ${link('/guides/platform/products', 'Products guide')} · tabs: Overview, Features, Entitlements, Releases, Licenses, Users, Access Matrix, Audit, Settings.</li>
         <li><strong>Releases</strong> — ${link('/guides/platform/releases', 'Releases guide')} (global + per-product tab).</li>
         <li><strong>Licenses</strong> — ${link('/guides/platform/licenses', 'Licenses guide')} · wizard + detail tabs (Overview, Activations, Sessions, Usage, Device).</li>
@@ -112,7 +112,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
     `,
   },
   organizations: {
-    title: 'Organizations',
+    title: 'Institutions',
     lead: 'Tenant boundary for your team, products, invitations, and audit context. Understand org roles, each dashboard tab, and the member lifecycle from invite through removal.',
     body: `
       <p>Every vendor operates inside an <strong>organization</strong>—a tenant that groups people, assigned products, policies, and audit history. Licenses are issued under <strong>products</strong>, but the organization defines who can see and manage them.</p>
@@ -122,7 +122,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <p>LicenPro uses <strong>three permission layers</strong>. Dashboard docs often mention “admin” in more than one sense—map each action to the correct layer:</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>System JWT role</strong> — <code>Admin</code> (platform operator) or <code>User</code> (registered vendor). Controls sidebar items like system logs, tickets, and subscribers. Does <em>not</em> automatically make someone a product owner.</li>
-        <li><strong>Organization role</strong> — your membership in a tenant: <code>Owner</code>, <code>Admin</code>, <code>ProductOwner</code>, <code>Member</code>, <code>Viewer</code>, or <code>ResellerAdmin</code> (backend). Stored as <code>myRole</code> on the org record.</li>
+        <li><strong>Institution role</strong> — your membership in a tenant: <code>Owner</code>, <code>Admin</code>, <code>ProductOwner</code>, <code>Member</code>, <code>Viewer</code>, or <code>ResellerAdmin</code> (backend). Stored as <code>myRole</code> on the org record.</li>
         <li><strong>Product ownership</strong> — listed in <code>product.owners</code>. Required for license CRUD, RSA keys, Users tab, Access Matrix, and most Settings actions—even if your org role is Admin.</li>
       </ul>
       <div class="help-callout info help-callout--plain"><i class="ki-outline ki-information" aria-hidden="true"></i><div>
@@ -130,7 +130,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <p>Some route guards only verify that you are a signed-in platform user. <strong>Authoritative checks run on the API.</strong> If a button appears but the server returns 403, your org or product role lacks that permission.</p>
       </div></div>
 
-      <h2>Organization lifecycle</h2>
+      <h2>Institution lifecycle</h2>
       <ol style="margin-left:1.25rem;">
         <li><strong>Create</strong> — wizard at <code>/dashboard/organizations</code> (Identity: name, website, default entry role; Branding: logo, colors, description).</li>
         <li><strong>Configure</strong> — settings tab: policies (self-registration, approval), default member role, branding.</li>
@@ -140,7 +140,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Transfer or delete</strong> — ownership transfer (Owner); org delete (Owner only, destructive).</li>
       </ol>
 
-      <h2>Organization tabs</h2>
+      <h2>Institution tabs</h2>
       <p>Each tab is a child route under the org layout. Tabs for <strong>Members</strong>, <strong>Invitations</strong>, <strong>Audit Logs</strong>, and <strong>Settings</strong> appear only when <code>myRole</code> is <code>Owner</code>, <code>Admin</code>, <code>ProductOwner</code>, or <code>ResellerAdmin</code>. <strong>Overview</strong> and <strong>Products</strong> are visible to all members.</p>
 
       <h3>Overview</h3>
@@ -183,7 +183,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Expiry</strong> — each row shows when the token expires; expired invites cannot be accepted until resent.</li>
         <li><strong>Roles in UI</strong> — Member, Viewer, Admin on this tab; Members tab also offers ProductOwner when inviting.</li>
       </ul>
-      ${screenshot('platform-organization-invitations.png', 'Organization Team Invitations tab: pending invites with role, status, and expiry')}
+      ${screenshot('platform-organization-invitations.png', 'Institution Team Invitations tab: pending invites with role, status, and expiry')}
 
       <h3>Audit Logs</h3>
       <p>Immutable org-scoped trail for compliance and support: who changed team membership, assigned products, or org settings.</p>
@@ -194,7 +194,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Details</strong> — eye icon opens structured payload for a single event.</li>
         <li><strong>Pair with Analytics</strong> — audit is point-in-time; ${link('/guides/platform/analytics', 'Analytics')} shows trends over time.</li>
       </ul>
-      ${screenshot('platform-organization-audit-logs.png', 'Organization Audit Logs tab: license and invitation activity with filters and export')}
+      ${screenshot('platform-organization-audit-logs.png', 'Institution Audit Logs tab: license and invitation activity with filters and export')}
 
       <h3>Settings</h3>
       <p>Owner-focused configuration split into sub-sections (left nav inside Settings):</p>
@@ -206,9 +206,9 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
         <li><strong>Danger zone</strong> — delete organization (Owner only; irreversible; licenses under org products may cascade per server policy).</li>
       </ul>
       <p><strong>Before you save:</strong> description and website are customer-facing on the org header; policy changes affect the next invitation or self-registration attempt, not retroactively on existing members.</p>
-      ${screenshot('platform-organization-settings-general.png', 'Organization Settings General Configuration: name, description, website, and branding sub-nav')}
+      ${screenshot('platform-organization-settings-general.png', 'Institution Settings General Configuration: name, description, website, and branding sub-nav')}
 
-      <h2>Organization roles matrix</h2>
+      <h2>Institution roles matrix</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Owner</strong> — full tenant control: delete org, transfer ownership, assign Admin, all invite/remove/role operations.</li>
         <li><strong>Admin</strong> — invite, change roles (not to Owner; cannot assign Admin—that is Owner-only), remove members; cannot delete org.</li>
@@ -230,14 +230,14 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
 
       <h2>REST automation</h2>
       <p>Routes under <code>/api/Organization/…</code> mirror dashboard flows: CRUD, members, invitations, policies. Use operator JWT or scoped account API keys (${link('/rsa-keys', 'API keys guide')}).</p>
-      <p>${link('/api/organizations', 'Organizations API')} · ${link('/api/auth-users', 'Auth &amp; users')} · ${link('/guides/platform/products', 'Products')} · ${link('/guides/platform/overview', 'System overview')}</p>
+      <p>${link('/api/organizations', 'Institutions API')} · ${link('/api/auth-users', 'Auth &amp; users')} · ${link('/guides/platform/products', 'Products')} · ${link('/guides/platform/overview', 'System overview')}</p>
     `,
   },
   products: {
     title: 'Products',
     lead: 'The anchor for RSA keys, releases, entitlements, licenses, and API credentials. Every product tab, access type, owner rule, and settings section explained.',
     body: `
-      <p>A <strong>product</strong> is the software you license. All license files, validation traffic, RSA signing keys, and product <code>X-API-KEY</code> values belong to one product id. Organizations assign products to tenants; <strong>product owners</strong> run day-to-day licensing.</p>
+      <p>A <strong>product</strong> is the software you license. All license files, validation traffic, RSA signing keys, and product <code>X-API-KEY</code> values belong to one product id. Institutions assign products to tenants; <strong>product owners</strong> run day-to-day licensing.</p>
       <p>Walkthrough: ${link('/first-product', 'Create your first product')} · ${link('/rsa-keys', 'RSA keys &amp; API credentials')}.</p>
 
       <h2>Product lifecycle</h2>
@@ -254,7 +254,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <h2>Access types: Associated vs Opened</h2>
       <p>Chosen at create time; drives UI and license rules:</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Associated (Organization)</strong> — full vendor workflow. All product tabs, all license types (subject to plan). Licenses tie to org context; only assigned org users access the product.</li>
+        <li><strong>Associated (Institution)</strong> — full vendor workflow. All product tabs, all license types (subject to plan). Licenses tie to org context; only assigned org users access the product.</li>
         <li><strong>Opened (All users)</strong> — simplified distribution. Dashboard shows only <strong>Overview</strong> and <strong>Releases</strong> tabs. License creation is restricted (e.g. perpetual offline patterns); intended for broadly opened software catalogs.</li>
       </ul>
 
@@ -765,7 +765,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
 
       <h2>Page sections</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Organization selector</strong> — scope charts to one tenant (multi-org operators).</li>
+        <li><strong>Institution selector</strong> — scope charts to one tenant (multi-org operators).</li>
         <li><strong>Date range</strong> — presets (7D, 30D, 90D, YTD) and custom ranges.</li>
         <li><strong>KPI cards</strong> — license totals, active vs expired, activation counts, trial stats, revenue-style metrics when billing integrated.</li>
         <li><strong>Charts</strong> — activations over time, license type mix, top products by usage.</li>
@@ -791,7 +791,7 @@ export const PLATFORM_GUIDES: Record<string, DocTopic> = {
       <h2>Roles</h2>
       <p>Org Admins and product owners see org-scoped analytics. System Admin sees platform-wide views. Viewers/Members see limited or no analytics depending on assignment.</p>
 
-      <p>${link('/guides/platform/organizations', 'Organizations')} · ${link('/guides/platform/activations', 'Activations')} · ${link('/guides/platform/overview', 'System overview')}</p>
+      <p>${link('/guides/platform/organizations', 'Institutions')} · ${link('/guides/platform/activations', 'Activations')} · ${link('/guides/platform/overview', 'System overview')}</p>
     `,
   },
   storage: {

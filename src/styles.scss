@@ -226,3 +226,26 @@ pre code {
 /* Utility Classes */
 .text-accent { color: var(--primary); }
 .bg-accent { background: var(--accent); color: var(--accent-foreground); }
+
+/* RTL layout adjustments */
+html[dir='rtl'] .docs-topbar-breadcrumb .docs-breadcrumb-sep {
+  transform: scaleX(-1);
+}
+
+html[dir='rtl'] .docs-search-icon {
+  left: auto;
+  right: 0.75rem;
+}
+
+html[dir='rtl'] .docs-search-input {
+  padding-inline: 2.25rem 2rem;
+}
+
+html[dir='rtl'] .docs-search-clear {
+  right: auto;
+  left: 0.5rem;
+}
+
+html.locale-ar {
+  --font-main: 'Segoe UI', Tahoma, Arial, sans-serif;
+}

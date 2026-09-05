@@ -1,6 +1,27 @@
 <!doctype html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" dir="ltr" data-bs-theme="dark">
 <head>
+  <script>
+    (function() {
+      try {
+        var theme = localStorage.getItem('docs-theme') || 'dark';
+        document.documentElement.setAttribute('data-bs-theme', theme);
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+
+        var locale = localStorage.getItem('licenpro-locale') || 'en';
+        if (locale !== 'en' && locale !== 'ar' && locale !== 'fr') {
+          locale = 'en';
+        }
+        document.documentElement.lang = locale;
+        document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.setAttribute('data-locale', locale);
+        if (locale === 'ar') {
+          document.documentElement.classList.add('locale-ar');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="utf-8">
   <title>LicenPro Documentation</title>
   

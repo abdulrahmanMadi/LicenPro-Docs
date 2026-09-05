@@ -40,7 +40,7 @@ export const DOCS_NAV: NavSection[] = [
     expanded: true,
     items: [
       { id: 'quick-start', label: 'Quick start', icon: 'ki-outline ki-flag', route: '/quick-start' },
-      { id: 'first-organization', label: 'First organization', icon: 'ki-outline ki-briefcase', route: '/first-organization' },
+      { id: 'first-organization', label: 'First institution', icon: 'ki-outline ki-briefcase', route: '/first-organization' },
       { id: 'first-product', label: 'First product', icon: 'ki-outline ki-abstract-26', route: '/first-product' },
       { id: 'first-license', label: 'First license', icon: 'ki-outline ki-key', route: '/first-license' },
       { id: 'rsa-keys', label: 'RSA keys', icon: 'ki-outline ki-shield-tick', route: '/rsa-keys' },
@@ -52,7 +52,7 @@ export const DOCS_NAV: NavSection[] = [
     icon: 'ki-outline ki-screen',
     expanded: false,
     items: [
-      { id: 'gp-orgs', label: 'Organizations', icon: 'ki-outline ki-briefcase', route: '/guides/platform/organizations' },
+      { id: 'gp-orgs', label: 'Institutions', icon: 'ki-outline ki-briefcase', route: '/guides/platform/organizations' },
       { id: 'gp-products', label: 'Products', icon: 'ki-outline ki-mouse-square', route: '/guides/platform/products' },
       { id: 'gp-releases', label: 'Releases', icon: 'ki-outline ki-cloud-add', route: '/guides/platform/releases' },
       {
@@ -130,7 +130,7 @@ export const DOCS_NAV: NavSection[] = [
         label: 'Catalog & licensing',
         icon: 'ki-outline ki-package',
         children: [
-          { id: 'api-orgs', label: 'Organizations', icon: 'ki-outline ki-briefcase', route: '/api/organizations' },
+          { id: 'api-orgs', label: 'Institutions', icon: 'ki-outline ki-briefcase', route: '/api/organizations' },
           { id: 'api-catalog', label: 'Products & releases', icon: 'ki-outline ki-abstract-26', route: '/api/catalog' },
           { id: 'api-licenses', label: 'Licenses', icon: 'ki-outline ki-key', route: '/api/licenses' },
           {

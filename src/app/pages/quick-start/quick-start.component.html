@@ -14,7 +14,7 @@
     <div>
       <span class="callout-title">Mental model</span>
       <p>
-        <strong>Organization</strong> is your tenant boundary—members, invitations, and product ownership.
+        <strong>Institution</strong> is your tenant boundary—members, invitations, and product ownership.
         <strong>Product</strong> is the anchor for releases, RSA signing, API credentials, entitlements, and every license.
         The <strong>dashboard</strong> signs licenses with a server-side private key; the <strong>SDK</strong> only needs the product <strong>public key</strong>, the customer <strong>license key</strong>, and <code>license.bin</code>.
         Online validation and automation use <code>https://licenpro.runasp.net/api</code> (or your self-hosted API base)—always with the <code>/api</code> suffix.
@@ -47,7 +47,7 @@
   <p>
     Full walkthrough (Identity &amp; Branding wizard, workspace tabs, roles, invitations, API):
     <a routerLink="/first-organization">Create your first organization</a>.
-    Platform reference: <a routerLink="/guides/platform/organizations">Organizations</a> · <a routerLink="/api/organizations">Organizations API</a>.
+    Platform reference: <a routerLink="/guides/platform/organizations">Institutions</a> · <a routerLink="/api/organizations">Institutions API</a>.
   </p>
 
   <h2>2. Create your first product and release</h2>
@@ -59,7 +59,7 @@
     <li><strong>Product name</strong> (required) — unique label in your account.</li>
     <li><strong>Initial version</strong> (required on create) — first <strong>software release</strong> (semver, build number, or custom format). Licenses and update checks target a <code>softwareReleaseId</code>.</li>
     <li><strong>Release channel</strong> — e.g. Stable, Beta, Alpha, RC—so you can separate production and preview builds.</li>
-    <li><strong>Product access type</strong> — <strong>Associated</strong> (licenses tied to specific organizations) or <strong>Opened</strong> (any valid license holder).</li>
+    <li><strong>Product access type</strong> — <strong>Associated</strong> (licenses tied to specific institutions) or <strong>Opened</strong> (any valid license holder).</li>
     <li><strong>Description &amp; image</strong> (optional) — internal documentation and branding.</li>
   </ul>
   <p>
@@ -175,7 +175,7 @@ Application.Run(new MainForm());</code></pre>
       </a>
       <a routerLink="/first-organization" class="integration-card">
         <i class="ki-outline ki-briefcase"></i>
-        <h4>First organization</h4>
+        <h4>First institution</h4>
         <p>Tenant setup in the dashboard</p>
       </a>
       <a routerLink="/first-product" class="integration-card">

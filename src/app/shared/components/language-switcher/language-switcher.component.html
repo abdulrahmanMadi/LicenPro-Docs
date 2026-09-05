@@ -1,0 +1,45 @@
+<div class="lang-switcher" [class.is-open]="open()">
+  <button
+    type="button"
+    class="lang-switcher__trigger"
+    (click)="toggle($event)"
+    [attr.aria-expanded]="open()"
+    [attr.aria-label]="'nav.language' | t"
+    [title]="'nav.language' | t">
+    <img
+      class="lang-switcher__flag"
+      [src]="localeService.currentOption().flagSrc"
+      [alt]="localeService.currentOption().label"
+      width="20"
+      height="14"
+      decoding="async" />
+    <span class="lang-switcher__code">{{ localeService.locale().toUpperCase() }}</span>
+    <i class="ki-outline ki-down lang-switcher__caret" aria-hidden="true"></i>
+  </button>
+
+  @if (open()) {
+    <div class="lang-switcher__menu" role="listbox" [attr.aria-label]="'nav.language' | t">
+      @for (opt of localeService.options; track opt.code) {
+        <button
+          type="button"
+          class="lang-switcher__option"
+          role="option"
+          [attr.aria-selected]="localeService.locale() === opt.code"
+          [ngClass]="{ 'is-active': localeService.locale() === opt.code }"
+          (click)="select(opt.code, $event)">
+          <img
+            class="lang-switcher__flag"
+            [src]="opt.flagSrc"
+            [alt]="opt.label"
+            width="22"
+            height="16"
+            decoding="async" />
+          <span class="lang-switcher__labels">
+            <span class="lang-switcher__native">{{ opt.nativeLabel }}</span>
+            <span class="lang-switcher__english">{{ opt.label }}</span>
+          </span>
+        </button>
+      }
+    </div>
+  }
+</div>

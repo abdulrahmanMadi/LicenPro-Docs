@@ -1,0 +1,126 @@
+.lang-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  z-index: 110;
+}
+
+.lang-switcher__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 36px;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lang-switcher__trigger:hover,
+.lang-switcher.is-open .lang-switcher__trigger {
+  background: var(--accent);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.lang-switcher__flag {
+  width: 1.25rem;
+  height: 0.9rem;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--border);
+  flex-shrink: 0;
+}
+
+.lang-switcher__option .lang-switcher__flag {
+  width: 1.375rem;
+  height: 1rem;
+}
+
+.lang-switcher__code {
+  min-width: 1.5rem;
+}
+
+.lang-switcher__caret {
+  font-size: 0.65rem;
+  opacity: 0.75;
+  transition: transform 0.2s ease;
+}
+
+.lang-switcher.is-open .lang-switcher__caret {
+  transform: rotate(180deg);
+}
+
+.lang-switcher__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  min-width: 11.5rem;
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  z-index: 200;
+}
+
+:host-context(html[dir='ltr']) .lang-switcher__menu {
+  right: 0;
+  left: auto;
+}
+
+:host-context(html[dir='rtl']) .lang-switcher__menu {
+  left: 0;
+  right: auto;
+}
+
+.lang-switcher__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: start;
+}
+
+.lang-switcher__option:hover,
+.lang-switcher__option.is-active {
+  background: var(--accent);
+}
+
+.lang-switcher__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.lang-switcher__native {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.lang-switcher__english {
+  font-size: 0.7rem;
+  opacity: 0.65;
+}
+
+:host-context([data-bs-theme='dark']) .lang-switcher__menu {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 480px) {
+  .lang-switcher__code {
+    display: none;
+  }
+}

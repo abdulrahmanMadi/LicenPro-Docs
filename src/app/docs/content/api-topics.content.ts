@@ -34,10 +34,10 @@ export const API_TOPICS: Record<string, DocTopic> = {
     `,
   },
   organizations: {
-    title: 'Organizations API',
+    title: 'Institutions API',
     lead: 'Tenant metadata, membership, invitations.',
     body: `
-      <p>Routes under <code>/api/Organization/...</code> (casing may match your host) cover tenant metadata, membership, invitations, and tenant-scoped lists aligned with the organization workspace in the dashboard.</p>
+      <p>Routes under <code>/api/Organization/...</code> (casing may match your host) cover tenant metadata, membership, invitations, and tenant-scoped lists aligned with the institution workspace in the dashboard.</p>
       <h2>Typical integration sequence</h2>
       <ol style="margin-left:1.25rem;">
         <li>Authenticate as a vendor operator (JWT).</li>
@@ -45,7 +45,7 @@ export const API_TOPICS: Record<string, DocTopic> = {
         <li>Create or revoke invitations; accept flows as documented for your environment.</li>
         <li>Link products using <code>/api/Products/...</code> routes scoped to that tenant.</li>
       </ol>
-      <p>${L('/guides/platform/organizations', 'Organizations platform guide')}</p>
+      <p>${L('/guides/platform/organizations', 'Institutions platform guide')}</p>
     `,
   },
   catalog: {

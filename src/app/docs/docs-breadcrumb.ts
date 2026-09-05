@@ -8,28 +8,31 @@ export interface BreadcrumbSegment {
   current?: boolean;
 }
 
-const STATIC_PAGE_TITLES: Record<string, string> = {
-  '/': 'Home',
-  '/quick-start': 'Quick start',
-  '/first-organization': 'First organization',
-  '/first-product': 'First product',
-  '/first-license': 'First license',
-  '/rsa-keys': 'RSA keys',
-  '/perpetual-license': 'Perpetual license',
-  '/trial-license': 'Trial license',
-  '/subscription-license': 'Subscription license',
-  '/floating-license': 'Floating license',
-  '/concurrent-license': 'Concurrent license',
-  '/node-locked-license': 'Node-locked license',
-  '/credit-based-license': 'Credit-Based license',
-  '/usage-based-license': 'Usage-Based license',
-  '/sessions-activations': 'Sessions & activations',
-  '/webhooks': 'Webhooks',
-  '/changelog': 'Changelog',
-  '/sdk/dotnet': '.NET integration',
-  '/sdk/winforms': 'WinForms',
-  '/sdk/wpf': 'WPF',
-  '/api/overview': 'REST API overview',
+export type TranslateFn = (key: string) => string;
+
+/** Maps static doc routes to `docs.nav.*` dictionary keys. */
+const STATIC_PATH_KEYS: Record<string, string> = {
+  '/': 'docs.nav.home',
+  '/quick-start': 'docs.nav.quick-start',
+  '/first-organization': 'docs.nav.first-organization',
+  '/first-product': 'docs.nav.first-product',
+  '/first-license': 'docs.nav.first-license',
+  '/rsa-keys': 'docs.nav.rsa-keys',
+  '/perpetual-license': 'docs.nav.perpetual',
+  '/trial-license': 'docs.nav.trial',
+  '/subscription-license': 'docs.nav.subscription',
+  '/floating-license': 'docs.nav.floating',
+  '/concurrent-license': 'docs.nav.concurrent',
+  '/node-locked-license': 'docs.nav.node-locked',
+  '/credit-based-license': 'docs.nav.credit-based',
+  '/usage-based-license': 'docs.nav.usage-based',
+  '/sessions-activations': 'docs.nav.sessions-activations',
+  '/webhooks': 'docs.nav.webhooks',
+  '/changelog': 'docs.nav.section.changelog',
+  '/sdk/dotnet': 'docs.nav.sdk-dotnet',
+  '/sdk/winforms': 'docs.nav.sdk-winforms',
+  '/sdk/wpf': 'docs.nav.sdk-wpf',
+  '/api/overview': 'docs.nav.api-hub',
 };
 
 function humanizeSlug(slug: string): string {
@@ -40,45 +43,62 @@ function humanizeSlug(slug: string): string {
     .join(' ');
 }
 
-export function buildBreadcrumbSegments(url: string): BreadcrumbSegment[] {
+export function buildBreadcrumbSegments(url: string, t: TranslateFn): BreadcrumbSegment[] {
   const path = (url.split('?')[0].split('#')[0] || '/').replace(/\/+$/, '') || '/';
-  const base: BreadcrumbSegment[] = [{ label: 'Documentation' }];
+  const base: BreadcrumbSegment[] = [{ label: t('docs.breadcrumb.documentation') }];
 
   if (path === '/' || path === '') {
-    return [...base, { label: 'Home', current: true }];
+    return [...base, { label: t('docs.nav.home'), current: true }];
   }
 
   const platformMatch = /^\/guides\/platform\/([^/]+)$/.exec(path);
   if (platformMatch) {
     const slug = platformMatch[1];
     const topic = getPlatformTopic(slug);
-    return [...base, { label: 'Platform' }, { label: topic?.title ?? humanizeSlug(slug), current: true }];
+    return [
+      ...base,
+      { label: t('docs.breadcrumb.platform') },
+      { label: topic?.title ?? humanizeSlug(slug), current: true },
+    ];
   }
 
   const apiTopicMatch = /^\/api\/([^/]+)$/.exec(path);
   if (apiTopicMatch && path !== '/api/overview') {
     const slug = apiTopicMatch[1];
     const topic = getApiTopic(slug);
-    return [...base, { label: 'REST API' }, { label: topic?.title ?? humanizeSlug(slug), current: true }];
+    return [
+      ...base,
+      { label: t('docs.breadcrumb.restApi') },
+      { label: topic?.title ?? humanizeSlug(slug), current: true },
+    ];
   }
 
   if (path === '/api/overview') {
-    return [...base, { label: 'REST API' }, { label: 'REST API overview', current: true }];
+    return [
+      ...base,
+      { label: t('docs.breadcrumb.restApi') },
+      { label: t('docs.nav.api-hub'), current: true },
+    ];
   }
 
   const sdkTopicMatch = /^\/sdk\/([^/]+)$/.exec(path);
   if (sdkTopicMatch && !['dotnet', 'winforms', 'wpf'].includes(sdkTopicMatch[1])) {
     const slug = sdkTopicMatch[1];
     const topic = getSdkTopic(slug);
-    return [...base, { label: '.NET SDK' }, { label: topic?.title ?? humanizeSlug(slug), current: true }];
+    return [
+      ...base,
+      { label: t('docs.breadcrumb.dotnetSdk') },
+      { label: topic?.title ?? humanizeSlug(slug), current: true },
+    ];
   }
 
-  const staticTitle = STATIC_PAGE_TITLES[path];
-  if (staticTitle) {
+  const staticKey = STATIC_PATH_KEYS[path];
+  if (staticKey) {
+    const title = t(staticKey);
     if (path.startsWith('/sdk/')) {
-      return [...base, { label: '.NET SDK' }, { label: staticTitle, current: true }];
+      return [...base, { label: t('docs.breadcrumb.dotnetSdk') }, { label: title, current: true }];
     }
-    return [...base, { label: staticTitle, current: true }];
+    return [...base, { label: title, current: true }];
   }
 
   const parts = path.split('/').filter(Boolean);

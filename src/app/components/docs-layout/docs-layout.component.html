@@ -2,7 +2,7 @@
   <div class="docs-mobile-header">
     <div class="docs-mobile-header-row">
       <div class="docs-mobile-header-brand">
-        <button type="button" class="docs-mobile-menu-btn" (click)="toggleSidebar()" aria-label="Open menu">
+        <button type="button" class="docs-mobile-menu-btn" (click)="toggleSidebar()" [attr.aria-label]="'docs.shell.openMenu' | t">
           <i class="ki-outline ki-menu"></i>
         </button>
         <a routerLink="/" class="docs-mobile-brand">
@@ -11,13 +11,14 @@
       </div>
 
       <div class="docs-mobile-actions">
-        <button type="button" class="mobile-action-btn" (click)="toggleTheme()" aria-label="Toggle theme">
+        <app-language-switcher />
+        <button type="button" class="mobile-action-btn" (click)="toggleTheme()" [attr.aria-label]="'docs.shell.toggleTheme' | t">
           <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
         </button>
       </div>
     </div>
 
-    <div class="docs-nav-tabs docs-nav-tabs--mobile" role="tablist" aria-label="Documentation scope">
+    <div class="docs-nav-tabs docs-nav-tabs--mobile" role="tablist" [attr.aria-label]="'docs.shell.docScope' | t">
       <button
         type="button"
         role="tab"
@@ -25,7 +26,7 @@
         [class.active]="navMode() === 'guides'"
         [attr.aria-selected]="navMode() === 'guides'"
         (click)="selectGuidesTab()">
-        Guides
+        {{ 'docs.shell.guides' | t }}
       </button>
       <button
         type="button"
@@ -34,7 +35,7 @@
         [class.active]="navMode() === 'api'"
         [attr.aria-selected]="navMode() === 'api'"
         (click)="selectApiTab()">
-        API reference
+        {{ 'docs.shell.apiReference' | t }}
       </button>
     </div>
   </div>
@@ -46,7 +47,7 @@
       </a>
     </div>
 
-    <div class="docs-nav-tabs" role="tablist" aria-label="Documentation scope">
+    <div class="docs-nav-tabs" role="tablist" [attr.aria-label]="'docs.shell.docScope' | t">
       <button
         type="button"
         role="tab"
@@ -54,7 +55,7 @@
         [class.active]="navMode() === 'guides'"
         [attr.aria-selected]="navMode() === 'guides'"
         (click)="selectGuidesTab(); onNavItemClick()">
-        Guides
+        {{ 'docs.shell.guides' | t }}
       </button>
       <button
         type="button"
@@ -63,7 +64,7 @@
         [class.active]="navMode() === 'api'"
         [attr.aria-selected]="navMode() === 'api'"
         (click)="selectApiTab(); onNavItemClick()">
-        API reference
+        {{ 'docs.shell.apiReference' | t }}
       </button>
     </div>
 
@@ -85,18 +86,22 @@
             type="button"
             class="docs-search-clear"
             (click)="clearSearch()"
-            aria-label="Clear search">
+            [attr.aria-label]="'docs.shell.clearSearch' | t">
             <i class="ki-outline ki-cross"></i>
           </button>
         }
       </div>
       @if (searchQuery.trim()) {
         <p class="docs-search-meta">
-          {{ searchHitCount }} match{{ searchHitCount !== 1 ? 'es' : '' }}
+          @if (searchHitCount === 1) {
+            {{ 'docs.shell.searchMatchOne' | t }}
+          } @else {
+            {{ 'docs.shell.searchMatches' | t:{ count: searchHitCount } }}
+          }
           <span class="docs-search-meta-sep">·</span>
-          <span class="docs-search-meta-hint">Use arrow keys and Enter</span>
+          <span class="docs-search-meta-hint">{{ 'docs.shell.searchHint' | t }}</span>
         </p>
-      } 
+      }
     </div>
 
     <nav class="docs-nav docs-nav-tree">
@@ -108,7 +113,7 @@
               class="docs-nav-section-head"
               (click)="toggleSectionCollapse(section.id, $event)"
               [attr.aria-expanded]="!isSectionCollapsed(section.id)"
-              [attr.aria-label]="'Toggle section ' + section.label">
+              [attr.aria-label]="toggleSectionAria(section.label)">
               <span class="docs-nav-section-icon" aria-hidden="true">
                 <i class="ki-outline" [ngClass]="section.icon"></i>
               </span>
@@ -131,7 +136,7 @@
                     class="docs-nav-branch-row"
                     (click)="toggleNavBranch(item.id, $event)"
                     [attr.aria-expanded]="!isNavBranchCollapsed(item.id)"
-                    [attr.aria-label]="'Toggle ' + item.label">
+                    [attr.aria-label]="toggleBranchAria(item.label)">
                     <div class="docs-nav-sublabel">
                       <i class="ki-outline" [ngClass]="item.icon"></i>
                       <span [innerHTML]="item.matchedText || item.label"></span>
@@ -190,17 +195,18 @@
       <div class="docs-topbar-breadcrumb">
         @for (seg of breadcrumbSegments(); track $index; let i = $index) {
           @if (i > 0) {
-            <i class="ki-outline ki-right" aria-hidden="true"></i>
+            <i class="ki-outline ki-right docs-breadcrumb-sep" aria-hidden="true"></i>
           }
           <span [class.active]="seg.current">{{ seg.label }}</span>
         }
       </div>
 
       <div class="docs-topbar-actions">
-        <a href="https://github.com/LicenPro" target="_blank" rel="noopener noreferrer" class="topbar-btn" aria-label="GitHub">
+        <app-language-switcher />
+        <a href="https://github.com/LicenPro" target="_blank" rel="noopener noreferrer" class="topbar-btn" [attr.aria-label]="'docs.shell.github' | t">
           <i class="ki-outline ki-github"></i>
         </a>
-        <button type="button" class="docs-theme-toggle-btn" (click)="toggleTheme()" aria-label="Toggle theme">
+        <button type="button" class="docs-theme-toggle-btn" (click)="toggleTheme()" [attr.aria-label]="'docs.shell.toggleTheme' | t">
           <i class="ki-outline" [class.ki-moon]="currentTheme() === 'light'" [class.ki-sun]="currentTheme() === 'dark'"></i>
         </button>
       </div>
@@ -214,7 +220,7 @@
           <footer class="docs-content-footer">
             <div class="docs-footer-line"></div>
             <div class="docs-footer-meta">
-              <span>LicenPro documentation</span>
+              <span>{{ 'docs.shell.footer' | t }}</span>
               <a href="https://github.com/LicenPro" target="_blank" rel="noopener noreferrer" class="edit-link">
                 <i class="ki-outline ki-github"></i> GitHub
               </a>
@@ -223,8 +229,8 @@
         </div>
       </main>
 
-      <aside class="docs-toc" aria-label="On this page">
-        <div class="docs-toc-title">On this page</div>
+      <aside class="docs-toc" [attr.aria-label]="'docs.shell.onThisPage' | t">
+        <div class="docs-toc-title">{{ 'docs.shell.onThisPage' | t }}</div>
         <nav class="docs-toc-nav">
           <ul>
             <li>
@@ -233,7 +239,7 @@
                 class="docs-toc-link"
                 [class.active]="activeTocId() === 'top'"
                 (click)="scrollDocTop($event)">
-                Top
+                {{ 'docs.shell.top' | t }}
               </a>
             </li>
             @for (h of tocEntries(); track h.id) {
@@ -263,13 +269,13 @@
         class="doc-lightbox-inner"
         role="dialog"
         aria-modal="true"
-        [attr.aria-label]="imageLightboxAlt() || 'Image preview'"
+        [attr.aria-label]="imageLightboxAlt() || ('docs.shell.imagePreview' | t)"
         (click)="$event.stopPropagation()">
         <button
           type="button"
           class="doc-lightbox-close"
           (click)="closeImageLightbox()"
-          aria-label="Close image preview">
+          [attr.aria-label]="'docs.shell.closeImage' | t">
           <i class="ki-outline ki-cross" aria-hidden="true"></i>
         </button>
         <img [src]="imageLightboxSrc()" [alt]="imageLightboxAlt()" />

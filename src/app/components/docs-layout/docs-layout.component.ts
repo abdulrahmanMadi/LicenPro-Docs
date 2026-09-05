@@ -28,6 +28,10 @@ import {
   type NavSection,
 } from '../../docs/docs-nav.config';
 import { buildBreadcrumbSegments, type BreadcrumbSegment } from '../../docs/docs-breadcrumb';
+import { localizeNavSections } from '../../core/i18n/docs-nav.localize';
+import { TranslateService } from '../../core/i18n/translate.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { LanguageSwitcherComponent } from '../../shared/components/language-switcher/language-switcher.component';
 
 export interface TocEntry {
   id: string;
@@ -38,7 +42,7 @@ export interface TocEntry {
 @Component({
   selector: 'app-docs-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, FormsModule, CommonModule],
+  imports: [RouterOutlet, RouterLink, FormsModule, CommonModule, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './docs-layout.component.html',
   styleUrls: ['./docs-layout.component.scss'],
 })
@@ -48,6 +52,7 @@ export class DocsLayoutComponent {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
+  readonly i18n = inject(TranslateService);
 
   isSidebarOpen = true;
   searchQuery = '';
@@ -91,7 +96,7 @@ export class DocsLayoutComponent {
     this.resetNavClones();
     this.applyUrlToNavMode(this.router.url);
     this.initSectionCollapseState();
-    this.breadcrumbSegments.set(buildBreadcrumbSegments(this.router.url));
+    this.breadcrumbSegments.set(buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k)));
 
     if (this.isBrowser) {
       const savedTheme = (localStorage.getItem('docs-theme') as 'light' | 'dark') || 'dark';
@@ -102,6 +107,15 @@ export class DocsLayoutComponent {
         document.documentElement.setAttribute('data-bs-theme', theme);
         document.documentElement.classList.remove('light', 'dark');
         document.documentElement.classList.add(theme);
+      });
+
+      effect(() => {
+        void this.i18n.tick();
+        this.resetNavClones();
+        this.breadcrumbSegments.set(buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k)));
+        if (this.searchQuery.trim()) {
+          this.onSearchChange();
+        }
       });
 
       this.router.events
@@ -118,7 +132,7 @@ export class DocsLayoutComponent {
           if (this.navMode() !== prevMode) {
             this.initSectionCollapseState();
           }
-          this.breadcrumbSegments.set(buildBreadcrumbSegments(url));
+          this.breadcrumbSegments.set(buildBreadcrumbSegments(url, (k) => this.i18n.t(k)));
           this.expandNavForCurrentUrl();
           this.scheduleTocRefresh();
         });
@@ -397,7 +411,17 @@ export class DocsLayoutComponent {
   }
 
   get searchPlaceholder(): string {
-    return this.navMode() === 'api' ? 'Search API topics…' : 'Search documentation…';
+    return this.navMode() === 'api'
+      ? this.i18n.t('docs.shell.searchApi')
+      : this.i18n.t('docs.shell.searchGuides');
+  }
+
+  toggleSectionAria(sectionLabel: string): string {
+    return this.i18n.t('docs.shell.toggleSection', { label: sectionLabel });
+  }
+
+  toggleBranchAria(branchLabel: string): string {
+    return this.i18n.t('docs.shell.toggleBranch', { label: branchLabel });
   }
 
   private pathOnly(url: string): string {
@@ -411,8 +435,14 @@ export class DocsLayoutComponent {
   }
 
   private resetNavClones(): void {
-    this.guidesNavSections = JSON.parse(JSON.stringify(GUIDES_NAV)) as NavSection[];
-    this.apiNavSections = JSON.parse(JSON.stringify(API_NAV)) as NavSection[];
+    this.guidesNavSections = localizeNavSections(
+      JSON.parse(JSON.stringify(GUIDES_NAV)) as NavSection[],
+      this.i18n
+    );
+    this.apiNavSections = localizeNavSections(
+      JSON.parse(JSON.stringify(API_NAV)) as NavSection[],
+      this.i18n
+    );
   }
 
   private sectionCollapseKey(sectionId: string): string {
