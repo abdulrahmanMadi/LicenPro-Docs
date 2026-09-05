@@ -33,12 +33,6 @@ Public documentation for [LicenPro](https://licenpro.tech) — cryptographically
 
 <p align="center"><em>REST API overview — system context and license lifecycle diagrams</em></p>
 
-Regenerate these images (dev server on port 4202):
-
-```bash
-node scripts/capture-readme-screens.mjs
-```
-
 ## What this site covers
 
 | Area | Examples |
@@ -91,8 +85,6 @@ Open [http://localhost:4202](http://localhost:4202).
 | `npm run build` | Production build (browser + SSR) |
 | `npm run watch` | Development build in watch mode |
 | `npm run serve:ssr:LicenPro-Docs` | Serve the SSR bundle from `dist/` |
-| `node scripts/build-platform-guides-locale.mjs` | Rebuild platform-guide AR/FR from translation JSON |
-| `node scripts/capture-readme-screens.mjs` | Refresh README screenshots |
 
 ## Internationalization
 
@@ -115,7 +107,6 @@ src/app/
   components/docs-layout/ shell (sidebar, top bar, TOC)
   docs/content/           localized page bodies
   pages/                  routes (home, topics, static docs)
-scripts/                  i18n generators and screenshot capture
 docs/readme/              README screenshots
 ```
 
