@@ -1,79 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { TranslateService } from '../../core/i18n/translate.service';
+import { getHomeCards, type HomeCard } from '../../docs/content/home.content';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   template: `
     <div class="doc-page">
-      <h1 class="text-accent">LicenPro Documentation</h1>
-      <p class="lead">
-        LicenPro helps software vendors issue <strong>cryptographically signed licenses</strong>, track <strong>activations and sessions</strong>,
-        and validate entitlements inside <strong>.NET desktop and server apps</strong> via the official SDK and REST API.
-        Use the sidebar <strong>Guides</strong> tab for onboarding and platform walkthroughs; switch to <strong>API reference</strong> when you are wiring HTTP calls.
-        Cards below jump to the most common destinations.
-      </p>
-      
+      <h1 class="text-accent">{{ 'docs.home.title' | t }}</h1>
+      <p class="lead" [innerHTML]="leadHtml()"></p>
+
       <div class="doc-cards">
-        <a routerLink="/quick-start" class="doc-card">
-          <i class="ki-outline ki-rocket"></i>
-          <h3>Quick Start</h3>
-          <p>Get up and running in minutes</p>
-        </a>
-        <a routerLink="/first-product" class="doc-card">
-          <i class="ki-outline ki-abstract-26"></i>
-          <h3>First Product</h3>
-          <p>Learn how to define products</p>
-        </a>
-        <a routerLink="/perpetual-license" class="doc-card">
-          <i class="ki-outline ki-key"></i>
-          <h3>Models</h3>
-          <p>Explore licensing strategies</p>
-        </a>
-        <a routerLink="/sdk/dotnet" class="doc-card">
-          <i class="ki-outline ki-microsoft"></i>
-          <h3>.NET SDK</h3>
-          <p>LicenseClient, cache, updates</p>
-        </a>
-        <a routerLink="/api/overview" class="doc-card">
-          <i class="ki-outline ki-data"></i>
-          <h3>REST API</h3>
-          <p>Auth, route topics, and hosted base URL</p>
-        </a>
-        <a routerLink="/guides/platform/overview" class="doc-card">
-          <i class="ki-outline ki-element-11"></i>
-          <h3>System overview</h3>
-          <p>Dashboard, API, and SDK roles</p>
-        </a>
-        <a routerLink="/changelog" class="doc-card">
-          <i class="ki-outline ki-notepad-edit"></i>
-          <h3>Changelog</h3>
-          <p>Release notes and product updates</p>
-        </a>
-        <a routerLink="/quick-start" class="doc-card">
-          <i class="ki-outline ki-route"></i>
-          <h3>Vendor workflow</h3>
-          <p>Products, releases, keys, licenses, SDK</p>
-        </a>
-        <a routerLink="/sessions-activations" class="doc-card">
-          <i class="ki-outline ki-chart-line"></i>
-          <h3>Sessions</h3>
-          <p>Activations in the dashboard</p>
-        </a>
+        @for (card of cards(); track card.route) {
+          <a [routerLink]="card.route" class="doc-card">
+            <i class="ki-outline {{ card.icon }}"></i>
+            <h3>{{ card.titleKey | t }}</h3>
+            <p>{{ card.descKey | t }}</p>
+          </a>
+        }
       </div>
 
       <div class="getting-help">
-        <h2>Need help?</h2>
-        <p>Our technical team is available to help you with your integration requirements.</p>
+        <h2>{{ 'docs.home.help.title' | t }}</h2>
+        <p>{{ 'docs.home.help.lead' | t }}</p>
         <div class="help-links">
           <a href="https://licenpro.tech/support" class="help-item">
             <i class="ki-outline ki-support"></i>
-            <span>Support Center</span>
+            <span>{{ 'docs.home.help.support' | t }}</span>
           </a>
           <a href="https://github.com/LicenPro" class="help-item">
             <i class="ki-outline ki-github"></i>
-            <span>GitHub Community</span>
+            <span>{{ 'docs.home.help.github' | t }}</span>
           </a>
         </div>
       </div>
@@ -202,6 +162,17 @@ import { RouterLink } from '@angular/router';
         &:hover { text-decoration: underline; }
       }
     }
-  `]
+  `],
 })
-export class HomeComponent {}
+export class HomeComponent {
+  private readonly i18n = inject(TranslateService);
+  readonly cards = signal<HomeCard[]>(getHomeCards());
+  readonly leadHtml = signal('');
+
+  constructor() {
+    effect(() => {
+      void this.i18n.tick();
+      this.leadHtml.set(this.i18n.t('docs.home.lead'));
+    });
+  }
+}

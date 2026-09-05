@@ -1,16 +1,16 @@
 <div class="help-page">
   <header class="help-page-header">
-    <h1>Changelog</h1>
-    <p class="lead">Stay up to date with the latest features, improvements, and security patches in LicenPro.</p>
+    <h1>{{ 'docs.changelog.title' | t }}</h1>
+    <p class="lead">{{ 'docs.changelog.lead' | t }}</p>
   </header>
 
   <div class="doc-stepper">
-    @for (entry of changelog; track entry.version) {
+    @for (entry of changelog(); track entry.version) {
       <div class="step-item active">
         <div class="step-number">v{{ entry.version }}</div>
         <div class="step-content">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-             <h3 style="margin: 0; border: none; padding: 0;">{{ entry.type }} Release</h3>
+             <h3 style="margin: 0; border: none; padding: 0;">{{ releaseTypeLabel(entry.type) }} {{ 'docs.changelog.release' | t }}</h3>
              <span style="font-size: 0.8125rem; color: var(--muted-foreground);">{{ entry.date }}</span>
           </div>
 
@@ -18,7 +18,7 @@
             <div class="help-callout success" style="margin-top: 0;">
               <i class="ki-outline ki-star"></i>
               <div>
-                <span class="callout-title">Highlights</span>
+                <span class="callout-title">{{ 'docs.changelog.highlights' | t }}</span>
                 <p>{{ entry.highlights.join('. ') }}</p>
               </div>
             </div>
@@ -28,8 +28,8 @@
             @for (change of entry.changes; track change.category) {
               <div style="margin-bottom: 1.5rem;">
                 <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.875rem; color: var(--foreground); margin-bottom: 8px;">
-                   <i class="ki-outline" [class]="getCategoryIcon(change.category)" style="color: var(--primary);"></i>
-                   <span>{{ getCategoryLabel(change.category) }}</span>
+                   <i class="ki-outline {{ getCategoryIcon(change.category) }}" style="color: var(--primary);"></i>
+                   <span>{{ categoryLabel(change.category) }}</span>
                 </div>
                 <ul style="padding-left: 20px; color: var(--muted-foreground); font-size: 0.9375rem; line-height: 1.6;">
                   @for (item of change.items; track item) {
@@ -47,8 +47,8 @@
   <div class="help-callout info" style="margin-top: 5rem;">
     <i class="ki-outline ki-notification-on"></i>
     <div>
-      <span class="callout-title">Get Notified</span>
-      <p>Want to receive these updates in your inbox? <a href="mailto:updates@licenpro.tech" style="color: var(--primary); font-weight: 500;">Subscribe to our developer mailing list</a>.</p>
+      <span class="callout-title">{{ 'docs.changelog.notifyTitle' | t }}</span>
+      <p [innerHTML]="'docs.changelog.notifyBody' | t"></p>
     </div>
   </div>
 </div>

@@ -1,6 +1,14 @@
 import { Routes } from '@angular/router';
 import { DocsLayoutComponent } from './components/docs-layout/docs-layout.component';
 
+const staticPage = (pageId: string) => ({
+  loadComponent: () =>
+    import('./pages/localized-static-doc-page/localized-static-doc-page.component').then(
+      (m) => m.LocalizedStaticDocPageComponent
+    ),
+  data: { pageId },
+});
+
 export const routes: Routes = [
   {
     path: '',
@@ -31,43 +39,30 @@ export const routes: Routes = [
           import('./pages/doc-topic/doc-topic-page.component').then((m) => m.DocTopicPageComponent),
         data: { docKind: 'api' },
       },
-      {
-        path: 'sdk/dotnet',
-        loadComponent: () => import('./pages/sdk-dotnet/sdk-dotnet.component').then((m) => m.SdkDotnetComponent),
-      },
-      {
-        path: 'sdk/winforms',
-        loadComponent: () => import('./pages/sdk-winforms/sdk-winforms.component').then((m) => m.SdkWinformsComponent),
-      },
-      {
-        path: 'sdk/wpf',
-        loadComponent: () => import('./pages/sdk-wpf/sdk-wpf.component').then((m) => m.SdkWpfComponent),
-      },
+      { path: 'sdk/dotnet', ...staticPage('sdk-dotnet') },
+      { path: 'sdk/winforms', ...staticPage('sdk-winforms') },
+      { path: 'sdk/wpf', ...staticPage('sdk-wpf') },
       {
         path: 'sdk/:topic',
         loadComponent: () =>
           import('./pages/doc-topic/doc-topic-page.component').then((m) => m.DocTopicPageComponent),
         data: { docKind: 'sdk' },
       },
-      { path: 'first-organization', loadComponent: () => import('./pages/first-organization/first-organization.component').then((m) => m.FirstOrganizationComponent) },
-      { path: 'first-product', loadComponent: () => import('./pages/first-product/first-product.component').then((m) => m.FirstProductComponent) },
-      { path: 'first-license', loadComponent: () => import('./pages/first-license/first-license.component').then((m) => m.FirstLicenseComponent) },
-      { path: 'rsa-keys', loadComponent: () => import('./pages/rsa-keys/rsa-keys.component').then((m) => m.RsaKeysComponent) },
-      { path: 'perpetual-license', loadComponent: () => import('./pages/perpetual-license/perpetual-license.component').then((m) => m.PerpetualLicenseComponent) },
-      { path: 'trial-license', loadComponent: () => import('./pages/trial-license/trial-license.component').then((m) => m.TrialLicenseComponent) },
-      { path: 'subscription-license', loadComponent: () => import('./pages/subscription-license/subscription-license.component').then((m) => m.SubscriptionLicenseComponent) },
-      { path: 'floating-license', loadComponent: () => import('./pages/floating-license/floating-license.component').then((m) => m.FloatingLicenseComponent) },
-      { path: 'concurrent-license', loadComponent: () => import('./pages/concurrent-license/concurrent-license.component').then((m) => m.ConcurrentLicenseComponent) },
-      { path: 'node-locked-license', loadComponent: () => import('./pages/node-locked-license/node-locked-license.component').then((m) => m.NodeLockedLicenseComponent) },
-      { path: 'credit-based-license', loadComponent: () => import('./pages/credit-based-license/credit-based-license.component').then((m) => m.CreditBasedLicenseComponent) },
-      { path: 'usage-based-license', loadComponent: () => import('./pages/usage-based-license/usage-based-license.component').then((m) => m.UsageBasedLicenseComponent) },
+      { path: 'first-organization', ...staticPage('first-organization') },
+      { path: 'first-product', ...staticPage('first-product') },
+      { path: 'first-license', ...staticPage('first-license') },
+      { path: 'rsa-keys', ...staticPage('rsa-keys') },
+      { path: 'perpetual-license', ...staticPage('perpetual-license') },
+      { path: 'trial-license', ...staticPage('trial-license') },
+      { path: 'subscription-license', ...staticPage('subscription-license') },
+      { path: 'floating-license', ...staticPage('floating-license') },
+      { path: 'concurrent-license', ...staticPage('concurrent-license') },
+      { path: 'node-locked-license', ...staticPage('node-locked-license') },
+      { path: 'credit-based-license', ...staticPage('credit-based-license') },
+      { path: 'usage-based-license', ...staticPage('usage-based-license') },
       { path: 'metered-license', redirectTo: 'credit-based-license', pathMatch: 'full' },
-      {
-        path: 'sessions-activations',
-        loadComponent: () =>
-          import('./pages/sessions-activations/sessions-activations.component').then((m) => m.SessionsActivationsComponent),
-      },
-      { path: 'webhooks', loadComponent: () => import('./pages/webhooks/webhooks.component').then((m) => m.WebhooksComponent) },
+      { path: 'sessions-activations', ...staticPage('sessions-activations') },
+      { path: 'webhooks', ...staticPage('webhooks') },
       {
         path: 'api-reference',
         redirectTo: 'api/overview',

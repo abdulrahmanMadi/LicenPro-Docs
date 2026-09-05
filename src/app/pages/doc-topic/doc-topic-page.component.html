@@ -1,10 +1,10 @@
 @if (notFound()) {
   <div class="help-page">
     <header class="help-page-header">
-      <h1>Page not found</h1>
-      <p class="lead">No documentation is registered for this path.</p>
+      <h1>{{ 'docs.page.notFoundTitle' | t }}</h1>
+      <p class="lead">{{ 'docs.page.notFoundLead' | t }}</p>
     </header>
-    <p><a class="doc-inline-link" href="/" (click)="goHome($event)">Return home</a></p>
+    <p><a class="doc-inline-link" href="/" (click)="goHome($event)">{{ 'docs.page.returnHome' | t }}</a></p>
   </div>
 } @else {
   <article class="help-page doc-topic-page" (click)="onArticleClick($event)">

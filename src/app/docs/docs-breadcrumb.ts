@@ -1,6 +1,7 @@
 import { getApiTopic } from './content/api-topics.content';
 import { getPlatformTopic } from './content/platform-guides.content';
 import { getSdkTopic } from './content/sdk-topics.content';
+import type { AppLocale } from '../core/i18n/locale.types';
 
 export interface BreadcrumbSegment {
   label: string;
@@ -43,7 +44,7 @@ function humanizeSlug(slug: string): string {
     .join(' ');
 }
 
-export function buildBreadcrumbSegments(url: string, t: TranslateFn): BreadcrumbSegment[] {
+export function buildBreadcrumbSegments(url: string, t: TranslateFn, locale: AppLocale = 'en'): BreadcrumbSegment[] {
   const path = (url.split('?')[0].split('#')[0] || '/').replace(/\/+$/, '') || '/';
   const base: BreadcrumbSegment[] = [{ label: t('docs.breadcrumb.documentation') }];
 
@@ -54,7 +55,7 @@ export function buildBreadcrumbSegments(url: string, t: TranslateFn): Breadcrumb
   const platformMatch = /^\/guides\/platform\/([^/]+)$/.exec(path);
   if (platformMatch) {
     const slug = platformMatch[1];
-    const topic = getPlatformTopic(slug);
+    const topic = getPlatformTopic(slug, locale);
     return [
       ...base,
       { label: t('docs.breadcrumb.platform') },
@@ -65,7 +66,7 @@ export function buildBreadcrumbSegments(url: string, t: TranslateFn): Breadcrumb
   const apiTopicMatch = /^\/api\/([^/]+)$/.exec(path);
   if (apiTopicMatch && path !== '/api/overview') {
     const slug = apiTopicMatch[1];
-    const topic = getApiTopic(slug);
+    const topic = getApiTopic(slug, locale);
     return [
       ...base,
       { label: t('docs.breadcrumb.restApi') },
@@ -84,7 +85,7 @@ export function buildBreadcrumbSegments(url: string, t: TranslateFn): Breadcrumb
   const sdkTopicMatch = /^\/sdk\/([^/]+)$/.exec(path);
   if (sdkTopicMatch && !['dotnet', 'winforms', 'wpf'].includes(sdkTopicMatch[1])) {
     const slug = sdkTopicMatch[1];
-    const topic = getSdkTopic(slug);
+    const topic = getSdkTopic(slug, locale);
     return [
       ...base,
       { label: t('docs.breadcrumb.dotnetSdk') },

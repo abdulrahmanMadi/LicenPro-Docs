@@ -96,7 +96,9 @@ export class DocsLayoutComponent {
     this.resetNavClones();
     this.applyUrlToNavMode(this.router.url);
     this.initSectionCollapseState();
-    this.breadcrumbSegments.set(buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k)));
+    this.breadcrumbSegments.set(
+      buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k), this.i18n.locale())
+    );
 
     if (this.isBrowser) {
       const savedTheme = (localStorage.getItem('docs-theme') as 'light' | 'dark') || 'dark';
@@ -112,7 +114,9 @@ export class DocsLayoutComponent {
       effect(() => {
         void this.i18n.tick();
         this.resetNavClones();
-        this.breadcrumbSegments.set(buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k)));
+        this.breadcrumbSegments.set(
+      buildBreadcrumbSegments(this.router.url, (k) => this.i18n.t(k), this.i18n.locale())
+    );
         if (this.searchQuery.trim()) {
           this.onSearchChange();
         }
