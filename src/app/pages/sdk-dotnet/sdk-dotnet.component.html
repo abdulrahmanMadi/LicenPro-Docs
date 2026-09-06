@@ -102,9 +102,9 @@ await client.DisposeAsync();</code></pre>
 
   <h2>5. Offline cache and “next launch”</h2>
   <p>
-    <code>LicenseClient.ValidateAndCacheAsync(...)</code> reads <code>license.bin</code> (including protected/encrypted payloads decrypted with the license key), validates, and on success persists credentials and bytes for fast startup.
+    <code>LicenseClient.ValidateAndCacheAsync(...)</code> reads <code>license.bin</code> (signed and protected offline license package), validates, and on success persists credentials and bytes for fast startup.
     On a later run, <code>LicenseClient.TryAutoValidateAsync(licenseKey, publicKey)</code> reloads the cache, re-validates, and returns a <code>CacheValidationResult</code> with <code>Client</code> ready for <code>ConnectSessionAsync</code> if you still need online features.
-    If the cache was written with an older encrypted format, TryAuto may return <code>LicenseKeyRequired</code> until the user enters the key once.
+    If the cache was written with an older license format, TryAuto may return <code>LicenseKeyRequired</code> until the user enters the key once.
   </p>
 
   <h2>6. Subscription expiry notices</h2>
