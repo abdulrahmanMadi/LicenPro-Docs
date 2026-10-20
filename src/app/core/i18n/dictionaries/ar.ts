@@ -80,6 +80,7 @@ export const AR_DICT: Record<string, string> = {
   'docs.nav.api-catalog': 'المنتجات والإصدارات',
   'docs.nav.api-licenses': 'التراخيص',
   'docs.nav.api-activations': 'التفعيلات والجلسات',
+  'docs.nav.api-metering': 'القياس والاستهلاك',
   'docs.nav.api-trials': 'النسخ التجريبية والتحويلات',
   'docs.nav.api-ops': 'العمليات',
   'docs.nav.api-telemetry': 'القياسات والسجلات',

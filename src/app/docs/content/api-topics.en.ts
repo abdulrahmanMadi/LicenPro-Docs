@@ -120,6 +120,43 @@ export const API_TOPICS_EN: Record<string, DocTopic> = {
       <p>${L('/guides/platform/activations', 'Activations guide')} · ${L('/guides/platform/sessions', 'Sessions guide')} · ${L('/sessions-activations', 'Combined narrative')} · ${L('/sdk/activation-session', 'SDK managers')}</p>
     `,
   },
+  metering: {
+    title: 'Metering (credit-based & usage-based)',
+    lead: 'Consume, balance, ledger, grants and per-feature pricing for metered licenses.',
+    body: `
+      <p>Prefix: <code>/api/meter</code>. These routes back the two metered license types — <strong>Credit-Based</strong> (<code>MeteredToken</code>) and <strong>Usage-Based</strong> (<code>MeteredCount</code>). Balance is <strong>only</strong> read and deducted here: validation, activation and session connect never look at it, so a metered license activates happily at zero balance.</p>
+
+      <h2>Client routes (product API key)</h2>
+      <p>Anonymous with <code>X-API-KEY</code>, called by the SDK on the customer's machine. The API key user must own or belong to the license's product.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/consume</code></div>
+      <p>Deducts from the wallet. Body: <code>licenseKey</code>, <code>featureName</code>, <code>idempotencyKey</code>, optional <code>quantity</code> (default 1), <code>hardwareId</code>, <code>activationId</code>. Credit-Based deducts <code>TokenCost × quantity</code>; Usage-Based deducts <code>quantity</code>. <strong><code>idempotencyKey</code> is required</strong> — the server charges <code>(wallet, idempotencyKey)</code> at most once and replays every later call with <code>idempotentReplay: true</code>, which is what makes a retry after a timeout safe. The key is fingerprinted together with feature, quantity and <code>hardwareId</code>: reusing it for a different operation returns <code>IdempotencyConflict</code> (409).</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance</code></div>
+      <p>Current balance for one license key, without deducting. The key goes in the <code>X-License-Key</code> header so it stays out of URLs that proxies and request logs record; the legacy <code>?licenseKey=</code> query is still accepted for older SDKs. Returns <code>balance</code>, <code>meteringMode</code>, <code>lowBalanceThreshold</code> and <code>balanceUnitLabel</code>.</p></div>
+
+      <h2>Operator routes (JWT)</h2>
+      <p>Dashboard routes. Each one checks that the caller owns the license's product or is an administrator.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance/{licenseId}</code></div>
+      <p>Balance for a license by id, for the dashboard rather than the SDK.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/ledger/{licenseId}</code></div>
+      <p>Paginated transaction history (<code>pageNumber</code>, <code>pageSize</code>). Entry types: <strong>InitialGrant</strong>, <strong>Consume</strong> (negative), <strong>AdminGrant</strong>, <strong>Adjust</strong>.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/grant</code></div>
+      <p>Adds balance. Requires a positive <code>amount</code> and a <code>reason</code>; an optional <code>externalReference</code> (invoice, PO) makes a repeated grant idempotent. There is no payment gateway — top-ups are a manual owner action.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/adjust</code></div>
+      <p>Signed correction or refund: negative <code>amount</code> debits, positive credits. <code>reason</code> is required and a debit cannot push the balance below zero.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/balance/{licenseId}/threshold</code></div>
+      <p>Sets the low-balance threshold that drives <code>IsLowBalance</code> on the SDK balance result and the dashboard alerts.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/reconcile/{licenseId}</code></div>
+      <p>Recomputes the wallet from its ledger and reports whether the two agree. Read-only.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/products/{productId}/pricing</code></div>
+      <p>Active per-feature token pricing for a product.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/features/{featureId}/pricing</code></div>
+      <p>Sets <code>TokenCost</code> for one feature (Credit-Based only; must be greater than zero). The previous active row is deactivated and a new one inserted, so history is preserved. Usage-Based ignores pricing entirely. The product <strong>Features</strong> page edits this inline.</p></div>
+
+      <h2>Error codes</h2>
+      <p>Consume returns a machine-readable <code>errorCode</code> alongside the HTTP status. The full table, including which codes are safe to retry, is on the ${L('/credit-based-license', 'Credit-Based')} and ${L('/usage-based-license', 'Usage-Based')} pages.</p>
+      <p>${L('/credit-based-license', 'Credit-Based licenses')} · ${L('/usage-based-license', 'Usage-Based licenses')} · ${L('/sdk/features-usage', 'SDK metering')}</p>
+    `,
+  },
   'trials-transfers': {
     title: 'Trials & transfers',
     lead: 'Evaluation extensions and license transfer flows.',

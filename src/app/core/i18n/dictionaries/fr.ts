@@ -80,6 +80,7 @@ export const FR_DICT: Record<string, string> = {
   'docs.nav.api-catalog': 'Produits et versions',
   'docs.nav.api-licenses': 'Licences',
   'docs.nav.api-activations': 'Activations et sessions',
+  'docs.nav.api-metering': 'Metering',
   'docs.nav.api-trials': 'Essais et transferts',
   'docs.nav.api-ops': 'Opérations',
   'docs.nav.api-telemetry': 'Télémétrie et journaux',

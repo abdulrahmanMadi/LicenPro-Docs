@@ -120,6 +120,43 @@ export const API_TOPICS_FR: Record<string, DocTopic> = {
       <p>${L('/guides/platform/activations', 'Guide Activations')} · ${L('/guides/platform/sessions', 'Guide Sessions')} · ${L('/sessions-activations', 'Récit combiné')} · ${L('/sdk/activation-session', 'Gestionnaires SDK')}</p>
     `,
   },
+  metering: {
+    title: 'Metering (credit-based et usage-based)',
+    lead: 'Consume, solde, ledger, octrois et tarification par fonctionnalité des licences metered.',
+    body: `
+      <p>Préfixe : <code>/api/meter</code>. Ces routes servent les deux types metered — <strong>Credit-Based</strong> (<code>MeteredToken</code>) et <strong>Usage-Based</strong> (<code>MeteredCount</code>). Le solde n'est lu et déduit <strong>qu'ici</strong> : la validation, l'activation et la session ne le regardent jamais, donc une licence metered s'active sans difficulté à solde zéro.</p>
+
+      <h2>Routes client (clé API produit)</h2>
+      <p>Anonymes avec <code>X-API-KEY</code>, appelées par le SDK sur la machine du client. L'utilisateur de la clé API doit posséder le produit de la licence ou y être rattaché.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/consume</code></div>
+      <p>Déduit du wallet. Corps : <code>licenseKey</code>, <code>featureName</code>, <code>idempotencyKey</code>, optionnels <code>quantity</code> (défaut 1), <code>hardwareId</code>, <code>activationId</code>. Credit-Based déduit <code>TokenCost × quantity</code> ; Usage-Based déduit <code>quantity</code>. <strong><code>idempotencyKey</code> est obligatoire</strong> — le serveur facture <code>(wallet, idempotencyKey)</code> au plus une fois et rejoue tout appel suivant avec <code>idempotentReplay: true</code>, ce qui rend sûre une nouvelle tentative après un timeout. La clé est empreintée avec la fonctionnalité, la quantité et <code>hardwareId</code> : la réutiliser pour une autre opération renvoie <code>IdempotencyConflict</code> (409).</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance</code></div>
+      <p>Solde d'une clé de licence, sans déduction. La clé passe dans l'en-tête <code>X-License-Key</code> pour ne pas figurer dans les URL que les proxies et les logs enregistrent ; l'ancien paramètre <code>?licenseKey=</code> reste accepté. Renvoie <code>balance</code>, <code>meteringMode</code>, <code>lowBalanceThreshold</code> et <code>balanceUnitLabel</code>.</p></div>
+
+      <h2>Routes opérateur (JWT)</h2>
+      <p>Routes tableau de bord. Chacune vérifie que l'appelant possède le produit de la licence ou est administrateur.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance/{licenseId}</code></div>
+      <p>Solde par identifiant de licence, pour le tableau de bord plutôt que pour le SDK.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/ledger/{licenseId}</code></div>
+      <p>Historique paginé (<code>pageNumber</code>, <code>pageSize</code>). Types d'entrée : <strong>InitialGrant</strong>, <strong>Consume</strong> (négatif), <strong>AdminGrant</strong>, <strong>Adjust</strong>.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/grant</code></div>
+      <p>Ajoute du solde. Exige un <code>amount</code> positif et une <code>reason</code> ; un <code>externalReference</code> optionnel (facture, bon de commande) rend un octroi répété idempotent. Il n'y a pas de passerelle de paiement — les recharges sont une action manuelle de l'owner.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/adjust</code></div>
+      <p>Correction ou remboursement signé : <code>amount</code> négatif débite, positif crédite. <code>reason</code> est obligatoire et un débit ne peut pas rendre le solde négatif.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/balance/{licenseId}/threshold</code></div>
+      <p>Définit le seuil de solde bas qui pilote <code>IsLowBalance</code> côté SDK et les alertes du tableau de bord.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/reconcile/{licenseId}</code></div>
+      <p>Recalcule le wallet depuis son ledger et indique si les deux concordent. Lecture seule.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/products/{productId}/pricing</code></div>
+      <p>Tarification token active par fonctionnalité pour un produit.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/features/{featureId}/pricing</code></div>
+      <p>Définit le <code>TokenCost</code> d'une fonctionnalité (Credit-Based uniquement ; doit être supérieur à zéro). La ligne active précédente est désactivée et une nouvelle insérée, l'historique est conservé. Usage-Based ignore totalement la tarification. La page <strong>Features</strong> du produit l'édite en ligne.</p></div>
+
+      <h2>Codes d'erreur</h2>
+      <p>Consume renvoie un <code>errorCode</code> exploitable en plus du statut HTTP. Le tableau complet, avec les codes qu'il est sûr de réessayer, est sur les pages ${L('/credit-based-license', 'Credit-Based')} et ${L('/usage-based-license', 'Usage-Based')}.</p>
+      <p>${L('/credit-based-license', 'Licences Credit-Based')} · ${L('/usage-based-license', 'Licences Usage-Based')} · ${L('/sdk/features-usage', 'Metering SDK')}</p>
+    `,
+  },
   'trials-transfers': {
     title: 'Essais et transferts',
     lead: 'Prolongations d’évaluation et flux de transfert de licence.',

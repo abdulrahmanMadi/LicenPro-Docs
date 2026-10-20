@@ -439,7 +439,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>تجميع</strong> في مجموعات استحقاق في علامة <strong>مجموعات الاستحقاق</strong> (<code>…/entitlements</code>).</li>
         <li><strong>تعيين</strong> مجموعة اختيارية عند إنشاء/تعديل ترخيص (الخطوة 1 من المعالج أو التفاصيل).</li>
         <li><strong>توزيع</strong> <code>license.bin</code> — الحمولة الموقّعة تتضمن مادة الاستحقاق.</li>
-        <li><strong>تطبيق</strong> في التطبيق عبر SDK <code>FeatureManager</code>؛ <code>FeatureUsageTracker</code> اختياري للقياس.</li>
+        <li><strong>تطبيق</strong> في التطبيق عبر SDK <code>FeatureManager</code>؛ وللتراخيص metered حاسِب عبر <code>MeterManager.ConsumeMeterAsync</code> (${link('/credit-based-license', 'Credit-Based')} / ${link('/usage-based-license', 'Usage-Based')}) — لا عبر <code>FeatureUsageTracker</code> المهجور الذي لا يحاسب شيئاً.</li>
       </ol>
 
       <h2>علامة Features</h2>

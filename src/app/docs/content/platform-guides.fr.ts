@@ -439,7 +439,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Regrouper</strong> en jeux de droits sur onglet <strong>Jeux de droits</strong> (<code>…/entitlements</code>).</li>
         <li><strong>Assigner</strong> jeu optionnel à la création/modification licence (étape 1 assistant ou détails).</li>
         <li><strong>Distribuer</strong> <code>license.bin</code> — charge signée inclut matériel droits.</li>
-        <li><strong>Appliquer</strong> dans l'app via SDK <code>FeatureManager</code> ; <code>FeatureUsageTracker</code> optionnel pour mesure.</li>
+        <li><strong>Appliquer</strong> dans l'app via SDK <code>FeatureManager</code> ; pour les licences metered, facturez avec <code>MeterManager.ConsumeMeterAsync</code> (${link('/credit-based-license', 'Credit-Based')} / ${link('/usage-based-license', 'Usage-Based')}) — et non <code>FeatureUsageTracker</code>, obsolète et qui ne facture rien.</li>
       </ol>
 
       <h2>Onglet Features</h2>

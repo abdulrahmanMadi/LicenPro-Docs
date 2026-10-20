@@ -139,6 +139,7 @@ export const DOCS_NAV: NavSection[] = [
             icon: 'ki-outline ki-chart-line',
             route: '/api/activations-sessions',
           },
+          { id: 'api-metering', label: 'Metering', icon: 'ki-outline ki-wallet', route: '/api/metering' },
           { id: 'api-trials', label: 'Trials & transfers', icon: 'ki-outline ki-arrows-circle', route: '/api/trials-transfers' },
         ],
       },

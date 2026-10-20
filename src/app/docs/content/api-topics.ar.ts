@@ -120,6 +120,43 @@ export const API_TOPICS_AR: Record<string, DocTopic> = {
       <p>${L('/guides/platform/activations', 'دليل التفعيلات')} · ${L('/guides/platform/sessions', 'دليل الجلسات')} · ${L('/sessions-activations', 'السرد المدمج')} · ${L('/sdk/activation-session', 'مديرو SDK')}</p>
     `,
   },
+  metering: {
+    title: 'Metering (credit-based وusage-based)',
+    lead: 'Consume والرصيد وledger والمنح وتسعير الميزات لتراخيص metered.',
+    body: `
+      <p>البادئة: <code>/api/meter</code>. هذه المسارات تخدم نوعَي metered — <strong>Credit-Based</strong> (<code>MeteredToken</code>) و<strong>Usage-Based</strong> (<code>MeteredCount</code>). الرصيد <strong>لا يُقرأ ولا يُخصم إلا هنا</strong>: التحقق والتفعيل وجلسة الاتصال لا تنظر إليه إطلاقاً، لذا يُفعَّل ترخيص metered بلا مشكلة حتى عند رصيد صفر.</p>
+
+      <h2>مسارات العميل (مفتاح API للمنتج)</h2>
+      <p>مجهولة مع <code>X-API-KEY</code>، يستدعيها الـ SDK على جهاز العميل. ويجب أن يملك مستخدم مفتاح API منتجَ الترخيص أو يكون مرتبطاً به.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/consume</code></div>
+      <p>يخصم من المحفظة. الجسم: <code>licenseKey</code> و<code>featureName</code> و<code>idempotencyKey</code>، واختيارياً <code>quantity</code> (افتراضياً 1) و<code>hardwareId</code> و<code>activationId</code>. Credit-Based يخصم <code>TokenCost × quantity</code>؛ وUsage-Based يخصم <code>quantity</code>. <strong><code>idempotencyKey</code> مطلوب</strong> — يحاسب الخادم <code>(wallet, idempotencyKey)</code> مرة واحدة على الأكثر ويعيد أي استدعاء لاحق مع <code>idempotentReplay: true</code>، وهذا ما يجعل إعادة المحاولة بعد انتهاء المهلة آمنة. ويُبصَم المفتاح مع الميزة والكمية و<code>hardwareId</code>: فاستخدامه لعملية مختلفة يُرجع <code>IdempotencyConflict</code> (409).</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance</code></div>
+      <p>رصيد مفتاح ترخيص واحد دون خصم. يُمرَّر المفتاح في ترويسة <code>X-License-Key</code> كي لا يظهر في عناوين URL التي تسجّلها الوسطاء وسجلات الطلبات؛ ولا يزال <code>?licenseKey=</code> القديم مقبولاً. يُرجع <code>balance</code> و<code>meteringMode</code> و<code>lowBalanceThreshold</code> و<code>balanceUnitLabel</code>.</p></div>
+
+      <h2>مسارات المشغّل (JWT)</h2>
+      <p>مسارات لوحة التحكم. يتحقق كل منها أن المستدعي يملك منتج الترخيص أو أنه مسؤول.</p>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/balance/{licenseId}</code></div>
+      <p>الرصيد بمعرّف الترخيص، للوحة التحكم بدل الـ SDK.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/ledger/{licenseId}</code></div>
+      <p>سجل العمليات مع ترقيم الصفحات (<code>pageNumber</code> و<code>pageSize</code>). أنواع القيود: <strong>InitialGrant</strong> و<strong>Consume</strong> (سالب) و<strong>AdminGrant</strong> و<strong>Adjust</strong>.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/grant</code></div>
+      <p>يضيف رصيداً. يتطلب <code>amount</code> موجباً و<code>reason</code>؛ ويجعل <code>externalReference</code> الاختياري (فاتورة أو أمر شراء) المنحة المكرّرة idempotent. ولا توجد بوابة دفع — الشحن إجراء يدوي من المالك.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method post">POST</span><code class="path">/api/meter/adjust</code></div>
+      <p>تصحيح أو استرداد بإشارة: <code>amount</code> سالب يخصم وموجب يضيف. <code>reason</code> مطلوب ولا يمكن للخصم أن يجعل الرصيد سالباً.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/balance/{licenseId}/threshold</code></div>
+      <p>يضبط عتبة الرصيد المنخفض التي تحرّك <code>IsLowBalance</code> في نتيجة الرصيد لدى الـ SDK وتنبيهات لوحة التحكم.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/reconcile/{licenseId}</code></div>
+      <p>يعيد حساب المحفظة من سجلها ويبيّن ما إذا كانا متطابقين. للقراءة فقط.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method get">GET</span><code class="path">/api/meter/products/{productId}/pricing</code></div>
+      <p>تسعير token النشط لكل ميزة في منتج.</p></div>
+      <div class="api-endpoint"><div class="endpoint-header"><span class="method put">PUT</span><code class="path">/api/meter/features/{featureId}/pricing</code></div>
+      <p>يضبط <code>TokenCost</code> لميزة واحدة (Credit-Based فقط؛ ويجب أن يكون أكبر من صفر). يُعطَّل الصف النشط السابق ويُدرج صف جديد، فيُحفظ السجل. وUsage-Based يتجاهل التسعير تماماً. وصفحة <strong>Features</strong> للمنتج تحرّره مباشرة.</p></div>
+
+      <h2>رموز الأخطاء</h2>
+      <p>يُرجع consume رمز <code>errorCode</code> قابلاً للمعالجة إلى جانب حالة HTTP. والجدول الكامل، بما فيه الرموز الآمنة لإعادة المحاولة، في صفحتَي ${L('/credit-based-license', 'Credit-Based')} و${L('/usage-based-license', 'Usage-Based')}.</p>
+      <p>${L('/credit-based-license', 'تراخيص Credit-Based')} · ${L('/usage-based-license', 'تراخيص Usage-Based')} · ${L('/sdk/features-usage', 'Metering في الـ SDK')}</p>
+    `,
+  },
   'trials-transfers': {
     title: 'النسخ التجريبية والتحويلات',
     lead: 'تمديدات التقييم وتدفقات نقل الترخيص.',

@@ -14,7 +14,7 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
       <ul>
         <li><strong>Core</strong> — <code>LicenseClient</code>, <code>LicenseBuilder</code>, serialization of license payloads.</li>
         <li><strong>Managers</strong> — <code>ActivationManager</code>, <code>SessionManager</code>, <code>OfflineCacheManager</code>, <code>LicenseTransferManager</code>, <code>TrialExtensionManager</code>, <code>GracePeriodManager</code>, <code>NodeLockedDeviceManager</code>.</li>
-        <li><strong>Features</strong> — <code>FeatureManager</code>, <code>FeatureUsageTracker</code>, <code>UpdateChecker</code>.</li>
+        <li><strong>Features</strong> — <code>FeatureManager</code>, <code>UpdateChecker</code> (<code>FeatureUsageTracker</code> is obsolete; metered billing uses <code>MeterManager</code>).</li>
         <li><strong>Updates</strong> — <code>SdkUpdateManager</code> calling ${L('/api/sdk-host', 'SDK host HTTP APIs')}.</li>
         <li><strong>AppHosting</strong> — <code>SdkBootstrap</code>, expiry UX helpers for desktop shells.</li>
       </ul>
@@ -49,10 +49,11 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     `,
   },
   'features-usage': {
-    title: 'Features & usage tracking',
-    lead: 'FeatureManager and optional telemetry.',
+    title: 'Features & metered usage',
+    lead: 'FeatureManager for entitlements, MeterManager for billable usage.',
     body: `
-      <p><code>FeatureManager</code> evaluates entitlements deserialized from the signed license. <code>FeatureUsageTracker</code> can POST usage counters to telemetry endpoints when your integration enables analytics.</p>
+      <p><code>FeatureManager</code> evaluates entitlements deserialized from the signed license.</p>
+      <p><strong>Billable usage goes through <code>MeterManager</code>, not <code>FeatureUsageTracker</code>.</strong> <code>FeatureUsageTracker</code> is <code>[Obsolete]</code>: its sync endpoint no longer exists and it reports nothing, so metering built on it silently never bills. Call <code>LicenseClient.ConsumeMeterAsync</code> (or <code>ConsumeMeterWithRetryAsync</code>) with an operation id you create with <code>MeterManager.CreateOperationId</code> and persist before the call — see ${L('/credit-based-license', 'Credit-Based')} and ${L('/usage-based-license', 'Usage-Based')} for the full pattern, and ${L('/api/metering', 'Metering API')} for the routes.</p>
       <p>Feature definitions are authored in the dashboard and exposed over REST (catalog routes on <code>${HOST}/api</code>) — see ${L('/api/catalog', 'Catalog API topic')}.</p>
     `,
   },

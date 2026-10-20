@@ -80,6 +80,7 @@ export const EN_DICT: Record<string, string> = {
   'docs.nav.api-catalog': 'Products & releases',
   'docs.nav.api-licenses': 'Licenses',
   'docs.nav.api-activations': 'Activations & sessions',
+  'docs.nav.api-metering': 'Metering',
   'docs.nav.api-trials': 'Trials & transfers',
   'docs.nav.api-ops': 'Operations',
   'docs.nav.api-telemetry': 'Telemetry & logs',

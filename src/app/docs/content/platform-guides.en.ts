@@ -439,7 +439,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Bundle</strong> into entitlement sets on <strong>Entitlement Sets</strong> tab (<code>…/entitlements</code>).</li>
         <li><strong>Assign</strong> optional set when creating/editing a license (wizard step 1 or details).</li>
         <li><strong>Distribute</strong> <code>license.bin</code>—signed payload includes entitlement material.</li>
-        <li><strong>Enforce</strong> in app via SDK <code>FeatureManager</code>; optional <code>FeatureUsageTracker</code> for metering.</li>
+        <li><strong>Enforce</strong> in app via SDK <code>FeatureManager</code>; for metered licenses, bill with <code>MeterManager.ConsumeMeterAsync</code> (${link('/credit-based-license', 'Credit-Based')} / ${link('/usage-based-license', 'Usage-Based')}) — not the obsolete <code>FeatureUsageTracker</code>, which bills nothing.</li>
       </ol>
 
       <h2>Features tab</h2>

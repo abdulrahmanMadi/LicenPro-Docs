@@ -14,7 +14,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
       <ul>
         <li><strong>Core</strong> — <code>LicenseClient</code>، <code>LicenseBuilder</code>، تسلسل حمولات الترخيص.</li>
         <li><strong>Managers</strong> — <code>ActivationManager</code>، <code>SessionManager</code>، <code>OfflineCacheManager</code>، <code>LicenseTransferManager</code>، <code>TrialExtensionManager</code>، <code>GracePeriodManager</code>، <code>NodeLockedDeviceManager</code>.</li>
-        <li><strong>Features</strong> — <code>FeatureManager</code>، <code>FeatureUsageTracker</code>، <code>UpdateChecker</code>.</li>
+        <li><strong>Features</strong> — <code>FeatureManager</code>، <code>UpdateChecker</code> (<code>FeatureUsageTracker</code> مهجور؛ المحاسبة metered عبر <code>MeterManager</code>).</li>
         <li><strong>Updates</strong> — <code>SdkUpdateManager</code> يستدعي ${L('/api/sdk-host', 'واجهات HTTP المضيف لـ SDK')}.</li>
         <li><strong>AppHosting</strong> — <code>SdkBootstrap</code>، مساعدات UX لانتهاء الصلاحية لأغلفة سطح المكتب.</li>
       </ul>
@@ -49,10 +49,11 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
     `,
   },
   'features-usage': {
-    title: 'الميزات وتتبع الاستخدام',
-    lead: 'FeatureManager والقياسات الاختيارية.',
+    title: 'الميزات والاستخدام المحاسَب',
+    lead: 'FeatureManager للصلاحيات، وMeterManager للاستخدام المحاسَب.',
     body: `
-      <p>يقيّم <code>FeatureManager</code> الصلاحيات المُ deserialized من الترخيص الموقّع. يمكن لـ <code>FeatureUsageTracker</code> إرسال POST لعدادات الاستخدام إلى نقاط نهاية القياسات عندما يُفعّل تكاملك التحليلات.</p>
+      <p>يقيّم <code>FeatureManager</code> الصلاحيات المستخرجة من الترخيص الموقّع.</p>
+      <p><strong>الاستخدام المحاسَب يمر عبر <code>MeterManager</code>، لا عبر <code>FeatureUsageTracker</code>.</strong> فـ <code>FeatureUsageTracker</code> مُعلَّم <code>[Obsolete]</code>: نقطة المزامنة الخاصة به لم تعد موجودة ولا يُبلّغ عن شيء، لذا أي محاسبة مبنية عليه لا تحاسب أبداً ودون أي خطأ ظاهر. استدعِ <code>LicenseClient.ConsumeMeterAsync</code> (أو <code>ConsumeMeterWithRetryAsync</code>) مع operation id تنشئه بـ <code>MeterManager.CreateOperationId</code> وتحفظه قبل الاستدعاء — راجع ${L('/credit-based-license', 'Credit-Based')} و${L('/usage-based-license', 'Usage-Based')} للنمط الكامل، و${L('/api/metering', 'Metering API')} للمسارات.</p>
       <p>تُؤلَّف تعريفات الميزات في لوحة التحكم وتُعرض عبر REST (مسارات الفهرس على <code>${HOST}/api</code>) — راجع ${L('/api/catalog', 'موضوع Catalog API')}.</p>
     `,
   },

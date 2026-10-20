@@ -14,7 +14,7 @@ export const SDK_TOPICS_FR: Record<string, DocTopic> = {
       <ul>
         <li><strong>Core</strong> — <code>LicenseClient</code>, <code>LicenseBuilder</code>, sérialisation des charges licence.</li>
         <li><strong>Managers</strong> — <code>ActivationManager</code>, <code>SessionManager</code>, <code>OfflineCacheManager</code>, <code>LicenseTransferManager</code>, <code>TrialExtensionManager</code>, <code>GracePeriodManager</code>, <code>NodeLockedDeviceManager</code>.</li>
-        <li><strong>Features</strong> — <code>FeatureManager</code>, <code>FeatureUsageTracker</code>, <code>UpdateChecker</code>.</li>
+        <li><strong>Features</strong> — <code>FeatureManager</code>, <code>UpdateChecker</code> (<code>FeatureUsageTracker</code> est obsolète ; la facturation metered passe par <code>MeterManager</code>).</li>
         <li><strong>Updates</strong> — <code>SdkUpdateManager</code> appelle les ${L('/api/sdk-host', 'API HTTP hôte SDK')}.</li>
         <li><strong>AppHosting</strong> — <code>SdkBootstrap</code>, aides UX d’expiration pour shells desktop.</li>
       </ul>
@@ -49,10 +49,11 @@ export const SDK_TOPICS_FR: Record<string, DocTopic> = {
     `,
   },
   'features-usage': {
-    title: 'Fonctionnalités et suivi d’usage',
-    lead: 'FeatureManager et télémétrie optionnelle.',
+    title: 'Fonctionnalités et usage facturé',
+    lead: 'FeatureManager pour les droits, MeterManager pour l’usage facturé.',
     body: `
-      <p><code>FeatureManager</code> évalue les droits désérialisés depuis la licence signée. <code>FeatureUsageTracker</code> peut POSTer des compteurs d’usage vers les endpoints télémétrie si votre intégration active l’analytique.</p>
+      <p><code>FeatureManager</code> évalue les droits désérialisés depuis la licence signée.</p>
+      <p><strong>L’usage facturé passe par <code>MeterManager</code>, pas par <code>FeatureUsageTracker</code>.</strong> <code>FeatureUsageTracker</code> est <code>[Obsolete]</code> : son endpoint de synchronisation n’existe plus et il ne remonte rien, donc une facturation bâtie dessus ne facture jamais, sans la moindre erreur. Appelez <code>LicenseClient.ConsumeMeterAsync</code> (ou <code>ConsumeMeterWithRetryAsync</code>) avec un identifiant d’opération créé via <code>MeterManager.CreateOperationId</code> et enregistré avant l’appel — voir ${L('/credit-based-license', 'Credit-Based')} et ${L('/usage-based-license', 'Usage-Based')} pour le schéma complet, et ${L('/api/metering', 'API Metering')} pour les routes.</p>
       <p>Les définitions de fonctionnalités sont créées dans le tableau de bord et exposées via REST (routes catalogue sur <code>${HOST}/api</code>) — voir ${L('/api/catalog', 'Sujet API Catalogue')}.</p>
     `,
   },
