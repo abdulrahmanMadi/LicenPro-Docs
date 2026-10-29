@@ -70,12 +70,36 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     `,
   },
   'updates-logging': {
-    title: 'Updates & logging',
-    lead: 'SdkUpdateManager and ILicenseLogger implementations.',
+    title: 'One-click updates & logging',
+    lead: 'Notify licensed users about new builds and let them update with "Update & restart" — no uninstall/reinstall.',
     body: `
-      <p><code>SdkUpdateManager</code> calls <code>/api/Updates/...</code> with the current release id and license context so only eligible builds are offered.</p>
-      <p>Implement <code>ILicenseLogger</code> for structured logs — file, HTTP to <code>/api/SdkLogs/...</code>, or composite sinks — depending on compliance needs.</p>
-      <p>${L('/api/sdk-host', 'SDK host APIs')} · ${L('/api/telemetry', 'Telemetry topic')}</p>
+      <h3>How it works</h3>
+      <ol>
+        <li><strong>Publish</strong> a release in the dashboard with a <strong>zip of your app folder</strong> as its file. Publishing hashes the zip (SHA-256) and signs it with the product's RSA key. The release's <strong>Update package</strong> card shows "Ready for one-click update".</li>
+        <li><code>SdkUpdateManager.CheckForUpdateAsync</code> asks <code>/api/updates/check</code> which build this license may install. The answer depends on the license type, release pins and channel; with no channel, only Stable builds are offered. <code>UpdateAvailable</code> fires once per version.</li>
+        <li><code>DownloadUpdateAsync(update, progress)</code> downloads from <code>/api/updates/download/{releaseId}</code> with your API key and the license key, then checks the size, SHA-256 and product-key signature before extracting anything. It refuses zip entries that would land outside the staging folder.</li>
+        <li><code>ApplyUpdateAndRestart()</code> starts the new version as the installer and exits your app. The installer backs up the install folder, copies the new files, keeps <code>licenpro.cache</code> and <code>licenpro.settings.json</code>, and starts your app again. If anything fails it restores the backup. For an app in Program Files, Windows shows one UAC prompt.</li>
+      </ol>
+      <h3>Integrate</h3>
+      <pre><code>// Program.Main — first line: installs a staged update, applies mandatory ones, reports restarts
+SdkBootstrap.OnApplicationStartup(onRestarted: info =&gt; { /* info.Succeeded, info.FromVersion, info.Error */ });
+
+// After the license validated
+client.EnableAutoUpdates(currentAppVersion: "1.0.0", onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
+
+// In your prompt's "Update &amp; restart" button
+if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
+    SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
+      <h3>Options</h3>
+      <ul>
+        <li><strong>Mandatory</strong> (release flag, or a client older than the <strong>minimum supported version</strong>): the user cannot skip it, and once downloaded it installs at the next start.</li>
+        <li><code>SkipVersion(version)</code> stops prompts for a version. <code>RollbackAndRestart()</code> returns to the previous version (one backup is kept).</li>
+        <li><code>StageUpdateFromFile(zip, version)</code> stages a package delivered offline, for example on a USB stick to an air-gapped machine. It is not checked against the server.</li>
+        <li>Update state lives in <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+      </ul>
+      <h3>Logging</h3>
+      <p>Implement <code>ILicenseLogger</code> for structured logs (file, HTTP to <code>/api/SdkLogs/...</code>, or composite sinks), depending on your compliance needs.</p>
+      <p>${L('/api/sdk-host', 'SDK host APIs')} · ${L('/api/telemetry', 'Telemetry topic')} · ${L('/sdk/winforms', 'WinForms sample')}</p>
     `,
   },
 };

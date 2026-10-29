@@ -70,12 +70,36 @@ export const SDK_TOPICS_FR: Record<string, DocTopic> = {
     `,
   },
   'updates-logging': {
-    title: 'Mises à jour et journalisation',
-    lead: 'SdkUpdateManager et implémentations ILicenseLogger.',
+    title: 'Mises à jour en un clic et journalisation',
+    lead: 'Prévenez les utilisateurs licenciés des nouvelles versions et laissez-les mettre à jour via « Update & restart », sans désinstaller ni réinstaller.',
     body: `
-      <p><code>SdkUpdateManager</code> appelle <code>/api/Updates/...</code> avec l’id de version courant et le contexte licence pour n’offrir que les builds éligibles.</p>
-      <p>Implémentez <code>ILicenseLogger</code> pour des journaux structurés — fichier, HTTP vers <code>/api/SdkLogs/...</code>, ou sinks composites — selon vos besoins de conformité.</p>
-      <p>${L('/api/sdk-host', 'API hôte SDK')} · ${L('/api/telemetry', 'Sujet Télémétrie')}</p>
+      <h3>Fonctionnement</h3>
+      <ol>
+        <li><strong>Publiez</strong> une version dans le tableau de bord avec un <strong>zip du dossier de l’application</strong> comme fichier. La publication calcule le SHA-256 du zip et le signe avec la clé RSA du produit ; la carte <strong>Paquet de mise à jour</strong> affiche « Prêt pour la mise à jour en un clic ».</li>
+        <li><code>SdkUpdateManager.CheckForUpdateAsync</code> demande à <code>/api/updates/check</code> quelle version cette licence peut installer. La réponse dépend du type de licence, des versions associées et du canal ; sans canal, seules les versions Stable sont proposées. <code>UpdateAvailable</code> est déclenché une fois par version.</li>
+        <li><code>DownloadUpdateAsync(update, progress)</code> télécharge depuis <code>/api/updates/download/{releaseId}</code> avec votre clé API et la clé de licence, puis vérifie la taille, le SHA-256 et la signature du produit avant toute extraction. Les entrées du zip qui sortiraient du dossier de préparation sont refusées.</li>
+        <li><code>ApplyUpdateAndRestart()</code> lance la nouvelle version comme installateur et ferme votre application. L’installateur sauvegarde le dossier d’installation, copie les nouveaux fichiers, conserve <code>licenpro.cache</code> et <code>licenpro.settings.json</code>, puis relance l’application. En cas d’échec, il restaure la sauvegarde. Pour une application dans Program Files, Windows affiche une invite UAC.</li>
+      </ol>
+      <h3>Intégration</h3>
+      <pre><code>// Program.Main — première ligne : installe la mise à jour préparée, applique les obligatoires, signale le redémarrage
+SdkBootstrap.OnApplicationStartup(onRestarted: info =&gt; { /* info.Succeeded, info.FromVersion, info.Error */ });
+
+// Après validation de la licence
+client.EnableAutoUpdates(currentAppVersion: "1.0.0", onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
+
+// Dans le bouton « Update &amp; restart »
+if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
+    SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
+      <h3>Options</h3>
+      <ul>
+        <li><strong>Obligatoire</strong> (indicateur de la version, ou client plus ancien que la <strong>version minimale prise en charge</strong>) : l’utilisateur ne peut pas l’ignorer ; une fois téléchargée, elle s’installe au prochain démarrage.</li>
+        <li><code>SkipVersion(version)</code> arrête les invites pour une version. <code>RollbackAndRestart()</code> revient à la version précédente (une sauvegarde est conservée).</li>
+        <li><code>StageUpdateFromFile(zip, version)</code> prépare un paquet livré hors ligne, par exemple sur une clé USB pour une machine isolée. Il n’est pas vérifié par le serveur.</li>
+        <li>L’état des mises à jour est stocké dans <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+      </ul>
+      <h3>Journalisation</h3>
+      <p>Implémentez <code>ILicenseLogger</code> pour des journaux structurés (fichier, HTTP vers <code>/api/SdkLogs/...</code> ou plusieurs destinations) selon vos exigences.</p>
+      <p>${L('/api/sdk-host', 'API hôte du SDK')} · ${L('/api/telemetry', 'Télémétrie')} · ${L('/sdk/winforms', 'Exemple WinForms')}</p>
     `,
   },
 };
