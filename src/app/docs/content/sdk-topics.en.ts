@@ -37,6 +37,7 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
       <p><code>LicenseClient</code> is the primary API: paths to <code>license.bin</code>, public key material, license key, optional expected license type, product id for update checks, and tuning for expiry warnings.</p>
       <p>After a successful online validation, call <code>TryAutoValidateAsync</code> (or the documented equivalent for your version) so the encrypted offline cache stays warm for air-gapped scenarios.</p>
       <p>Online validation hits <code>POST /api/Licenses/validate</code> with the product <code>X-API-KEY</code> — see ${L('/api/licenses', 'Licenses REST')} and ${L('/sdk/dotnet', 'full .NET article')}.</p>
+      <p>Nothing stays licensed after a rejection. When <code>ValidateAsync</code> rejects a license after loading it (wrong license type, wrong license key, failed activation or session), the SDK disconnects the session and clears <code>LicenseManager.Current</code> and the features. A later failed validation of the same key, a heartbeat that reports the license invalid, and <code>LicenseManager.CloseAsync</code> clear them too.</p>
     `,
   },
   'activation-session': {
@@ -44,7 +45,8 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     lead: 'Managers that talk to Activations and Sessions APIs.',
     body: `
       <p><code>ActivationManager</code> coordinates device binding and seat consumption against ${L('/api/activations-sessions', 'activation routes')} on <code>${HOST}/api</code>.</p>
-      <p><code>SessionManager</code> maintains heartbeat intervals against ${L('/api/activations-sessions', 'session routes')} when your license policy requires concurrent or online enforcement.</p>
+      <p><code>SessionManager</code> maintains heartbeat intervals against ${L('/api/activations-sessions', 'session routes')} when your license policy requires concurrent or online enforcement. The cadence comes from the server's connect response, not from the license file.</p>
+      <p><code>SessionDisconnected</code> fires when a heartbeat reports the license invalid (revoked, suspended, expired, blocked — the license's features are disabled), when a reconnect fails, and once with reason <code>Unreachable</code> after 3 unanswered heartbeats (the license stays loaded and retries continue). Handle it to tell the user what happened.</p>
       <p>${L('/sessions-activations', 'Dashboard narrative')} · ${L('/guides/platform/activations', 'Activations platform guide')}</p>
     `,
   },
@@ -52,17 +54,18 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     title: 'Features & metered usage',
     lead: 'FeatureManager for entitlements, MeterManager for billable usage.',
     body: `
-      <p><code>FeatureManager</code> evaluates entitlements deserialized from the signed license.</p>
+      <p><code>FeatureManager</code> evaluates entitlements deserialized from the signed license. Features are cleared as soon as the SDK decides the license is no longer good, so <code>IsFeatureEnabled</code> returns <code>false</code> after a revoke reaches the app.</p>
       <p><strong>Billable usage goes through <code>MeterManager</code>, not <code>FeatureUsageTracker</code>.</strong> <code>FeatureUsageTracker</code> is <code>[Obsolete]</code>: its sync endpoint no longer exists and it reports nothing, so metering built on it silently never bills. Call <code>LicenseClient.ConsumeMeterAsync</code> (or <code>ConsumeMeterWithRetryAsync</code>) with an operation id you create with <code>MeterManager.CreateOperationId</code> and persist before the call — see ${L('/credit-based-license', 'Credit-Based')} and ${L('/usage-based-license', 'Usage-Based')} for the full pattern, and ${L('/api/metering', 'Metering API')} for the routes.</p>
       <p>Feature definitions are authored in the dashboard and exposed over REST (catalog routes on <code>${HOST}/api</code>) — see ${L('/api/catalog', 'Catalog API topic')}.</p>
     `,
   },
   'offline-grace': {
     title: 'Offline cache & grace periods',
-    lead: 'Resilience when the API is unreachable.',
+    lead: 'Expiry grace, offline files, and what happens when the API is unreachable.',
     body: `
-      <p><code>OfflineCacheManager</code> stores the last known-good validation outcome and license payload securely on disk.</p>
-      <p><code>GracePeriodManager</code> applies your policy for how long the app may run without reaching <code>${HOST}/api</code> before hard-stopping or degrading features.</p>
+      <p><code>GracePeriodManager</code> lets an <strong>expired</strong> license keep running for <code>GracePeriodDays</code> (default 0, off). It covers genuine expiry only — a license on the wrong device or with the wrong key is never accepted — and its start time is stored on the device, so restarting the app does not begin a new grace period.</p>
+      <p>Offline (file) licenses validate locally after a one-time online check on the first run on each machine; <code>ValidateOfflineAsync</code> never contacts the server.</p>
+      <p>Online licenses need the server. If <code>${HOST}/api</code> is unreachable at validation, validation fails: <code>OfflineCacheManager</code> records successful online validations, but there is no automatic fallback to it yet. During a run, unanswered heartbeats raise <code>SessionDisconnected</code> with reason <code>Unreachable</code>.</p>
       <p>Pair with the offline section in ${L('/sdk/dotnet', '.NET SDK guide')}.</p>
     `,
   },

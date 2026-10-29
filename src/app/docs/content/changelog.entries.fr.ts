@@ -2,6 +2,54 @@ import type { ChangelogEntry } from './changelog.types';
 
 export const CHANGELOG_ENTRIES_FR: ChangelogEntry[] = [
     {
+      version: '2.7.0',
+      date: '29 octobre 2026',
+      type: 'minor',
+      highlights: [
+        'Les licences Perpetual en mode Offline peuvent être émises depuis le tableau de bord',
+        'Le SDK arrête les fonctionnalités sous licence dès qu’une licence est révoquée ou rejetée',
+        'Les clients ne voient que les licences qui leur sont émises, avec la clé complète'
+      ],
+      changes: [
+        {
+          category: 'added',
+          items: [
+            'Perpetual est disponible en mode Offline dans l’assistant de licence, y compris pour les produits Opened',
+            'Les nouveaux produits sont créés avec des clés de signature RSA',
+            'L’assistant de licence avertit lorsque le produit sélectionné n’a pas de clés de signature et renvoie vers ses paramètres',
+            'SessionDisconnected signale un serveur inaccessible (raison Unreachable) après 3 heartbeats sans réponse'
+          ]
+        },
+        {
+          category: 'improved',
+          items: [
+            'Generate Another réinitialise tous les champs sauf le produit et la release',
+            'Produit sans clés de signature : la création de licence et le téléchargement du fichier renvoient 409 ProductKeysMissing et le tableau de bord affiche RSA Keys Required au lieu d’une erreur générique',
+            'Les mises à jour de licence sont auditées champ par champ (ancien -> nouveau), avec une entrée distincte pour les changements de statut'
+          ]
+        },
+        {
+          category: 'fixed',
+          items: [
+            'Une date d’expiration héritée de Trial ou Subscription était enregistrée sur les licences Perpetual et Node-Locked',
+            'SDK : les fonctionnalités restaient activées après une révocation, une activation échouée ou une licence rejetée',
+            'SDK : une licence expirée sur le mauvais appareil ou avec la mauvaise clé pouvait être acceptée pendant la période de grâce, et la période de grâce redémarrait à chaque lancement de l’app',
+            'Le blocage d’un appareil et la désactivation via le SDK ne libéraient pas le compteur de sièges',
+            'La connexion de session acceptait des clés de licence sans enregistrement de licence'
+          ]
+        },
+        {
+          category: 'security',
+          items: [
+            'Retirer un produit d’une organisation ne révoque plus ses licences ; auparavant, toutes les licences du produit étaient révoquées',
+            'Une licence et sa clé ne peuvent être lues que par ses gestionnaires ou son titulaire ; les clients ne voient plus les licences émises à d’autres clients',
+            'La révocation est définitive : le formulaire de modification peut suspendre une licence mais ne peut ni la révoquer ni la réactiver',
+            'Les clés privées des produits ne sont jamais renvoyées par l’API'
+          ]
+        }
+      ]
+    },
+    {
       version: '2.6.0',
       date: '16 août 2026',
       type: 'minor',

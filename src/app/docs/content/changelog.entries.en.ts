@@ -2,6 +2,54 @@ import type { ChangelogEntry } from './changelog.types';
 
 export const CHANGELOG_ENTRIES_EN: ChangelogEntry[] = [
     {
+      version: '2.7.0',
+      date: 'October 29, 2026',
+      type: 'minor',
+      highlights: [
+        'Offline Perpetual licenses can be issued from the dashboard',
+        'The SDK stops licensed features as soon as a license is revoked or rejected',
+        'Customers see only the licenses issued to them, with the full key'
+      ],
+      changes: [
+        {
+          category: 'added',
+          items: [
+            'Perpetual is available in Offline mode in the license wizard, including for Opened products',
+            'New products are created with RSA signing keys',
+            'The license wizard warns when the selected product has no signing keys and links to its settings',
+            'SessionDisconnected reports an unreachable server (reason Unreachable) after 3 unanswered heartbeats'
+          ]
+        },
+        {
+          category: 'improved',
+          items: [
+            'Generate Another resets every field except product and release',
+            'Product without signing keys: license create and file download return 409 ProductKeysMissing and the dashboard shows RSA Keys Required instead of a generic error',
+            'License updates are audited field by field (old -> new), with a separate entry for status changes'
+          ]
+        },
+        {
+          category: 'fixed',
+          items: [
+            'An expiry date left over from Trial or Subscription was saved on Perpetual and Node-Locked licenses',
+            'SDK: features stayed enabled after a revoke, a failed activation or a rejected license',
+            'SDK: an expired license on the wrong device or with the wrong key could be accepted during the grace period, and the grace period restarted with every app launch',
+            'Blocking a device and SDK deactivation did not release the seat counter',
+            'Session connect accepted license keys that have no license record'
+          ]
+        },
+        {
+          category: 'security',
+          items: [
+            'Unassigning a product from an organization no longer revokes licenses; it used to revoke every license of the product',
+            'A license and its key can be read only by its managers or its holder; customers no longer see licenses issued to other customers',
+            'Revocation is final: the edit form can suspend a license but cannot revoke or reactivate it',
+            'Product private keys are never returned by the API'
+          ]
+        }
+      ]
+    },
+    {
       version: '2.6.0',
       date: 'August 16, 2026',
       type: 'minor',
