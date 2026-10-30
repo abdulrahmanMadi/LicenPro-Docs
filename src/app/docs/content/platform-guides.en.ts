@@ -416,6 +416,17 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       </ul>
       ${screenshot('platform-release-detail.png', 'Release detail page: changelog, notes, entitlement sets, and Google Drive file download')}
 
+      <h2>Update package (one-click updates)</h2>
+      <p>Attach a <strong>zip of your app folder</strong> as the release file to let licensed apps install this version with "Update &amp; restart". When you publish, LicenPro hashes the zip (SHA-256) and signs it with the product's RSA key; the <strong>Update package</strong> card on the release page then shows "Ready for one-click update".</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Main executable</strong> — the file at the root of the zip that is started after the update. Leave it empty to use the running app's executable name.</li>
+        <li><strong>Mandatory update</strong> — users cannot postpone or skip it; once downloaded it is installed at the next start.</li>
+        <li><strong>Minimum supported version</strong> — clients older than this must install this update.</li>
+        <li><strong>Verify package</strong> — after replacing the file of a published release, verify it so it is hashed and signed again.</li>
+        <li><strong>Audience</strong> — the card shows how many active licenses are offered the update. A license gets new releases when <strong>Receives new releases</strong> is on (the default for new licenses); Beta and other levels reach only apps on that channel.</li>
+      </ul>
+      <p>Release files come from your ${link('/guides/platform/storage', 'storage connectors')}. App side: ${link('/sdk/updates-logging', 'Auto updater')}.</p>
+
       <h2>Roles</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Product owner / system Admin</strong> — create, edit, delete releases.</li>

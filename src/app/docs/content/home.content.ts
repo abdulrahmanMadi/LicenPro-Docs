@@ -32,6 +32,12 @@ export function getHomeCards(): HomeCard[] {
       descKey: 'docs.home.card.dotnet.desc',
     },
     {
+      route: '/sdk/updates-logging',
+      icon: 'ki-cloud-download',
+      titleKey: 'docs.home.card.updater.title',
+      descKey: 'docs.home.card.updater.desc',
+    },
+    {
       route: '/api/overview',
       icon: 'ki-data',
       titleKey: 'docs.home.card.rest.title',

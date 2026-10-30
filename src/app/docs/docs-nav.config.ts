@@ -103,7 +103,7 @@ export const DOCS_NAV: NavSection[] = [
       },
       { id: 'sdk-features', label: 'Features & usage', icon: 'ki-outline ki-setting-2', route: '/sdk/features-usage' },
       { id: 'sdk-offline', label: 'Offline & grace', icon: 'ki-outline ki-wifi-square', route: '/sdk/offline-grace' },
-      { id: 'sdk-updates', label: 'Updates & logging', icon: 'ki-outline ki-cloud-download', route: '/sdk/updates-logging' },
+      { id: 'sdk-updates', label: 'Auto updater & logging', icon: 'ki-outline ki-cloud-download', route: '/sdk/updates-logging' },
       { id: 'sdk-dotnet', label: '.NET integration', icon: 'ki-outline ki-code', route: '/sdk/dotnet' },
       { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-outline ki-mouse', route: '/sdk/winforms' },
       { id: 'sdk-wpf', label: 'WPF', icon: 'ki-outline ki-element-11', route: '/sdk/wpf' },

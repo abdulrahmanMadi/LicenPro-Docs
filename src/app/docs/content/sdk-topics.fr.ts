@@ -2,6 +2,15 @@ import type { DocTopic } from '../doc-topic.types';
 
 const L = (path: string, label: string) => `<a class="doc-inline-link" href="${path}">${label}</a>`;
 
+/** Screenshot with lightbox (full-resolution asset, no compression). */
+const screenshot = (file: string, alt: string) =>
+  `<figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/${file}" data-doc-image-alt="${alt}" aria-label="Afficher la capture en taille réelle">
+      <img src="assets/docs/${file}" alt="${alt}" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Cliquez sur l'image pour ouvrir l'aperçu en pleine résolution.</figcaption>
+  </figure>`;
+
 const HOST = 'https://licenpro.runasp.net';
 
 export const SDK_TOPICS_FR: Record<string, DocTopic> = {
@@ -70,9 +79,13 @@ export const SDK_TOPICS_FR: Record<string, DocTopic> = {
     `,
   },
   'updates-logging': {
-    title: 'Mises à jour en un clic et journalisation',
-    lead: 'Prévenez les utilisateurs licenciés des nouvelles versions et laissez-les mettre à jour via « Update & restart », sans désinstaller ni réinstaller.',
+    title: 'Mise à jour automatique et journalisation',
+    lead: 'Publiez une nouvelle version et vos clients l\'installent en un clic : « Update & restart » la télécharge, la vérifie, l\'installe et rouvre l\'application. Sans désinstaller ni réinstaller.',
     body: `
+      <h3>Ce que voient vos clients</h3>
+      <p>Quand une version plus récente est disponible pour leur licence, votre application affiche son numéro, sa taille et ses notes de version. <strong>Update &amp; restart</strong> l'installe tout de suite, <strong>Later</strong> redemande au prochain démarrage de l'application et <strong>Skip this version</strong> ne la propose plus. Une mise à jour obligatoire n'offre que <strong>Update &amp; restart</strong>.</p>
+      ${screenshot('sdk-update-prompt.png', 'Fenêtre de mise à jour de l\'exemple WinForms : version, taille, notes, Skip this version, Later et Update &amp; restart')}
+      <p>La fenêtre est la vôtre (l'${L('/sdk/winforms', 'exemple WinForms')} en contient une à copier) ; le SDK fournit les données et fait le travail.</p>
       <h3>Fonctionnement</h3>
       <ol>
         <li><strong>Publiez</strong> une version dans le tableau de bord avec un <strong>zip du dossier de l’application</strong> comme fichier. La publication calcule le SHA-256 du zip et le signe avec la clé RSA du produit ; la carte <strong>Paquet de mise à jour</strong> affiche « Prêt pour la mise à jour en un clic ». Les nouvelles licences reçoivent chaque nouvelle version par défaut (option <strong>Reçoit les nouvelles versions</strong> de la licence) ; la page de la version indique à combien de licences elle est proposée.</li>
@@ -91,13 +104,38 @@ client.EnableAutoUpdates(onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
 // Dans le bouton « Update &amp; restart »
 if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
     SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
-      <h3>Options</h3>
+      <h3>Qui reçoit une mise à jour</h3>
       <ul>
-        <li><strong>Obligatoire</strong> (indicateur de la version, ou client plus ancien que la <strong>version minimale prise en charge</strong>) : l’utilisateur ne peut pas l’ignorer. Le SDK la télécharge en arrière-plan dès qu’elle est trouvée, et elle s’installe au prochain démarrage même si l’application a été fermée.</li>
-        <li>Livrez la <strong>clé publique</strong> du produit avec votre application (<code>LicensingSecrets.PublicKey</code> dans <code>licenpro.settings.json</code> ; elle n’est pas secrète). Les paquets sont vérifiés avec elle : sans elle, <code>UpdateInfo.CanInstall</code> vaut false et rien n’est téléchargé.</li>
-        <li><code>SkipVersion(version)</code> arrête les invites pour une version. <code>RollbackAndRestart()</code> revient à la version précédente (une sauvegarde est conservée).</li>
-        <li><code>StageUpdateFromFile(zip, version)</code> prépare un paquet livré hors ligne, par exemple sur une clé USB pour une machine isolée. Il n’est pas vérifié par le serveur.</li>
-        <li>L’état des mises à jour est stocké dans <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+        <li>La version est <strong>publiée</strong> avec un paquet de mise à jour vérifié, et <strong>Proposer des mises à jour produit aux clients</strong> est activé (Produit → Paramètres → Mises à jour client).</li>
+        <li>La licence est active et <strong>Reçoit les nouvelles versions</strong> est activé (par défaut pour les nouvelles licences), ou la version est attribuée à la licence, ou son titulaire a <strong>Accorder toutes les versions</strong> dans Gérer l'accès du produit.</li>
+        <li>Le niveau de la version correspond au canal de l'application : les applications reçoivent les versions Stable ; une application qui passe <code>releaseChannel: "Beta"</code> reçoit les versions Beta à la place.</li>
+      </ul>
+      <p>La page de la version affiche le résultat : « Proposée comme mise à jour à N licence(s) active(s) ». Réglages du paquet : ${L('/guides/platform/releases', 'Versions')}.</p>
+      <h3>Mises à jour obligatoires</h3>
+      <ul>
+        <li>Cochez <strong>Mise à jour obligatoire</strong> sur la version, ou définissez une <strong>Version minimale prise en charge</strong> : les clients plus anciens doivent installer cette mise à jour.</li>
+        <li>Le SDK lance le téléchargement en arrière-plan dès qu'il trouve la mise à jour et l'installe au prochain démarrage, même si l'utilisateur a fermé l'application.</li>
+        <li>Votre fenêtre n'offre que « Update &amp; restart ». L'exemple WinForms ferme l'application si l'utilisateur refuse.</li>
+      </ul>
+      ${screenshot('sdk-update-prompt-mandatory.png', 'Mise à jour obligatoire dans l\'exemple WinForms : seulement Update &amp; restart')}
+      <h3>Sécurité</h3>
+      <ul>
+        <li>Avant toute extraction, la taille, le SHA-256 et la signature de la clé produit du paquet sont vérifiés, et les entrées du zip qui sortiraient du dossier de préparation sont refusées.</li>
+        <li>Livrez la <strong>clé publique</strong> du produit avec votre application (<code>LicensingSecrets.PublicKey</code> dans <code>licenpro.settings.json</code> ; elle n'est pas secrète). Sans elle, <code>UpdateInfo.CanInstall</code> vaut false et rien n'est téléchargé.</li>
+        <li>L'installeur sauvegarde le dossier d'installation et le restaure en cas d'échec. <code>RollbackAndRestart()</code> revient à la version précédente (une sauvegarde est conservée).</li>
+        <li><code>licenpro.cache</code> et <code>licenpro.settings.json</code> sont conservés : l'application reste activée après la mise à jour.</li>
+      </ul>
+      <h3>Autres options</h3>
+      <ul>
+        <li><code>SkipVersion(version)</code> ne propose plus une version.</li>
+        <li><code>StageUpdateFromFile(zip, version)</code> prépare un paquet livré hors ligne, par exemple sur une clé USB pour une machine isolée. Il n'est pas vérifié auprès du serveur.</li>
+        <li>L'état des mises à jour est dans <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+      </ul>
+      <h3>Dépannage</h3>
+      <ul>
+        <li><strong>Aucune mise à jour proposée</strong> : la version est encore un brouillon, la licence ne la reçoit pas (voir « Proposée comme mise à jour à… » sur la page de la version), ou le niveau de la version n'est pas le canal de l'application.</li>
+        <li><strong>« Update &amp; restart » indisponible</strong> : l'application n'a pas la clé publique du produit, ou le fichier de la version n'est pas un paquet zip vérifié (page de la version → Paquet de mise à jour → Vérifier le paquet).</li>
+        <li><strong>L'application affiche l'ancienne version après la mise à jour</strong> : définissez la version dans le fichier projet avant de construire le zip, et laissez le SDK indiquer la version en cours au lieu de passer un <code>currentAppVersion</code> fixe.</li>
       </ul>
       <h3>Journalisation</h3>
       <p>Implémentez <code>ILicenseLogger</code> pour des journaux structurés (fichier, HTTP vers <code>/api/SdkLogs/...</code> ou plusieurs destinations) selon vos exigences.</p>

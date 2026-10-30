@@ -416,6 +416,17 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       </ul>
       ${screenshot('platform-release-detail.png', 'Page détail version : changelog, notes, jeux de droits et téléchargement fichier Google Drive')}
 
+      <h2>Paquet de mise à jour (mise à jour en un clic)</h2>
+      <p>Joignez un <strong>zip du dossier de votre application</strong> comme fichier de la version pour que les applications sous licence installent cette version via « Update &amp; restart ». À la publication, LicenPro calcule le SHA-256 du zip et le signe avec la clé RSA du produit ; la carte <strong>Paquet de mise à jour</strong> de la page de la version affiche alors « Prêt pour la mise à jour en un clic ».</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Exécutable principal</strong> — le fichier à la racine du zip lancé après la mise à jour. Laissez vide pour reprendre le nom de l'exécutable en cours.</li>
+        <li><strong>Mise à jour obligatoire</strong> — l'utilisateur ne peut ni la reporter ni l'ignorer ; une fois téléchargée, elle s'installe au prochain démarrage.</li>
+        <li><strong>Version minimale prise en charge</strong> — les clients plus anciens doivent installer cette mise à jour.</li>
+        <li><strong>Vérifier le paquet</strong> — après avoir remplacé le fichier d'une version publiée, vérifiez-le pour qu'il soit de nouveau haché et signé.</li>
+        <li><strong>Destinataires</strong> — la carte indique à combien de licences actives la mise à jour est proposée. Une licence reçoit les nouvelles versions quand <strong>Reçoit les nouvelles versions</strong> est activé (par défaut pour les nouvelles licences) ; les versions Beta et autres n'atteignent que les applications sur ce canal.</li>
+      </ul>
+      <p>Les fichiers de version proviennent de vos ${link('/guides/platform/storage', 'connecteurs de stockage')}. Côté application : ${link('/sdk/updates-logging', 'Mise à jour automatique')}.</p>
+
       <h2>Rôles</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Propriétaire produit / Admin système</strong> — créer, modifier, supprimer versions.</li>

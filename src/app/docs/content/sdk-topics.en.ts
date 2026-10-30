@@ -2,6 +2,15 @@ import type { DocTopic } from '../doc-topic.types';
 
 const L = (path: string, label: string) => `<a class="doc-inline-link" href="${path}">${label}</a>`;
 
+/** Screenshot with lightbox (full-resolution asset, no compression). */
+const screenshot = (file: string, alt: string) =>
+  `<figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/${file}" data-doc-image-alt="${alt}" aria-label="View screenshot full size">
+      <img src="assets/docs/${file}" alt="${alt}" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">Click image to open full-resolution preview.</figcaption>
+  </figure>`;
+
 const HOST = 'https://licenpro.runasp.net';
 
 export const SDK_TOPICS_EN: Record<string, DocTopic> = {
@@ -70,9 +79,13 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     `,
   },
   'updates-logging': {
-    title: 'One-click updates & logging',
-    lead: 'Notify licensed users about new builds and let them update with "Update & restart" — no uninstall/reinstall.',
+    title: 'Auto updater & logging',
+    lead: 'Publish a new build and your customers install it with one click: "Update & restart" downloads it, verifies it, installs it and reopens the app. No uninstall, no reinstall.',
     body: `
+      <h3>What your customers see</h3>
+      <p>When a newer build is available for their license, your app shows its version, size and release notes. <strong>Update &amp; restart</strong> installs it now, <strong>Later</strong> asks again the next time the app starts, and <strong>Skip this version</strong> stops prompts for that version. A mandatory update offers only <strong>Update &amp; restart</strong>.</p>
+      ${screenshot('sdk-update-prompt.png', 'Update prompt in the WinForms sample: version, size, release notes, Skip this version, Later and Update &amp; restart')}
+      <p>The window is yours (the ${L('/sdk/winforms', 'WinForms sample')} has one to copy); the SDK supplies the data and does the work.</p>
       <h3>How it works</h3>
       <ol>
         <li><strong>Publish</strong> a release in the dashboard with a <strong>zip of your app folder</strong> as its file. Publishing hashes the zip (SHA-256) and signs it with the product's RSA key. The release's <strong>Update package</strong> card shows "Ready for one-click update". New licenses receive every new release by default (the license's <strong>Receives new releases</strong> option); the release page shows how many licenses it is offered to.</li>
@@ -91,13 +104,38 @@ client.EnableAutoUpdates(onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
 // In your prompt's "Update &amp; restart" button
 if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
     SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
-      <h3>Options</h3>
+      <h3>Who receives an update</h3>
       <ul>
-        <li><strong>Mandatory</strong> (release flag, or a client older than the <strong>minimum supported version</strong>): the user cannot skip it. The SDK downloads it in the background as soon as it is found, and it installs at the next start even if the app was closed.</li>
-        <li>Ship the product <strong>public key</strong> with your app (<code>LicensingSecrets.PublicKey</code> in <code>licenpro.settings.json</code>; it is not secret). Packages are verified with it: without it <code>UpdateInfo.CanInstall</code> is false and nothing is downloaded.</li>
-        <li><code>SkipVersion(version)</code> stops prompts for a version. <code>RollbackAndRestart()</code> returns to the previous version (one backup is kept).</li>
+        <li>The release is <strong>published</strong> with a verified update package, and <strong>Offer product updates to clients</strong> is on (Product → Settings → Client updates).</li>
+        <li>The license is active and has <strong>Receives new releases</strong> on (the default for new licenses), or the release is assigned to the license, or its owner has <strong>Grant to all versions</strong> in the product's Manage Access.</li>
+        <li>The release level matches the app's channel. Apps get Stable releases; an app that passes <code>releaseChannel: "Beta"</code> gets Beta releases instead.</li>
+      </ul>
+      <p>The release page shows the result: "Offered as an update to N active license(s)". See ${L('/guides/platform/releases', 'Releases')} for the update package settings.</p>
+      <h3>Mandatory updates</h3>
+      <ul>
+        <li>Tick <strong>Mandatory update</strong> on the release, or set a <strong>Minimum supported version</strong>: clients older than it must install this update.</li>
+        <li>The SDK starts the download in the background as soon as it finds the update and installs it at the next start, even if the user closed the app.</li>
+        <li>Your prompt offers only "Update &amp; restart". The WinForms sample closes the app when the user refuses.</li>
+      </ul>
+      ${screenshot('sdk-update-prompt-mandatory.png', 'Mandatory update in the WinForms sample: only Update &amp; restart')}
+      <h3>Safety</h3>
+      <ul>
+        <li>Before anything is extracted, the package's size, SHA-256 and product-key signature are checked, and zip entries that would land outside the staging folder are refused.</li>
+        <li>Ship the product <strong>public key</strong> with your app (<code>LicensingSecrets.PublicKey</code> in <code>licenpro.settings.json</code>; it is not secret). Without it <code>UpdateInfo.CanInstall</code> is false and nothing is downloaded.</li>
+        <li>The installer backs up the install folder and restores it if anything fails. <code>RollbackAndRestart()</code> returns to the previous version (one backup is kept).</li>
+        <li><code>licenpro.cache</code> and <code>licenpro.settings.json</code> are kept, so the app stays activated after the update.</li>
+      </ul>
+      <h3>More options</h3>
+      <ul>
+        <li><code>SkipVersion(version)</code> stops prompts for a version.</li>
         <li><code>StageUpdateFromFile(zip, version)</code> stages a package delivered offline, for example on a USB stick to an air-gapped machine. It is not checked against the server.</li>
         <li>Update state lives in <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+      </ul>
+      <h3>Troubleshooting</h3>
+      <ul>
+        <li><strong>No update is offered</strong>: the release is still a draft, the license does not receive it (check "Offered as an update to…" on the release page), or the release level is not the app's channel.</li>
+        <li><strong>"Update &amp; restart" is unavailable</strong>: the app has no product public key, or the release file is not a verified zip package (release page → Update package → Verify package).</li>
+        <li><strong>The app shows the old version after updating</strong>: set the version in your project file before you build the zip, and let the SDK report the running build instead of passing a fixed <code>currentAppVersion</code>.</li>
       </ul>
       <h3>Logging</h3>
       <p>Implement <code>ILicenseLogger</code> for structured logs (file, HTTP to <code>/api/SdkLogs/...</code>, or composite sinks), depending on your compliance needs.</p>

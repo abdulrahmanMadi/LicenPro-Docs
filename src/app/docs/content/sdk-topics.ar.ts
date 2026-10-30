@@ -2,6 +2,15 @@ import type { DocTopic } from '../doc-topic.types';
 
 const L = (path: string, label: string) => `<a class="doc-inline-link" href="${path}">${label}</a>`;
 
+/** Screenshot with lightbox (full-resolution asset, no compression). */
+const screenshot = (file: string, alt: string) =>
+  `<figure class="doc-figure doc-figure-card">
+    <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/${file}" data-doc-image-alt="${alt}" aria-label="عرض لقطة الشاشة بالحجم الكامل">
+      <img src="assets/docs/${file}" alt="${alt}" loading="lazy" decoding="async" />
+    </button>
+    <figcaption class="doc-figure-caption">انقر على الصورة لفتح معاينة بدقة كاملة.</figcaption>
+  </figure>`;
+
 const HOST = 'https://licenpro.runasp.net';
 
 export const SDK_TOPICS_AR: Record<string, DocTopic> = {
@@ -70,9 +79,13 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
     `,
   },
   'updates-logging': {
-    title: 'التحديث بضغطة واحدة والسجلات',
-    lead: 'أبلغ المستخدمين المرخَّصين بالنسخ الجديدة ودعهم يحدّثون عبر "Update & restart" — بدون إزالة وإعادة تثبيت.',
+    title: 'التحديث التلقائي والسجلات',
+    lead: 'انشر نسخة جديدة وعملاؤك يثبّتونها بضغطة واحدة: "Update & restart" ينزّلها ويتحقق منها ويثبّتها ثم يعيد فتح البرنامج. بدون إزالة وإعادة تثبيت.',
     body: `
+      <h3>ما يراه عملاؤك</h3>
+      <p>عند توفر نسخة أحدث لترخيصهم، يعرض برنامجك رقمها وحجمها وملاحظات الإصدار. <strong>Update &amp; restart</strong> يثبّتها الآن، و<strong>Later</strong> يسأل مرة أخرى عند التشغيل التالي، و<strong>Skip this version</strong> يوقف الإشعار لهذه النسخة. التحديث الإلزامي لا يعرض إلا <strong>Update &amp; restart</strong>.</p>
+      ${screenshot('sdk-update-prompt.png', 'نافذة التحديث في مثال WinForms: النسخة والحجم وملاحظات الإصدار وأزرار Skip this version وLater وUpdate &amp; restart')}
+      <p>النافذة من تصميمك (${L('/sdk/winforms', 'مثال WinForms')} فيه واحدة جاهزة للنسخ)؛ الـ SDK يوفّر البيانات وينفّذ العمل.</p>
       <h3>كيف يعمل</h3>
       <ol>
         <li><strong>انشر</strong> إصداراً من لوحة التحكم وملفه <strong>zip لمجلد البرنامج</strong>. عند النشر يُحسب SHA-256 للـ zip ويُوقَّع بمفتاح RSA الخاص بالمنتج، وتُظهر بطاقة <strong>حزمة التحديث</strong> عبارة "جاهزة للتحديث بضغطة واحدة". التراخيص الجديدة تستلم كل إصدار جديد افتراضياً (خيار <strong>يستلم الإصدارات الجديدة</strong> في الترخيص)، وصفحة الإصدار تعرض عدد التراخيص التي سيصلها.</li>
@@ -91,13 +104,38 @@ client.EnableAutoUpdates(onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
 // في زر "Update &amp; restart"
 if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
     SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
-      <h3>خيارات</h3>
+      <h3>من يستلم التحديث</h3>
       <ul>
-        <li><strong>إلزامي</strong> (علامة على الإصدار، أو عميل أقدم من <strong>أقل نسخة مدعومة</strong>): لا يستطيع المستخدم تخطّيه. الـ SDK ينزّله في الخلفية أول ما يلاقيه، ويتثبّت في التشغيل التالي حتى لو البرنامج اتقفل.</li>
-        <li>ضمّن <strong>المفتاح العام</strong> للمنتج مع برنامجك (<code>LicensingSecrets.PublicKey</code> في <code>licenpro.settings.json</code>؛ ليس سرّياً). الحزم يتم التحقق منها به: بدونه تكون <code>UpdateInfo.CanInstall</code> بقيمة false ولا يُنزَّل شيء.</li>
-        <li><code>SkipVersion(version)</code> يوقف الإشعار لنسخة معينة. <code>RollbackAndRestart()</code> يرجع للنسخة السابقة (تُحفظ نسخة احتياطية واحدة).</li>
+        <li>الإصدار <strong>منشور</strong> وحزمة التحديث متحقَّق منها، وخيار <strong>تقديم تحديثات المنتج للعملاء</strong> مفعّل (المنتج ← الإعدادات ← تحديثات العميل).</li>
+        <li>الترخيص نشط وخيار <strong>يستلم الإصدارات الجديدة</strong> مفعّل فيه (الافتراضي للتراخيص الجديدة)، أو الإصدار مرتبط بالترخيص، أو صاحبه لديه <strong>منح لجميع الإصدارات</strong> في إدارة الوصول للمنتج.</li>
+        <li>مستوى الإصدار يطابق قناة البرنامج: البرامج تستلم إصدارات Stable، والبرنامج الذي يمرّر <code>releaseChannel: "Beta"</code> يستلم إصدارات Beta بدلاً منها.</li>
+      </ul>
+      <p>صفحة الإصدار تعرض النتيجة: "يُعرض كتحديث على N ترخيص نشط". إعدادات حزمة التحديث في ${L('/guides/platform/releases', 'الإصدارات')}.</p>
+      <h3>التحديثات الإلزامية</h3>
+      <ul>
+        <li>فعّل <strong>تحديث إلزامي</strong> في الإصدار، أو حدّد <strong>أقل نسخة مدعومة</strong>: العملاء الأقدم منها يجب أن يثبّتوا هذا التحديث.</li>
+        <li>الـ SDK يبدأ التنزيل في الخلفية بمجرد العثور على التحديث، ويثبّته في التشغيل التالي حتى لو أغلق المستخدم البرنامج.</li>
+        <li>نافذتك تعرض "Update &amp; restart" فقط. مثال WinForms يغلق البرنامج إذا رفض المستخدم.</li>
+      </ul>
+      ${screenshot('sdk-update-prompt-mandatory.png', 'تحديث إلزامي في مثال WinForms: زر Update &amp; restart فقط')}
+      <h3>الأمان</h3>
+      <ul>
+        <li>قبل فك أي ملف يتم التحقق من حجم الحزمة وSHA-256 وتوقيع مفتاح المنتج، ويُرفض أي ملف داخل الـ zip يحاول الخروج من مجلد التجهيز.</li>
+        <li>ضمّن <strong>المفتاح العام</strong> للمنتج مع برنامجك (<code>LicensingSecrets.PublicKey</code> في <code>licenpro.settings.json</code>؛ ليس سرّياً). بدونه تكون <code>UpdateInfo.CanInstall</code> بقيمة false ولا يُنزَّل شيء.</li>
+        <li>الـ installer يأخذ نسخة احتياطية من مجلد التثبيت ويسترجعها عند أي فشل. <code>RollbackAndRestart()</code> يرجع للنسخة السابقة (تُحفظ نسخة احتياطية واحدة).</li>
+        <li>يُحتفظ بـ <code>licenpro.cache</code> و<code>licenpro.settings.json</code>، فيبقى البرنامج مفعّلاً بعد التحديث.</li>
+      </ul>
+      <h3>خيارات أخرى</h3>
+      <ul>
+        <li><code>SkipVersion(version)</code> يوقف الإشعار لنسخة معينة.</li>
         <li><code>StageUpdateFromFile(zip, version)</code> يجهّز حزمة وصلت بدون إنترنت، مثلاً على USB لجهاز معزول. لا يتحقق منها الخادم.</li>
         <li>حالة التحديث محفوظة في <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
+      </ul>
+      <h3>حل المشكلات</h3>
+      <ul>
+        <li><strong>لا يظهر أي تحديث</strong>: الإصدار ما زال مسودة، أو الترخيص لا يستلمه (راجع "يُعرض كتحديث على…" في صفحة الإصدار)، أو مستوى الإصدار ليس قناة البرنامج.</li>
+        <li><strong>زر "Update &amp; restart" غير متاح</strong>: البرنامج بدون المفتاح العام للمنتج، أو ملف الإصدار ليس حزمة zip متحقَّقاً منها (صفحة الإصدار ← حزمة التحديث ← التحقق من الحزمة).</li>
+        <li><strong>البرنامج يعرض النسخة القديمة بعد التحديث</strong>: حدّد رقم النسخة في ملف المشروع قبل بناء الـ zip، واترك الـ SDK يبلّغ بالنسخة التي تعمل بدل تمرير <code>currentAppVersion</code> ثابت.</li>
       </ul>
       <h3>السجلات</h3>
       <p>نفّذ <code>ILicenseLogger</code> لسجلات منظَّمة (ملف، أو HTTP إلى <code>/api/SdkLogs/...</code>، أو أكثر من وجهة) حسب متطلباتك.</p>
