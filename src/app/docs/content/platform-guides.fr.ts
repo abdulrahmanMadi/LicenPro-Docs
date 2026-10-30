@@ -17,7 +17,7 @@ const HOST = 'https://licenpro.runasp.net';
 export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
   overview: {
     title: "Vue d'ensemble du système",
-    lead: "Comment le tableau de bord LicenPro, l'API REST hébergée et les SDK clients s'articulent — de la première configuration produit jusqu'à la validation à l'exécution dans votre application livrée. Le SDK .NET est documenté aujourd'hui ; des SDK pour d'autres langages (avec exemples par stack) sont prévus.",
+    lead: "Comment le tableau de bord LicenPro, l'API REST hébergée et les SDK clients s'articulent — de la première configuration produit jusqu'à la validation à l'exécution dans votre application livrée. Des guides SDK existent aujourd'hui pour .NET, VB.NET et Python (aperçu) ; Java est prévu.",
     body: `
       <figure class="doc-figure doc-figure--hero doc-figure-card">
         <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/overview1.png" data-doc-image-alt="Flux LicenPro : tableau de bord pour la configuration éditeur, API REST pour les opérations runtime, et SDK clients dans les applications clientes (SDK multilingues et exemples prévus)" aria-label="Afficher le diagramme de flux en taille réelle">

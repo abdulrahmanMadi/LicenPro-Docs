@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>Python</h1>
+    <h1>Python SDK</h1>
     <p class="lead">
       The <code>licenpro</code> package brings LicenPro licensing to Python. It is not a rewrite: the licensing logic is the LicenPro .NET SDK itself, compiled into a native library, with a small Python API on top.
       Licenses, activations and sessions therefore behave exactly as in .NET. No .NET runtime and no other Python packages are needed.

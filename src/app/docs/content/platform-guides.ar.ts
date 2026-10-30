@@ -17,7 +17,7 @@ const HOST = 'https://licenpro.runasp.net';
 export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
   overview: {
     title: "نظرة عامة على النظام",
-    lead: "كيف يتكامل لوحة تحكم LicenPro وREST API المستضاف وSDKs العميل — من إعداد المنتج الأول حتى التحقق وقت التشغيل في تطبيقك المنشور. SDK ‎.NET موثّق اليوم؛ SDKs بلغات إضافية (مع أمثلة لكل مكدس) في خارطة الطريق.",
+    lead: "كيف يتكامل لوحة تحكم LicenPro وREST API المستضاف وSDKs العميل — من إعداد المنتج الأول حتى التحقق وقت التشغيل في تطبيقك المنشور. أدلة SDK متاحة اليوم لـ \u200E.NET وVB.NET وPython (معاينة)، وJava مخطط لها.",
     body: `
       <figure class="doc-figure doc-figure--hero doc-figure-card">
         <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/overview1.png" data-doc-image-alt="سير عمل LicenPro: لوحة التحكم لإعداد البائع، REST API للعمليات وقت التشغيل، وSDKs العميل في تطبيقات العملاء (SDKs متعددة اللغات وأمثلة مخططة)" aria-label="عرض مخطط سير العمل بالحجم الكامل">
@@ -49,7 +49,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>مشغّلو البائع</strong> — يعملون في لوحة تحكم المتصفح ضمن مؤسستك؛ تأليف يومي للمنتجات والإصدارات والمفاتيح والتراخيص.</li>
         <li><strong>المكاملون والأتمتة</strong> — يستدعون نفس سطح HTTPS من CI أو الفوترة أو الأدوات الداخلية (JWT للمسارات بنطاق المشغّل، أو مفتاح المنتج فقط حيث صُمّ مسار للوصول المجهول).</li>
-        <li><strong>تطبيقات العملاء</strong> — تستخدم SDK عميل مدعوماً (اليوم: .NET) أو تستدعي REST API من مكدسك؛ تتحقق من <code>license.bin</code> دون اتصال بالمفتاح العام واختيارياً تحدّث الحالة عبر الإنترنت مقابل <code>${HOST}/api</code>. SDKs بلغات إضافية وأمثلة لكل لغة (مثل VB وJava وPython) مخططة.</li>
+        <li><strong>تطبيقات العملاء</strong> — تستخدم SDK عميل مدعوماً (اليوم: \u200E.NET) أو تستدعي REST API من مكدسك؛ تتحقق من <code>license.bin</code> دون اتصال بالمفتاح العام واختيارياً تحدّث الحالة عبر الإنترنت مقابل <code>${HOST}/api</code>. SDKs بلغات إضافية وأمثلة لكل لغة (مثل VB وJava وPython) مخططة.</li>
       </ul>
 
       <h2>المرحلة 1 — التكوين (لوحة التحكم)</h2>
@@ -92,14 +92,14 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <p>ابدأ هنا: ${link('/api/overview', 'نظرة عامة على REST API')} · ${link('/api/licenses', 'API التراخيص')} · ${link('/api/activations-sessions', 'التفعيلات والجلسات')} · ${link('/api/telemetry', 'القياس عن بُعد والسجلات')}.</p>
 
       <h2>المرحلة 3 — التطبيق (SDKs العميل)</h2>
-      <p>الجانب الأيمن من المخطط: كود يُشحن داخل عمليتك. <strong>.NET</strong> مغطّى بالكامل في هذا الموقع اليوم؛ SDKs إضافية و<strong>أمثلة مخصصة لكل لغة</strong> (بما في ذلك VB وJava وPython وغيرها) ستظهر هنا عند إصدارها. حتى ذلك الحين، أي مكدس يمكنه استخدام عقد HTTPS نفسه كـ REST API.</p>
-      <p>الخطوات التالية تستخدم أنواع و<strong>.NET</strong> ونقاط الدخول اليوم؛ SDKs أخرى ستعكس دورة الحياة نفسها بواجهات API أصيلة لكل لغة.</p>
+      <p>الجانب الأيمن من المخطط: كود يُشحن داخل عمليتك. <strong>\u200E.NET</strong> مغطّى بالكامل في هذا الموقع اليوم؛ SDKs إضافية و<strong>أمثلة مخصصة لكل لغة</strong> (بما في ذلك VB وJava وPython وغيرها) ستظهر هنا عند إصدارها. حتى ذلك الحين، أي مكدس يمكنه استخدام عقد HTTPS نفسه كـ REST API.</p>
+      <p>الخطوات التالية تستخدم أنواع و<strong>\u200E.NET</strong> ونقاط الدخول اليوم؛ SDKs أخرى ستعكس دورة الحياة نفسها بواجهات API أصيلة لكل لغة.</p>
       <ul style="margin-left:1.25rem;">
         <li><strong>Bootstrap مرة واحدة</strong> — حل <code>ServerBaseEndpoint</code> (يجب أن يتضمن <code>/api</code>)، حمّل إعدادات JSON إن استخدمتها، ثم شغّل <code>SdkBootstrap.OnApplicationStartup()</code> على hosts سطح المكتب قبل الواجهة.</li>
         <li><strong>الثقة دون اتصال</strong> — <code>LicenseClient</code> يتحقق من توقيع RSA على <code>license.bin</code> باستخدام المادة العامة المضمّنة؛ لا مفتاح خاص في العميل.</li>
         <li><strong>التحديث عبر الإنترنت</strong> — مسارات اختيارية إلى <code>${HOST}/api</code> لتحديث التحقق والتفعيلات والجلسات واستخدام الميزات والتحديثات الواعية بالترخيص.</li>
       </ul>
-      <p>تابع مع ${link('/sdk/overview', 'نظرة عامة على SDK ‎.NET')} · ${link('/sdk/configuration', 'التكوين وBootstrap')} · ${link('/sdk/dotnet', 'تكامل .NET')} · ${link('/sdk/license-client', 'دورة حياة LicenseClient')}.</p>
+      <p>تابع مع ${link('/sdk/overview', 'نظرة عامة على SDK ‎.NET')} · ${link('/sdk/configuration', 'التكوين وBootstrap')} · ${link('/sdk/dotnet', 'تكامل \u200E.NET')} · ${link('/sdk/license-client', 'دورة حياة LicenseClient')}.</p>
 
       <h2>مسارات وقت التشغيل الاختيارية</h2>
       <p>بعد عمل الحلقة الأساسية، تضيف الفرق عادةً واحداً أو أكثر مما يلي:</p>
@@ -361,7 +361,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
 
       <h2>REST &amp; وقت التشغيل</h2>
       <p><code>/api/Products/…</code> — CRUD، مسارات مفتاح RSA، الإعدادات. تطبيقات العملاء تستخدم <code>X-API-KEY</code> للمنتج على مسارات الترخيص المجهولة — وليس JWT المشغّل.</p>
-      <p>${link('/api/catalog', 'API المنتجات والإصدارات')} · ${link('/api/licenses', 'API التراخيص')} · ${link('/sdk/dotnet', 'SDK .NET')} · ${link('/guides/platform/overview', 'نظرة عامة على النظام')}</p>
+      <p>${link('/api/catalog', 'API المنتجات والإصدارات')} · ${link('/api/licenses', 'API التراخيص')} · ${link('/sdk/dotnet', 'SDK \u200E.NET')} · ${link('/guides/platform/overview', 'نظرة عامة على النظام')}</p>
     `,
   },
   releases: {

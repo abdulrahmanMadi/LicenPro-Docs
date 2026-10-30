@@ -204,7 +204,7 @@ export const API_TOPICS_AR: Record<string, DocTopic> = {
       <p><code>/api/SdkSettings/...</code> — إعداد SDK محدد نطاق المنتج (أعلام الميزات، نقاط النهاية، الضبط) المُسلّم للعملاء المرخّصين.</p>
       <p><code>/api/Updates/...</code> — بيانات الإصدار والتحديث المستهلكة بواسطة <code>SdkUpdateManager</code> للتحديثات الواعية بالترخيص.</p>
       <p>تستدعي تطبيقات العملاء هذه بمفتاح product API key أو أنماط مجهولة الهوية حيث يسمح كل مسار — وليس JWT البائع.</p>
-      <p>${L('/sdk/updates-logging', 'تحديثات SDK والتسجيل')} · ${L('/sdk/dotnet', 'تكامل .NET')}</p>
+      <p>${L('/sdk/updates-logging', 'تحديثات SDK والتسجيل')} · ${L('/sdk/dotnet', 'تكامل \u200E.NET')}</p>
     `,
   },
   billing: {

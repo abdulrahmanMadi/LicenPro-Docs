@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>Java (مخطط لها)</h1>
+    <h1>Java SDK (مخطط لها)</h1>
     <p class="lead">دعم Java مخطط له. لا توجد حزمة Java ولا API بعد، لذلك لا تحتوي هذه الصفحة على كود.</p>
   </header>
 

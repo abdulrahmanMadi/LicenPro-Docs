@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>VB.NET</h1>
+    <h1>VB.NET SDK</h1>
     <p class="lead">
       تستخدم تطبيقات VB.NET حزمة NuGet نفسها التي تستخدمها تطبيقات <bdi>C#</bdi>، وهي <strong>LicenPro.SDK</strong>: الفئات نفسها، وملفات الترخيص نفسها، والسلوك نفسه.
       تعرض هذه الصفحة المهام الشائعة بصياغة VB، وكل ما في صفحات <bdi>.NET SDK</bdi> الأخرى ينطبق على VB كما هو.

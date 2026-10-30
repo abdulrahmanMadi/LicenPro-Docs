@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>Java (planned)</h1>
+    <h1>Java SDK (planned)</h1>
     <p class="lead">Java support is planned. There is no Java package or API yet, so this page has no code.</p>
   </header>
 

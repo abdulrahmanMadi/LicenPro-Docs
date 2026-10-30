@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>VB.NET</h1>
+    <h1>VB.NET SDK</h1>
     <p class="lead">
       VB.NET apps use the same <strong>LicenPro.SDK</strong> NuGet package as C#: the same classes, the same license files and the same behavior.
       This page shows the common tasks in VB syntax. Everything on the other .NET SDK pages applies to VB unchanged.

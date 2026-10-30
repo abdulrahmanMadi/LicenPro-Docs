@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>Python</h1>
+    <h1>Python SDK</h1>
     <p class="lead">
       تجلب حزمة <code>licenpro</code> ترخيص LicenPro إلى Python. وهي ليست إعادة كتابة: منطق الترخيص هو نفسه <bdi>.NET SDK</bdi> من LicenPro، مُترجَماً إلى مكتبة أصلية (native library) مع واجهة Python صغيرة فوقها.
       لذلك تعمل التراخيص والتفعيلات والجلسات تماماً كما في <bdi>.NET</bdi>. لا حاجة إلى <bdi>.NET runtime</bdi> ولا إلى أي حزم Python أخرى.

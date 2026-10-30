@@ -1,5 +1,5 @@
 export const HTML = `<header class="help-page-header">
-    <h1>Java (prévu)</h1>
+    <h1>Java SDK (prévu)</h1>
     <p class="lead">Le support de Java est prévu. Il n’existe pas encore de package ni d’API Java : cette page ne contient donc pas de code.</p>
   </header>
 

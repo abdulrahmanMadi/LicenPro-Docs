@@ -17,7 +17,7 @@ const HOST = 'https://licenpro.runasp.net';
 export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
   overview: {
     title: 'System overview',
-    lead: 'How the LicenPro dashboard, hosted REST API, and client SDKs fit together—from first product setup through runtime validation in your shipped application. The .NET SDK is documented today; additional language SDKs (with examples per stack) are on the roadmap.',
+    lead: 'How the LicenPro dashboard, hosted REST API, and client SDKs fit together—from first product setup through runtime validation in your shipped application. SDK guides exist today for .NET, VB.NET and Python (preview); Java is planned.',
     body: `
       <figure class="doc-figure doc-figure--hero doc-figure-card">
         <button type="button" class="doc-figure-view-link" data-doc-image-lightbox="/assets/docs/overview1.png" data-doc-image-alt="LicenPro workflow: Dashboard for vendor setup, REST API for runtime operations, and client SDKs in customer applications (multi-language SDKs and examples planned)" aria-label="View workflow diagram full size">
