@@ -104,7 +104,7 @@ export const CHANGELOG_ENTRIES_AR: ChangelogEntry[] = [
             'صفحة من نحن بمعلومات الشركة',
             'دليل البدء السريع للمستخدمين الجدد',
             'توثيق أنواع التراخيص (Standard, Trial, Floating, إلخ)',
-            'أدلة تكامل SDK لـ .NET و WinForms و WPF'
+            'أدلة تكامل SDK لـ \u200E.NET و WinForms و WPF'
           ]
         },
         {
@@ -341,7 +341,7 @@ export const CHANGELOG_ENTRIES_AR: ChangelogEntry[] = [
       highlights: [
         'الإصدار الأول',
         'ميزات الترخيص الأساسية',
-        '.NET SDK'
+        '\u200E.NET SDK'
       ],
       changes: [
         {
@@ -351,7 +351,7 @@ export const CHANGELOG_ENTRIES_AR: ChangelogEntry[] = [
             'دعم التراخيص التجريبية',
             'إدارة مفاتيح RSA',
             'تشفير ملف الترخيص',
-            '.NET SDK للتحقق من الترخيص',
+            '\u200E.NET SDK للتحقق من الترخيص',
             'لوحة تحكم أساسية لإدارة التراخيص',
             'مصادقة المستخدم والتسجيل'
           ]

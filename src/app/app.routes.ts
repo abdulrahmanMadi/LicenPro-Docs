@@ -42,6 +42,9 @@ export const routes: Routes = [
       { path: 'sdk/dotnet', ...staticPage('sdk-dotnet') },
       { path: 'sdk/winforms', ...staticPage('sdk-winforms') },
       { path: 'sdk/wpf', ...staticPage('sdk-wpf') },
+      { path: 'sdk/vbnet', ...staticPage('sdk-vbnet') },
+      { path: 'sdk/python', ...staticPage('sdk-python') },
+      { path: 'sdk/java', ...staticPage('sdk-java') },
       {
         path: 'sdk/:topic',
         loadComponent: () =>

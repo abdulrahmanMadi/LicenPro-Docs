@@ -18,6 +18,9 @@ import { HTML as WEBHOOKS_EN } from './static-pages/en/webhooks';
 import { HTML as SDK_DOTNET_EN } from './static-pages/en/sdk-dotnet';
 import { HTML as SDK_WINFORMS_EN } from './static-pages/en/sdk-winforms';
 import { HTML as SDK_WPF_EN } from './static-pages/en/sdk-wpf';
+import { HTML as SDK_VBNET_EN } from './static-pages/en/sdk-vbnet';
+import { HTML as SDK_PYTHON_EN } from './static-pages/en/sdk-python';
+import { HTML as SDK_JAVA_EN } from './static-pages/en/sdk-java';
 import { HTML as QUICK_START_BEFORE_EN } from './static-pages/en/quick-start-before';
 import { HTML as QUICK_START_AFTER_EN } from './static-pages/en/quick-start-after';
 import { HTML as API_OVERVIEW_BEFORE_EN } from './static-pages/en/api-overview-before';
@@ -41,6 +44,9 @@ import { HTML as WEBHOOKS_AR } from './static-pages/ar/webhooks';
 import { HTML as SDK_DOTNET_AR } from './static-pages/ar/sdk-dotnet';
 import { HTML as SDK_WINFORMS_AR } from './static-pages/ar/sdk-winforms';
 import { HTML as SDK_WPF_AR } from './static-pages/ar/sdk-wpf';
+import { HTML as SDK_VBNET_AR } from './static-pages/ar/sdk-vbnet';
+import { HTML as SDK_PYTHON_AR } from './static-pages/ar/sdk-python';
+import { HTML as SDK_JAVA_AR } from './static-pages/ar/sdk-java';
 import { HTML as QUICK_START_BEFORE_AR } from './static-pages/ar/quick-start-before';
 import { HTML as QUICK_START_AFTER_AR } from './static-pages/ar/quick-start-after';
 import { HTML as API_OVERVIEW_BEFORE_AR } from './static-pages/ar/api-overview-before';
@@ -64,6 +70,9 @@ import { HTML as WEBHOOKS_FR } from './static-pages/fr/webhooks';
 import { HTML as SDK_DOTNET_FR } from './static-pages/fr/sdk-dotnet';
 import { HTML as SDK_WINFORMS_FR } from './static-pages/fr/sdk-winforms';
 import { HTML as SDK_WPF_FR } from './static-pages/fr/sdk-wpf';
+import { HTML as SDK_VBNET_FR } from './static-pages/fr/sdk-vbnet';
+import { HTML as SDK_PYTHON_FR } from './static-pages/fr/sdk-python';
+import { HTML as SDK_JAVA_FR } from './static-pages/fr/sdk-java';
 import { HTML as QUICK_START_BEFORE_FR } from './static-pages/fr/quick-start-before';
 import { HTML as QUICK_START_AFTER_FR } from './static-pages/fr/quick-start-after';
 import { HTML as API_OVERVIEW_BEFORE_FR } from './static-pages/fr/api-overview-before';
@@ -101,6 +110,9 @@ const STATIC_PAGES: Record<string, PageMap> = {
   'sdk-dotnet': { en: SDK_DOTNET_EN, ar: SDK_DOTNET_AR, fr: SDK_DOTNET_FR },
   'sdk-winforms': { en: SDK_WINFORMS_EN, ar: SDK_WINFORMS_AR, fr: SDK_WINFORMS_FR },
   'sdk-wpf': { en: SDK_WPF_EN, ar: SDK_WPF_AR, fr: SDK_WPF_FR },
+  'sdk-vbnet': { en: SDK_VBNET_EN, ar: SDK_VBNET_AR, fr: SDK_VBNET_FR },
+  'sdk-python': { en: SDK_PYTHON_EN, ar: SDK_PYTHON_AR, fr: SDK_PYTHON_FR },
+  'sdk-java': { en: SDK_JAVA_EN, ar: SDK_JAVA_AR, fr: SDK_JAVA_FR },
 };
 
 const QUICK_START_PARTS: Record<AppLocale, QuickStartParts> = {

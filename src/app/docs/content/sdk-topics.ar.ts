@@ -15,7 +15,7 @@ const HOST = 'https://licenpro.runasp.net';
 
 export const SDK_TOPICS_AR: Record<string, DocTopic> = {
   overview: {
-    title: 'نظرة عامة على .NET SDK',
+    title: 'نظرة عامة على \u200E.NET SDK',
     lead: 'تخطيط حزمة NuGet، مسؤوليات وقت التشغيل، وروابط للتعمق.',
     body: `
       <p>تتحقق مكتبة <code>LicenPro.SDK</code> من التراخيص الموقّعة دون اتصال باستخدام <strong>المفتاح العام</strong> لمنتجك، وقد تتواصل اختيارياً مع <code>${HOST}/api</code> للتحقق عبر الإنترنت، والتفعيلات، والجلسات، واستخدام الميزات، والتحديثات.</p>
@@ -27,7 +27,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
         <li><strong>Updates</strong> — <code>SdkUpdateManager</code> يستدعي ${L('/api/sdk-host', 'واجهات HTTP المضيف لـ SDK')}.</li>
         <li><strong>AppHosting</strong> — <code>SdkBootstrap</code>، مساعدات UX لانتهاء الصلاحية لأغلفة سطح المكتب.</li>
       </ul>
-      <p>تابع مع ${L('/sdk/configuration', 'الإعداد')} → ${L('/sdk/license-client', 'LicenseClient')} → ${L('/sdk/dotnet', 'مثال تكامل .NET')}.</p>
+      <p>تابع مع ${L('/sdk/configuration', 'الإعداد')} → ${L('/sdk/license-client', 'LicenseClient')} → ${L('/sdk/dotnet', 'مثال تكامل \u200E.NET')}.</p>
     `,
   },
   configuration: {
@@ -36,7 +36,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
     body: `
       <p>يجب أن ينتهي <code>ServerBaseEndpoint</code> بـ <code>/api</code> (الافتراضي السحابي: <code>${HOST}/api</code>). استدعِ <code>SdkConfiguration.Initialize</code> أو اعتمد على اكتشاف <code>licenpro.settings.json</code> / <code>appsettings.json</code> (راجع ${L('/quick-start', 'البدء السريع')}).</p>
       <p>يجب على مضيفات سطح المكتب استدعاء <code>SdkBootstrap.OnApplicationStartup()</code> مرة واحدة قبل حلقة رسائل واجهة المستخدم حتى تُطبَّق التحديثات المعلّقة وافتراضيات المظهر بشكل متسق.</p>
-      <p>${L('/sdk/dotnet', 'صفحة تكامل .NET')} · ${L('/api/licenses', 'عقد HTTP للتحقق')}</p>
+      <p>${L('/sdk/dotnet', 'صفحة تكامل \u200E.NET')} · ${L('/api/licenses', 'عقد HTTP للتحقق')}</p>
     `,
   },
   'license-client': {
@@ -45,7 +45,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
     body: `
       <p><code>LicenseClient</code> هو API الأساسي: مسارات إلى <code>license.bin</code>، مواد المفتاح العام، مفتاح الترخيص، نوع الترخيص المتوقع اختيارياً، معرّف المنتج لفحوصات التحديث، وضبط تحذيرات انتهاء الصلاحية.</p>
       <p>بعد تحقق ناجح عبر الإنترنت، استدعِ <code>TryAutoValidateAsync</code> (أو المكافئ الموثّق لإصدارك) حتى تبقى الذاكرة المؤقتة دون اتصال المشفّرة دافئة لسيناريوهات العزل.</p>
-      <p>يصل التحقق عبر الإنترنت إلى <code>POST /api/Licenses/validate</code> بـ <code>X-API-KEY</code> للمنتج — راجع ${L('/api/licenses', 'Licenses REST')} و${L('/sdk/dotnet', 'مقالة .NET الكاملة')}.</p>
+      <p>يصل التحقق عبر الإنترنت إلى <code>POST /api/Licenses/validate</code> بـ <code>X-API-KEY</code> للمنتج — راجع ${L('/api/licenses', 'Licenses REST')} و${L('/sdk/dotnet', 'مقالة \u200E.NET الكاملة')}.</p>
       <p>لا يبقى أي شيء مرخّصاً بعد الرفض. عندما يرفض <code>ValidateAsync</code> ترخيصاً بعد تحميله (نوع ترخيص خاطئ، أو مفتاح ترخيص خاطئ، أو فشل التفعيل أو الجلسة)، يفصل SDK الجلسة ويمسح <code>LicenseManager.Current</code> والميزات. ويمسحها كذلك أي تحقق فاشل لاحق للمفتاح نفسه، وأي نبض قلب يُبلغ بأن الترخيص غير صالح، و<code>LicenseManager.CloseAsync</code>.</p>
     `,
   },
@@ -75,7 +75,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
       <p>يتيح <code>GracePeriodManager</code> لترخيص <strong>منتهي الصلاحية</strong> مواصلة العمل لمدة <code>GracePeriodDays</code> (الافتراضي 0، أي معطّل). يغطي الانتهاء الفعلي فقط — لا يُقبل أبداً ترخيص على جهاز خاطئ أو بمفتاح خاطئ — ويُخزَّن وقت بدئه على الجهاز، لذا لا تبدأ إعادة تشغيل التطبيق فترة سماح جديدة.</p>
       <p>تتحقق التراخيص دون اتصال (القائمة على الملف) محلياً بعد فحص عبر الإنترنت لمرة واحدة في أول تشغيل على كل جهاز؛ ولا يتصل <code>ValidateOfflineAsync</code> بالخادم أبداً.</p>
       <p>تحتاج التراخيص عبر الإنترنت إلى الخادم. إذا تعذّر الوصول إلى <code>${HOST}/api</code> عند التحقق، يفشل التحقق: يسجّل <code>OfflineCacheManager</code> عمليات التحقق الناجحة عبر الإنترنت، لكن لا يوجد بعدُ رجوع تلقائي إليه. أثناء التشغيل، تُطلق نبضات القلب التي لم يُرد عليها <code>SessionDisconnected</code> بالسبب <code>Unreachable</code>.</p>
-      <p>اربط مع قسم وضع عدم الاتصال في ${L('/sdk/dotnet', 'دليل .NET SDK')}.</p>
+      <p>اربط مع قسم وضع عدم الاتصال في ${L('/sdk/dotnet', 'دليل \u200E.NET SDK')}.</p>
     `,
   },
   'updates-logging': {

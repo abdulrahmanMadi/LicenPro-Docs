@@ -32,6 +32,18 @@ export function getHomeCards(): HomeCard[] {
       descKey: 'docs.home.card.dotnet.desc',
     },
     {
+      route: '/sdk/vbnet',
+      icon: 'ki-code',
+      titleKey: 'docs.home.card.vbnet.title',
+      descKey: 'docs.home.card.vbnet.desc',
+    },
+    {
+      route: '/sdk/python',
+      icon: 'ki-python',
+      titleKey: 'docs.home.card.python.title',
+      descKey: 'docs.home.card.python.desc',
+    },
+    {
       route: '/sdk/updates-logging',
       icon: 'ki-cloud-download',
       titleKey: 'docs.home.card.updater.title',

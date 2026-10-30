@@ -105,8 +105,19 @@ export const DOCS_NAV: NavSection[] = [
       { id: 'sdk-offline', label: 'Offline & grace', icon: 'ki-outline ki-wifi-square', route: '/sdk/offline-grace' },
       { id: 'sdk-updates', label: 'Auto updater & logging', icon: 'ki-outline ki-cloud-download', route: '/sdk/updates-logging' },
       { id: 'sdk-dotnet', label: '.NET integration', icon: 'ki-outline ki-code', route: '/sdk/dotnet' },
+      { id: 'sdk-vbnet', label: 'VB.NET', icon: 'ki-outline ki-microsoft', route: '/sdk/vbnet' },
       { id: 'sdk-winforms', label: 'WinForms', icon: 'ki-outline ki-mouse', route: '/sdk/winforms' },
       { id: 'sdk-wpf', label: 'WPF', icon: 'ki-outline ki-element-11', route: '/sdk/wpf' },
+    ],
+  },
+  {
+    id: 'sdk-languages',
+    label: 'Other languages',
+    icon: 'ki-outline ki-code',
+    expanded: false,
+    items: [
+      { id: 'sdk-python', label: 'Python', icon: 'ki-outline ki-python', route: '/sdk/python' },
+      { id: 'sdk-java', label: 'Java (planned)', icon: 'ki-outline ki-coffee', route: '/sdk/java' },
     ],
   },
   {

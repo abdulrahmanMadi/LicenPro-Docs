@@ -33,8 +33,17 @@ const STATIC_PATH_KEYS: Record<string, string> = {
   '/sdk/dotnet': 'docs.nav.sdk-dotnet',
   '/sdk/winforms': 'docs.nav.sdk-winforms',
   '/sdk/wpf': 'docs.nav.sdk-wpf',
+  '/sdk/vbnet': 'docs.nav.sdk-vbnet',
+  '/sdk/python': 'docs.nav.sdk-python',
+  '/sdk/java': 'docs.nav.sdk-java',
   '/api/overview': 'docs.nav.api-hub',
 };
+
+/** `/sdk/<slug>` routes that are static pages, not SDK topics. */
+const STATIC_SDK_SLUGS = ['dotnet', 'winforms', 'wpf', 'vbnet', 'python', 'java'];
+
+/** SDK pages for languages other than .NET (sidebar section `sdk-languages`). */
+const OTHER_LANGUAGE_SDK_PATHS = new Set(['/sdk/python', '/sdk/java']);
 
 function humanizeSlug(slug: string): string {
   return slug
@@ -83,7 +92,7 @@ export function buildBreadcrumbSegments(url: string, t: TranslateFn, locale: App
   }
 
   const sdkTopicMatch = /^\/sdk\/([^/]+)$/.exec(path);
-  if (sdkTopicMatch && !['dotnet', 'winforms', 'wpf'].includes(sdkTopicMatch[1])) {
+  if (sdkTopicMatch && !STATIC_SDK_SLUGS.includes(sdkTopicMatch[1])) {
     const slug = sdkTopicMatch[1];
     const topic = getSdkTopic(slug, locale);
     return [
@@ -96,6 +105,9 @@ export function buildBreadcrumbSegments(url: string, t: TranslateFn, locale: App
   const staticKey = STATIC_PATH_KEYS[path];
   if (staticKey) {
     const title = t(staticKey);
+    if (OTHER_LANGUAGE_SDK_PATHS.has(path)) {
+      return [...base, { label: t('docs.nav.section.sdk-languages') }, { label: title, current: true }];
+    }
     if (path.startsWith('/sdk/')) {
       return [...base, { label: t('docs.breadcrumb.dotnetSdk') }, { label: title, current: true }];
     }
