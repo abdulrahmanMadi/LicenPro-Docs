@@ -826,14 +826,14 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
 
       <h2>Provider comparison</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth to Google; browse folders; upload/list/delete via <code>/api/Storage/…</code> or Drive-specific routes.</li>
-        <li><strong>OneDrive</strong> — Microsoft OAuth; similar list/upload semantics via <code>/api/OneDriveStorage/…</code>.</li>
-        <li><strong>Custom server</strong> — your HTTPS endpoint; LicenPro proxies list/upload/delete per <code>/api/CustomServerStorage/…</code>; requires Pro guard in UI.</li>
+        <li><strong>Google Drive</strong> — OAuth to Google; browse folders; upload/list/delete via <code>/api/Storage/…</code> or Drive-specific routes; Pro plan.</li>
+        <li><strong>OneDrive</strong> — Microsoft OAuth; similar list/upload semantics via <code>/api/OneDriveStorage/…</code>; Pro plan.</li>
+        <li><strong>Custom server</strong> — your HTTPS endpoint; LicenPro proxies list/upload/delete per <code>/api/CustomServerStorage/…</code>; included on every plan (the Free plan's only storage).</li>
         <li><strong>S3-compatible</strong> — your own bucket on Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner or MinIO; access key instead of OAuth; list/upload via <code>/api/storage/s3/…</code>; Pro plan.</li>
       </ul>
 
       <h2>S3-compatible storage</h2>
-      <p>One connector covers every service that speaks the S3 API. <strong>Storage → S3-Compatible Storage</strong> offers presets that fill in the endpoint format, region and addressing style.</p>
+      <p>One connector covers every service that speaks the S3 API. Each service (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner, MinIO) has its own card under <strong>Storage → Connect a provider</strong>; <strong>Connect</strong> opens the setup with that service picked, its endpoint format, region and addressing style already filled in.</p>
       <ol style="margin-left:1.25rem;">
         <li><strong>Cloudflare R2</strong> — create a bucket, then an R2 API token with <em>Object Read &amp; Write</em> limited to that bucket. Endpoint <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code>, region <code>auto</code>. R2 charges no egress fees, which suits update delivery.</li>
         <li><strong>Amazon S3</strong> — create a bucket and an IAM user whose policy allows <code>s3:ListBucket</code> on the bucket (limited to your prefix with an <code>s3:prefix</code> condition) and <code>s3:GetObject</code>, <code>s3:PutObject</code>, <code>s3:DeleteObject</code> on <code>arn:aws:s3:::BUCKET/PREFIX*</code>. No endpoint needed; enter the bucket's region. The setup page generates this policy for you.</li>
@@ -860,8 +860,9 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <h2>Roles &amp; plans</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Product owners</strong> — typically configure storage used by their releases.</li>
-        <li><strong>Custom server</strong> — may require Pro subscription (plan guard on route).</li>
-        <li><strong>S3-compatible</strong> — Pro plan; a Free account that is already connected can still manage or disconnect it.</li>
+        <li><strong>Free plan</strong> — Custom Server only.</li>
+        <li><strong>Pro plan</strong> — Custom Server, Google Drive, OneDrive and every S3-compatible service.</li>
+        <li><strong>Existing connections</strong> — an account on Free that is already connected to Google Drive, OneDrive or S3 can still manage or disconnect it.</li>
         <li><strong>System Admin</strong> — troubleshoot connector OAuth failures platform-wide.</li>
       </ul>
 

@@ -826,14 +826,14 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
 
       <h2>Comparaison fournisseurs</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth Google ; parcourir dossiers ; upload/list/delete via <code>/api/Storage/…</code> ou routes Drive.</li>
-        <li><strong>OneDrive</strong> — OAuth Microsoft ; sémantiques list/upload similaires via <code>/api/OneDriveStorage/…</code>.</li>
-        <li><strong>Custom server</strong> — votre endpoint HTTPS ; LicenPro proxy list/upload/delete via <code>/api/CustomServerStorage/…</code> ; requiert garde Pro dans l'UI.</li>
+        <li><strong>Google Drive</strong> — OAuth Google ; parcourir dossiers ; upload/list/delete via <code>/api/Storage/…</code> ou routes Drive ; forfait Pro.</li>
+        <li><strong>OneDrive</strong> — OAuth Microsoft ; sémantiques list/upload similaires via <code>/api/OneDriveStorage/…</code> ; forfait Pro.</li>
+        <li><strong>Custom server</strong> — votre endpoint HTTPS ; LicenPro proxy list/upload/delete via <code>/api/CustomServerStorage/…</code> ; inclus dans tous les forfaits (seul stockage du forfait Free).</li>
         <li><strong>S3-compatible</strong> — votre propre bucket sur Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner ou MinIO ; clé d'accès au lieu d'OAuth ; list/upload via <code>/api/storage/s3/…</code> ; forfait Pro.</li>
       </ul>
 
       <h2>Stockage compatible S3</h2>
-      <p>Un seul connecteur couvre tout service parlant l'API S3. La page <strong>Storage → S3-Compatible Storage</strong> propose des préréglages qui remplissent le format du point de terminaison, la région et le style d'adressage.</p>
+      <p>Un seul connecteur couvre tout service parlant l'API S3. Chaque service (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner, MinIO) a sa propre carte dans <strong>Storage → Connect a provider</strong> ; <strong>Connect</strong> ouvre la configuration avec ce service choisi, le format du point de terminaison, la région et le style d'adressage déjà remplis.</p>
       <ol style="margin-left:1.25rem;">
         <li><strong>Cloudflare R2</strong> — créez un bucket, puis un jeton API R2 avec <em>Object Read &amp; Write</em> limité à ce bucket. Point de terminaison <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code>, région <code>auto</code>. R2 ne facture aucun frais de sortie, ce qui convient à la distribution des mises à jour.</li>
         <li><strong>Amazon S3</strong> — créez un bucket et un utilisateur IAM dont la stratégie autorise <code>s3:ListBucket</code> sur le bucket (limité à votre préfixe par une condition <code>s3:prefix</code>) et <code>s3:GetObject</code>, <code>s3:PutObject</code>, <code>s3:DeleteObject</code> sur <code>arn:aws:s3:::BUCKET/PREFIX*</code>. Aucun point de terminaison requis ; saisissez la région du bucket. La page de configuration génère cette stratégie pour vous.</li>
@@ -860,8 +860,9 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <h2>Rôles &amp; forfaits</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Propriétaires produit</strong> — configurent typiquement stockage utilisé par leurs versions.</li>
-        <li><strong>Custom server</strong> — peut requérir abonnement Pro (garde forfait sur route).</li>
-        <li><strong>S3-compatible</strong> — forfait Pro ; un compte Free déjà connecté peut toujours le gérer ou le déconnecter.</li>
+        <li><strong>Forfait Free</strong> — serveur personnalisé uniquement.</li>
+        <li><strong>Forfait Pro</strong> — serveur personnalisé, Google Drive, OneDrive et tous les services S3.</li>
+        <li><strong>Connexions existantes</strong> — un compte Free déjà connecté à Google Drive, OneDrive ou S3 peut toujours gérer ou déconnecter cette connexion.</li>
         <li><strong>System Admin</strong> — dépanner échecs OAuth connecteur à l'échelle plateforme.</li>
       </ul>
 

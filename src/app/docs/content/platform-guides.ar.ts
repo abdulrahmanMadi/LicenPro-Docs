@@ -826,14 +826,14 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
 
       <h2>مقارنة المزودين</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth إلى Google؛ تصفح المجلدات؛ upload/list/delete عبر <code>/api/Storage/…</code> أو مسارات Drive.</li>
-        <li><strong>OneDrive</strong> — OAuth Microsoft؛ دلالات list/upload مشابهة عبر <code>/api/OneDriveStorage/…</code>.</li>
-        <li><strong>Custom server</strong> — نقطة HTTPS خاصة بك؛ LicenPro يوكّل list/upload/delete عبر <code>/api/CustomServerStorage/…</code>؛ يتطلب Pro guard في واجهة المستخدم.</li>
+        <li><strong>Google Drive</strong> — OAuth إلى Google؛ تصفح المجلدات؛ upload/list/delete عبر <code>/api/Storage/…</code> أو مسارات Drive؛ خطة Pro.</li>
+        <li><strong>OneDrive</strong> — OAuth Microsoft؛ دلالات list/upload مشابهة عبر <code>/api/OneDriveStorage/…</code>؛ خطة Pro.</li>
+        <li><strong>Custom server</strong> — نقطة HTTPS خاصة بك؛ LicenPro يوكّل list/upload/delete عبر <code>/api/CustomServerStorage/…</code>؛ متاح في كل الخطط (التخزين الوحيد في الخطة المجانية).</li>
         <li><strong>S3-compatible</strong> — حاويتك الخاصة على Amazon S3 أو Cloudflare R2 أو Backblaze B2 أو Wasabi أو DigitalOcean Spaces أو Hetzner أو MinIO؛ مفتاح وصول بدلاً من OAuth؛ list/upload عبر <code>/api/storage/s3/…</code>؛ خطة Pro.</li>
       </ul>
 
       <h2>التخزين المتوافق مع S3</h2>
-      <p>موصل واحد يغطي كل خدمة تدعم S3 API. تقدّم صفحة <strong>Storage → S3-Compatible Storage</strong> إعدادات جاهزة تملأ صيغة نقطة النهاية والمنطقة ونمط العنونة.</p>
+      <p>موصل واحد يغطي كل خدمة تدعم S3 API. لكل خدمة (Amazon S3 وCloudflare R2 وBackblaze B2 وWasabi وDigitalOcean Spaces وHetzner وMinIO) بطاقتها الخاصة في <strong>Storage → Connect a provider</strong>؛ زر <strong>Connect</strong> يفتح الإعداد والخدمة مختارة، مع صيغة نقطة النهاية والمنطقة ونمط العنونة معبّأة مسبقاً.</p>
       <ol style="margin-left:1.25rem;">
         <li><strong>Cloudflare R2</strong> — أنشئ حاوية، ثم رمز R2 API بصلاحية <em>Object Read &amp; Write</em> مقيّداً بتلك الحاوية. نقطة النهاية <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code> والمنطقة <code>auto</code>. لا يفرض R2 رسوم نقل صادر، وهذا مناسب لتوزيع التحديثات.</li>
         <li><strong>Amazon S3</strong> — أنشئ حاوية ومستخدم IAM تسمح سياسته بـ <code>s3:ListBucket</code> على الحاوية (مقيّداً بالبادئة عبر شرط <code>s3:prefix</code>) وبـ <code>s3:GetObject</code> و<code>s3:PutObject</code> و<code>s3:DeleteObject</code> على <code>arn:aws:s3:::BUCKET/PREFIX*</code>. لا حاجة لنقطة نهاية؛ أدخل منطقة الحاوية. تولّد صفحة الإعداد هذه السياسة لك.</li>
@@ -860,8 +860,9 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <h2>الأدوار والخطط</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>مالكو المنتج</strong> — عادةً يكوّنون التخزين المستخدم لإصداراتهم.</li>
-        <li><strong>Custom server</strong> — قد يتطلب اشتراك Pro (plan guard على المسار).</li>
-        <li><strong>S3-compatible</strong> — خطة Pro؛ يستطيع حساب Free المتصل بالفعل إدارته أو قطع اتصاله.</li>
+        <li><strong>الخطة المجانية</strong> — الخادم المخصص فقط.</li>
+        <li><strong>خطة Pro</strong> — الخادم المخصص وGoogle Drive وOneDrive وكل خدمات S3.</li>
+        <li><strong>الاتصالات الحالية</strong> — يستطيع حساب Free المتصل بالفعل بـ Google Drive أو OneDrive أو S3 إدارة الاتصال أو قطعه.</li>
         <li><strong>System Admin</strong> — استكشاف أخطاء فشل OAuth للموصل على مستوى المنصة.</li>
       </ul>
 
