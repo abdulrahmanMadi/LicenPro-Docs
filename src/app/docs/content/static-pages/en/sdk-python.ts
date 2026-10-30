@@ -79,6 +79,56 @@ try:
 finally:
     client.close()  # ends the license session; safe to call more than once</code></pre>
 
+  <h3>PyQt5 example</h3>
+  <p>Run <code>validate()</code> on a <code>QThread</code> and send the result back to the UI with a signal; only touch Qt widgets on the GUI thread. Tested with PyQt5 5.15 on Windows x64.</p>
+
+  <pre><code>import sys
+
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QLabel
+
+from licenpro import LicenseClient
+
+PUBLIC_KEY = "MIIBCgKCAQEA..."       # your product public key (Base64, without PEM headers)
+LICENSE_KEY = "XXXX-XXXX-XXXX-XXXX"
+
+
+class LicenseWorker(QObject):
+    done = pyqtSignal(object)
+
+    def __init__(self, client):
+        super().__init__()
+        self.client = client
+
+    def run(self):
+        self.done.emit(self.client.validate())  # runs on the worker thread
+
+
+app = QApplication(sys.argv)
+label = QLabel("Checking license...")
+label.show()
+
+client = LicenseClient("license.bin", public_key=PUBLIC_KEY, license_key=LICENSE_KEY)
+thread = QThread()
+worker = LicenseWorker(client)
+worker.moveToThread(thread)
+thread.started.connect(worker.run)
+
+
+def on_done(result):  # runs on the GUI thread
+    if result.is_valid:
+        label.setText(f"Licensed: {result.license.type}")
+    else:
+        label.setText(f"{result.error_title}: {result.error_message}")
+
+
+worker.done.connect(on_done)
+worker.done.connect(thread.quit)
+app.aboutToQuit.connect(thread.wait)
+app.aboutToQuit.connect(client.close)  # ends the license session
+thread.start()
+sys.exit(app.exec_())</code></pre>
+
   <h2>5. Features and license details</h2>
 
   <pre><code>features = client.features        # empty until a validation succeeds
