@@ -75,7 +75,7 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
     body: `
       <h3>كيف يعمل</h3>
       <ol>
-        <li><strong>انشر</strong> إصداراً من لوحة التحكم وملفه <strong>zip لمجلد البرنامج</strong>. عند النشر يُحسب SHA-256 للـ zip ويُوقَّع بمفتاح RSA الخاص بالمنتج، وتُظهر بطاقة <strong>حزمة التحديث</strong> عبارة "جاهزة للتحديث بضغطة واحدة".</li>
+        <li><strong>انشر</strong> إصداراً من لوحة التحكم وملفه <strong>zip لمجلد البرنامج</strong>. عند النشر يُحسب SHA-256 للـ zip ويُوقَّع بمفتاح RSA الخاص بالمنتج، وتُظهر بطاقة <strong>حزمة التحديث</strong> عبارة "جاهزة للتحديث بضغطة واحدة". التراخيص الجديدة تستلم كل إصدار جديد افتراضياً (خيار <strong>يستلم الإصدارات الجديدة</strong> في الترخيص)، وصفحة الإصدار تعرض عدد التراخيص التي سيصلها.</li>
         <li><code>SdkUpdateManager.CheckForUpdateAsync</code> يسأل <code>/api/updates/check</code> عن النسخة التي يحق لهذا الترخيص تثبيتها. الجواب يعتمد على نوع الترخيص والإصدارات المرتبطة والقناة؛ بدون قناة تُعرض نسخ Stable فقط. الحدث <code>UpdateAvailable</code> يُطلَق مرة واحدة لكل نسخة.</li>
         <li><code>DownloadUpdateAsync(update, progress)</code> ينزّل من <code>/api/updates/download/{releaseId}</code> باستخدام API key ومفتاح الترخيص، ثم يتحقق من الحجم وSHA-256 وتوقيع المنتج قبل فك أي شيء، ويرفض أي ملف داخل الـ zip يحاول الخروج من مجلد التجهيز.</li>
         <li><code>ApplyUpdateAndRestart()</code> يشغّل النسخة الجديدة كـ installer ويغلق برنامجك. الـ installer يأخذ نسخة احتياطية من مجلد التثبيت، وينسخ الملفات الجديدة، ويحتفظ بـ <code>licenpro.cache</code> و<code>licenpro.settings.json</code>، ثم يعيد تشغيل البرنامج. عند أي فشل يسترجع النسخة الاحتياطية. إذا كان البرنامج في Program Files يظهر طلب UAC مرة واحدة.</li>
@@ -85,14 +85,16 @@ export const SDK_TOPICS_AR: Record<string, DocTopic> = {
 SdkBootstrap.OnApplicationStartup(onRestarted: info =&gt; { /* info.Succeeded, info.FromVersion, info.Error */ });
 
 // بعد التحقق من الترخيص
-client.EnableAutoUpdates(currentAppVersion: "1.0.0", onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
+// يرسل نسخة البرنامج الشغالة (SdkUpdateManager.RunningVersion)؛ مرّر currentAppVersion فقط لو عايز تغيّرها
+client.EnableAutoUpdates(onUpdateAvailable: e =&gt; ShowPrompt(e.Update!));
 
 // في زر "Update &amp; restart"
 if (await SdkUpdateManager.DownloadUpdateAsync(update, progress) != null)
     SdkUpdateManager.ApplyUpdateAndRestart(() =&gt; Application.Exit());</code></pre>
       <h3>خيارات</h3>
       <ul>
-        <li><strong>إلزامي</strong> (علامة على الإصدار، أو عميل أقدم من <strong>أقل نسخة مدعومة</strong>): لا يستطيع المستخدم تخطّيه، وبعد تنزيله يُثبَّت عند التشغيل التالي.</li>
+        <li><strong>إلزامي</strong> (علامة على الإصدار، أو عميل أقدم من <strong>أقل نسخة مدعومة</strong>): لا يستطيع المستخدم تخطّيه. الـ SDK ينزّله في الخلفية أول ما يلاقيه، ويتثبّت في التشغيل التالي حتى لو البرنامج اتقفل.</li>
+        <li>ضمّن <strong>المفتاح العام</strong> للمنتج مع برنامجك (<code>LicensingSecrets.PublicKey</code> في <code>licenpro.settings.json</code>؛ ليس سرّياً). الحزم يتم التحقق منها به: بدونه تكون <code>UpdateInfo.CanInstall</code> بقيمة false ولا يُنزَّل شيء.</li>
         <li><code>SkipVersion(version)</code> يوقف الإشعار لنسخة معينة. <code>RollbackAndRestart()</code> يرجع للنسخة السابقة (تُحفظ نسخة احتياطية واحدة).</li>
         <li><code>StageUpdateFromFile(zip, version)</code> يجهّز حزمة وصلت بدون إنترنت، مثلاً على USB لجهاز معزول. لا يتحقق منها الخادم.</li>
         <li>حالة التحديث محفوظة في <code>%LocalAppData%\\LicenPro\\{app}\\updates</code>.</li>
