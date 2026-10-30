@@ -75,7 +75,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Activations</strong> — ${link('/guides/platform/activations', 'Activations guide')}.</li>
         <li><strong>Sessions</strong> — ${link('/guides/platform/sessions', 'Sessions guide')}.</li>
         <li><strong>Trials</strong> — ${link('/guides/platform/trials', 'Trials guide')}.</li>
-        <li><strong>Storage</strong> — ${link('/guides/platform/storage', 'Storage guide')} (Drive, OneDrive, custom server).</li>
+        <li><strong>Storage</strong> — ${link('/guides/platform/storage', 'Storage guide')} (Drive, OneDrive, custom server, S3-compatible).</li>
         <li><strong>Analytics</strong> — ${link('/guides/platform/analytics', 'Analytics guide')}.</li>
         <li><strong>Account settings</strong> — ${link('/guides/platform/account-settings', 'Account settings')} (profile, security, plan, API keys).</li>
         <li><strong>My Audit</strong> (<code>/dashboard/audit-logs</code>) — personal audit trail; see Analytics guide.</li>
@@ -390,7 +390,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Status</strong> — Draft (hidden from end users) vs Published (visible in catalogs and license wizard).</li>
         <li><strong>Notes / changelog</strong> — operator-facing text shown on the release detail page and optionally in update metadata.</li>
         <li><strong>Entitlement sets</strong> — link sets that apply to this version line (see wizard step 2).</li>
-        <li><strong>Artifacts</strong> — installers via ${link('/guides/platform/storage', 'Storage connectors')} (Google Drive, OneDrive, custom server) instead of large API uploads.</li>
+        <li><strong>Artifacts</strong> — installers via ${link('/guides/platform/storage', 'Storage connectors')} (Google Drive, OneDrive, custom server, S3-compatible bucket) instead of large API uploads.</li>
       </ul>
 
       <h2>Operator workflow</h2>
@@ -807,7 +807,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
   },
   storage: {
     title: 'Storage connectors',
-    lead: 'Attach release binaries via Google Drive, OneDrive, or a custom server instead of pushing large files through the core API on every upload.',
+    lead: 'Attach release binaries via Google Drive, OneDrive, a custom server, or an S3-compatible bucket instead of pushing large files through the core API on every upload.',
     body: `
       <p><strong>Storage connectors</strong> link LicenPro to external file hosts. Use them when installers, delta packages, or release notes live on cloud drives or your own CDN—release records in LicenPro still point to version metadata while artifacts resolve from remote storage.</p>
 
@@ -829,6 +829,23 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Google Drive</strong> — OAuth to Google; browse folders; upload/list/delete via <code>/api/Storage/…</code> or Drive-specific routes.</li>
         <li><strong>OneDrive</strong> — Microsoft OAuth; similar list/upload semantics via <code>/api/OneDriveStorage/…</code>.</li>
         <li><strong>Custom server</strong> — your HTTPS endpoint; LicenPro proxies list/upload/delete per <code>/api/CustomServerStorage/…</code>; requires Pro guard in UI.</li>
+        <li><strong>S3-compatible</strong> — your own bucket on Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner or MinIO; access key instead of OAuth; list/upload via <code>/api/storage/s3/…</code>; Pro plan.</li>
+      </ul>
+
+      <h2>S3-compatible storage</h2>
+      <p>One connector covers every service that speaks the S3 API. <strong>Storage → S3-Compatible Storage</strong> offers presets that fill in the endpoint format, region and addressing style.</p>
+      <ol style="margin-left:1.25rem;">
+        <li><strong>Cloudflare R2</strong> — create a bucket, then an R2 API token with <em>Object Read &amp; Write</em> limited to that bucket. Endpoint <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code>, region <code>auto</code>. R2 charges no egress fees, which suits update delivery.</li>
+        <li><strong>Amazon S3</strong> — create a bucket and an IAM user whose policy allows <code>s3:ListBucket</code> on the bucket (limited to your prefix with an <code>s3:prefix</code> condition) and <code>s3:GetObject</code>, <code>s3:PutObject</code>, <code>s3:DeleteObject</code> on <code>arn:aws:s3:::BUCKET/PREFIX*</code>. No endpoint needed; enter the bucket's region. The setup page generates this policy for you.</li>
+        <li><strong>Others</strong> (B2, Wasabi, Spaces, Hetzner, MinIO) — enter the endpoint shown with your bucket; path-style addressing is on by default.</li>
+        <li>Optionally set a <strong>folder prefix</strong> (default <code>licenpro/</code>): LicenPro only lists and uploads under it.</li>
+        <li><strong>Save &amp; Test</strong> — LicenPro lists the prefix, then writes, reads and deletes a small probe object. The secret key is stored encrypted and never shown again.</li>
+      </ol>
+      <ul style="margin-left:1.25rem;">
+        <li>The endpoint must be <code>https</code> on a public address; private, loopback and cloud-metadata addresses are refused.</li>
+        <li>The bucket can stay private. SDK update packages download through the LicenPro API after the license check, as for every provider, and are verified (size, SHA-256, signature) before install.</li>
+        <li>Browser download links handed to customers are presigned URLs valid for 15 minutes, created only after the entitlement check.</li>
+        <li>Changing the endpoint or bucket while releases use it asks for confirmation; those releases must have their update package verified again.</li>
       </ul>
 
       <h2>Operator workflow</h2>
@@ -844,6 +861,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>Product owners</strong> — typically configure storage used by their releases.</li>
         <li><strong>Custom server</strong> — may require Pro subscription (plan guard on route).</li>
+        <li><strong>S3-compatible</strong> — Pro plan; a Free account that is already connected can still manage or disconnect it.</li>
         <li><strong>System Admin</strong> — troubleshoot connector OAuth failures platform-wide.</li>
       </ul>
 

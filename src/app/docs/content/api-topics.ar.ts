@@ -186,11 +186,12 @@ export const API_TOPICS_AR: Record<string, DocTopic> = {
     title: 'واجهات API التخزين',
     lead: 'موصلات لقطع الإصدارات.',
     body: `
-      <p>ثلاثة أسطح متوازية لخلفيات مختلفة:</p>
+      <p>أربعة أسطح متوازية لخلفيات مختلفة:</p>
       <ul>
         <li><code>/api/Storage/...</code> — تدفقات مدعومة بـ Google Drive (كما هو مُعد).</li>
         <li><code>/api/OneDriveStorage/...</code> — تكامل Microsoft Graph / OneDrive.</li>
         <li><code>/api/CustomServerStorage/...</code> — نقطة تخزين SFTP/HTTP خاصة بك.</li>
+        <li><code>/api/storage/s3/...</code> — أي حاوية متوافقة مع S3 (Amazon S3 وCloudflare R2 وBackblaze B2 وWasabi وMinIO…): <code>config</code> و<code>test</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. خطة Pro.</li>
       </ul>
       <p>ينفّذ كل منها دلالات list/upload/delete المناسبة للمزود؛ تُتحقق أسماء الملفات وأنواع MIME من جانب الخادم.</p>
       <p>${L('/guides/platform/storage', 'دليل منصة التخزين')}</p>

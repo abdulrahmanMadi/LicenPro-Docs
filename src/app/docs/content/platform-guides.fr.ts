@@ -75,7 +75,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Activations</strong> — ${link('/guides/platform/activations', 'Guide activations')}.</li>
         <li><strong>Sessions</strong> — ${link('/guides/platform/sessions', 'Guide sessions')}.</li>
         <li><strong>Essais</strong> — ${link('/guides/platform/trials', 'Guide essais')}.</li>
-        <li><strong>Stockage</strong> — ${link('/guides/platform/storage', 'Guide stockage')} (Drive, OneDrive, serveur personnalisé).</li>
+        <li><strong>Stockage</strong> — ${link('/guides/platform/storage', 'Guide stockage')} (Drive, OneDrive, serveur personnalisé, compatible S3).</li>
         <li><strong>Analytique</strong> — ${link('/guides/platform/analytics', 'Guide analytique')}.</li>
         <li><strong>Paramètres du compte</strong> — ${link('/guides/platform/account-settings', 'Paramètres du compte')} (profil, sécurité, forfait, clés API).</li>
         <li><strong>Mon audit</strong> (<code>/dashboard/audit-logs</code>) — piste d'audit personnelle ; voir guide Analytique.</li>
@@ -390,7 +390,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Statut</strong> — Draft (caché aux utilisateurs finaux) vs Published (visible catalogues et assistant licence).</li>
         <li><strong>Notes / changelog</strong> — texte opérateur sur page détail version et optionnellement dans métadonnées mise à jour.</li>
         <li><strong>Jeux de droits</strong> — lier sets applicables à cette ligne version (voir étape 2 assistant).</li>
-        <li><strong>Artefacts</strong> — installateurs via ${link('/guides/platform/storage', 'Connecteurs stockage')} (Google Drive, OneDrive, serveur personnalisé) au lieu de gros uploads API.</li>
+        <li><strong>Artefacts</strong> — installateurs via ${link('/guides/platform/storage', 'Connecteurs stockage')} (Google Drive, OneDrive, serveur personnalisé, bucket compatible S3) au lieu de gros uploads API.</li>
       </ul>
 
       <h2>Workflow opérateur</h2>
@@ -807,7 +807,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
   },
   storage: {
     title: "Connecteurs stockage",
-    lead: "Attachez binaires de version via Google Drive, OneDrive ou serveur personnalisé au lieu de pousser gros fichiers via l'API core à chaque upload.",
+    lead: "Attachez binaires de version via Google Drive, OneDrive, serveur personnalisé ou bucket compatible S3 au lieu de pousser gros fichiers via l'API core à chaque upload.",
     body: `
       <p>Les <strong>connecteurs stockage</strong> lient LicenPro à des hôtes de fichiers externes. Utilisez-les quand installateurs, packages delta ou notes de version vivent sur drives cloud ou votre CDN — enregistrements version dans LicenPro pointent toujours vers métadonnées version tandis que artefacts se résolvent depuis stockage distant.</p>
 
@@ -829,6 +829,23 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Google Drive</strong> — OAuth Google ; parcourir dossiers ; upload/list/delete via <code>/api/Storage/…</code> ou routes Drive.</li>
         <li><strong>OneDrive</strong> — OAuth Microsoft ; sémantiques list/upload similaires via <code>/api/OneDriveStorage/…</code>.</li>
         <li><strong>Custom server</strong> — votre endpoint HTTPS ; LicenPro proxy list/upload/delete via <code>/api/CustomServerStorage/…</code> ; requiert garde Pro dans l'UI.</li>
+        <li><strong>S3-compatible</strong> — votre propre bucket sur Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner ou MinIO ; clé d'accès au lieu d'OAuth ; list/upload via <code>/api/storage/s3/…</code> ; forfait Pro.</li>
+      </ul>
+
+      <h2>Stockage compatible S3</h2>
+      <p>Un seul connecteur couvre tout service parlant l'API S3. La page <strong>Storage → S3-Compatible Storage</strong> propose des préréglages qui remplissent le format du point de terminaison, la région et le style d'adressage.</p>
+      <ol style="margin-left:1.25rem;">
+        <li><strong>Cloudflare R2</strong> — créez un bucket, puis un jeton API R2 avec <em>Object Read &amp; Write</em> limité à ce bucket. Point de terminaison <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code>, région <code>auto</code>. R2 ne facture aucun frais de sortie, ce qui convient à la distribution des mises à jour.</li>
+        <li><strong>Amazon S3</strong> — créez un bucket et un utilisateur IAM dont la stratégie autorise <code>s3:ListBucket</code> sur le bucket (limité à votre préfixe par une condition <code>s3:prefix</code>) et <code>s3:GetObject</code>, <code>s3:PutObject</code>, <code>s3:DeleteObject</code> sur <code>arn:aws:s3:::BUCKET/PREFIX*</code>. Aucun point de terminaison requis ; saisissez la région du bucket. La page de configuration génère cette stratégie pour vous.</li>
+        <li><strong>Autres</strong> (B2, Wasabi, Spaces, Hetzner, MinIO) — saisissez le point de terminaison indiqué avec votre bucket ; l'adressage de type chemin est activé par défaut.</li>
+        <li>Définissez éventuellement un <strong>préfixe de dossier</strong> (par défaut <code>licenpro/</code>) : LicenPro ne liste et ne téléverse que sous ce préfixe.</li>
+        <li><strong>Enregistrer et tester</strong> — LicenPro liste le préfixe, puis écrit, lit et supprime un petit objet de test. La clé secrète est stockée chiffrée et jamais réaffichée.</li>
+      </ol>
+      <ul style="margin-left:1.25rem;">
+        <li>Le point de terminaison doit être en <code>https</code> sur une adresse publique ; les adresses privées, loopback et de métadonnées cloud sont refusées.</li>
+        <li>Le bucket peut rester privé. Les paquets de mise à jour SDK se téléchargent via l'API LicenPro après la vérification de licence, comme pour tous les fournisseurs, et sont vérifiés (taille, SHA-256, signature) avant installation.</li>
+        <li>Les liens de téléchargement remis aux clients dans le navigateur sont des URL présignées valables 15 minutes, créées uniquement après la vérification des droits.</li>
+        <li>Changer de point de terminaison ou de bucket alors que des versions l'utilisent demande une confirmation ; le paquet de mise à jour de ces versions doit être vérifié à nouveau.</li>
       </ul>
 
       <h2>Workflow opérateur</h2>
@@ -844,6 +861,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>Propriétaires produit</strong> — configurent typiquement stockage utilisé par leurs versions.</li>
         <li><strong>Custom server</strong> — peut requérir abonnement Pro (garde forfait sur route).</li>
+        <li><strong>S3-compatible</strong> — forfait Pro ; un compte Free déjà connecté peut toujours le gérer ou le déconnecter.</li>
         <li><strong>System Admin</strong> — dépanner échecs OAuth connecteur à l'échelle plateforme.</li>
       </ul>
 

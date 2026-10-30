@@ -186,11 +186,12 @@ export const API_TOPICS_EN: Record<string, DocTopic> = {
     title: 'Storage APIs',
     lead: 'Connectors for release artifacts.',
     body: `
-      <p>Three parallel surfaces for different backends:</p>
+      <p>Four parallel surfaces for different backends:</p>
       <ul>
         <li><code>/api/Storage/...</code> — Google Drive–backed flows (as configured).</li>
         <li><code>/api/OneDriveStorage/...</code> — Microsoft Graph / OneDrive integration.</li>
         <li><code>/api/CustomServerStorage/...</code> — your own SFTP/HTTP storage endpoint.</li>
+        <li><code>/api/storage/s3/...</code> — any S3-compatible bucket (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO…): <code>config</code>, <code>test</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Pro plan.</li>
       </ul>
       <p>Each implements list/upload/delete semantics appropriate to the provider; filenames and MIME types are validated server-side.</p>
       <p>${L('/guides/platform/storage', 'Storage platform guide')}</p>

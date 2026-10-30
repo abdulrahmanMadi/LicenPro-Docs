@@ -186,11 +186,12 @@ export const API_TOPICS_FR: Record<string, DocTopic> = {
     title: 'API Stockage',
     lead: 'Connecteurs pour artefacts de version.',
     body: `
-      <p>Trois surfaces parallèles pour backends différents :</p>
+      <p>Quatre surfaces parallèles pour backends différents :</p>
       <ul>
         <li><code>/api/Storage/...</code> — flux Google Drive (selon configuration).</li>
         <li><code>/api/OneDriveStorage/...</code> — intégration Microsoft Graph / OneDrive.</li>
         <li><code>/api/CustomServerStorage/...</code> — votre propre point de stockage SFTP/HTTP.</li>
+        <li><code>/api/storage/s3/...</code> — tout bucket compatible S3 (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO…) : <code>config</code>, <code>test</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Forfait Pro.</li>
       </ul>
       <p>Chacune implémente les sémantiques list/upload/delete du fournisseur ; noms de fichiers et types MIME validés côté serveur.</p>
       <p>${L('/guides/platform/storage', 'Guide plateforme Stockage')}</p>

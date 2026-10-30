@@ -75,7 +75,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>التفعيلات</strong> — ${link('/guides/platform/activations', 'دليل التفعيلات')}.</li>
         <li><strong>الجلسات</strong> — ${link('/guides/platform/sessions', 'دليل الجلسات')}.</li>
         <li><strong>التجارب</strong> — ${link('/guides/platform/trials', 'دليل التجارب')}.</li>
-        <li><strong>التخزين</strong> — ${link('/guides/platform/storage', 'دليل التخزين')} (Drive وOneDrive وخادم مخصص).</li>
+        <li><strong>التخزين</strong> — ${link('/guides/platform/storage', 'دليل التخزين')} (Drive وOneDrive وخادم مخصص وتخزين متوافق مع S3).</li>
         <li><strong>التحليلات</strong> — ${link('/guides/platform/analytics', 'دليل التحليلات')}.</li>
         <li><strong>إعدادات الحساب</strong> — ${link('/guides/platform/account-settings', 'إعدادات الحساب')} (الملف الشخصي، الأمان، الخطة، مفاتيح API).</li>
         <li><strong>تدقيقي</strong> (<code>/dashboard/audit-logs</code>) — سجل تدقيق شخصي؛ راجع دليل التحليلات.</li>
@@ -390,7 +390,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>الحالة</strong> — Draft (مخفية عن المستخدمين النهائيين) مقابل Published (مرئية في الفهارس ومعالج الترخيص).</li>
         <li><strong>الملاحظات / سجل التغيير</strong> — نص للمشغّل يُعرض في صفحة تفاصيل الإصدار واختيارياً في بيانات التحديث.</li>
         <li><strong>مجموعات الاستحقاق</strong> — ربط المجموعات التي تنطبق على خط الإصدار هذا (انظر الخطوة 2 من المعالج).</li>
-        <li><strong>الملفات</strong> — المثبتات عبر ${link('/guides/platform/storage', 'موصلات التخزين')} (Google Drive، OneDrive، خادم مخصص) بدلاً من رفع API كبير.</li>
+        <li><strong>الملفات</strong> — المثبتات عبر ${link('/guides/platform/storage', 'موصلات التخزين')} (Google Drive، OneDrive، خادم مخصص، حاوية متوافقة مع S3) بدلاً من رفع API كبير.</li>
       </ul>
 
       <h2>سير عمل المشغّل</h2>
@@ -807,7 +807,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
   },
   storage: {
     title: "موصلات التخزين",
-    lead: "أرفق ملفات الإصدار عبر Google Drive أو OneDrive أو خادم مخصص بدلاً من دفع ملفات كبيرة عبر API الأساسي في كل رفع.",
+    lead: "أرفق ملفات الإصدار عبر Google Drive أو OneDrive أو خادم مخصص أو حاوية متوافقة مع S3 بدلاً من دفع ملفات كبيرة عبر API الأساسي في كل رفع.",
     body: `
       <p><strong>موصلات التخزين</strong> تربط LicenPro بمضيفي ملفات خارجيين. استخدمها عندما تعيش المثبتات أو حزم delta أو ملاحظات الإصدار على محركات سحابية أو CDN خاص بك — سجلات الإصدار في LicenPro ما زالت تشير إلى بيانات الإصدار الوصفية بينما تُحلّ الملفات من التخزين البعيد.</p>
 
@@ -829,6 +829,23 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>Google Drive</strong> — OAuth إلى Google؛ تصفح المجلدات؛ upload/list/delete عبر <code>/api/Storage/…</code> أو مسارات Drive.</li>
         <li><strong>OneDrive</strong> — OAuth Microsoft؛ دلالات list/upload مشابهة عبر <code>/api/OneDriveStorage/…</code>.</li>
         <li><strong>Custom server</strong> — نقطة HTTPS خاصة بك؛ LicenPro يوكّل list/upload/delete عبر <code>/api/CustomServerStorage/…</code>؛ يتطلب Pro guard في واجهة المستخدم.</li>
+        <li><strong>S3-compatible</strong> — حاويتك الخاصة على Amazon S3 أو Cloudflare R2 أو Backblaze B2 أو Wasabi أو DigitalOcean Spaces أو Hetzner أو MinIO؛ مفتاح وصول بدلاً من OAuth؛ list/upload عبر <code>/api/storage/s3/…</code>؛ خطة Pro.</li>
+      </ul>
+
+      <h2>التخزين المتوافق مع S3</h2>
+      <p>موصل واحد يغطي كل خدمة تدعم S3 API. تقدّم صفحة <strong>Storage → S3-Compatible Storage</strong> إعدادات جاهزة تملأ صيغة نقطة النهاية والمنطقة ونمط العنونة.</p>
+      <ol style="margin-left:1.25rem;">
+        <li><strong>Cloudflare R2</strong> — أنشئ حاوية، ثم رمز R2 API بصلاحية <em>Object Read &amp; Write</em> مقيّداً بتلك الحاوية. نقطة النهاية <code>https://&lt;account-id&gt;.r2.cloudflarestorage.com</code> والمنطقة <code>auto</code>. لا يفرض R2 رسوم نقل صادر، وهذا مناسب لتوزيع التحديثات.</li>
+        <li><strong>Amazon S3</strong> — أنشئ حاوية ومستخدم IAM تسمح سياسته بـ <code>s3:ListBucket</code> على الحاوية (مقيّداً بالبادئة عبر شرط <code>s3:prefix</code>) وبـ <code>s3:GetObject</code> و<code>s3:PutObject</code> و<code>s3:DeleteObject</code> على <code>arn:aws:s3:::BUCKET/PREFIX*</code>. لا حاجة لنقطة نهاية؛ أدخل منطقة الحاوية. تولّد صفحة الإعداد هذه السياسة لك.</li>
+        <li><strong>غيرها</strong> (B2 وWasabi وSpaces وHetzner وMinIO) — أدخل نقطة النهاية الظاهرة مع حاويتك؛ العنونة بنمط المسار مفعّلة افتراضياً.</li>
+        <li>يمكنك تحديد <strong>بادئة مجلد</strong> (الافتراضية <code>licenpro/</code>): لا يعرض LicenPro الملفات ولا يرفعها إلا تحتها.</li>
+        <li><strong>حفظ واختبار</strong> — يعرض LicenPro محتوى البادئة، ثم يكتب كائن اختبار صغيراً ويقرؤه ويحذفه. يُخزَّن المفتاح السري مشفراً ولا يُعرض مرة أخرى.</li>
+      </ol>
+      <ul style="margin-left:1.25rem;">
+        <li>يجب أن تكون نقطة النهاية <code>https</code> على عنوان عام؛ تُرفض العناوين الخاصة وعناوين loopback وعناوين بيانات السحابة الوصفية.</li>
+        <li>يمكن أن تبقى الحاوية خاصة. تُنزَّل حزم تحديث SDK عبر LicenPro API بعد التحقق من الترخيص، كما في كل المزودين، ويُتحقق منها (الحجم وSHA-256 والتوقيع) قبل التثبيت.</li>
+        <li>روابط التنزيل التي تُعطى للعملاء في المتصفح روابط presigned صالحة 15 دقيقة، ولا تُنشأ إلا بعد التحقق من الأحقية.</li>
+        <li>تغيير نقطة النهاية أو الحاوية أثناء استخدام إصدارات لها يتطلب تأكيداً، ويجب إعادة التحقق من حزم تحديث تلك الإصدارات.</li>
       </ul>
 
       <h2>سير عمل المشغّل</h2>
@@ -844,6 +861,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>مالكو المنتج</strong> — عادةً يكوّنون التخزين المستخدم لإصداراتهم.</li>
         <li><strong>Custom server</strong> — قد يتطلب اشتراك Pro (plan guard على المسار).</li>
+        <li><strong>S3-compatible</strong> — خطة Pro؛ يستطيع حساب Free المتصل بالفعل إدارته أو قطع اتصاله.</li>
         <li><strong>System Admin</strong> — استكشاف أخطاء فشل OAuth للموصل على مستوى المنصة.</li>
       </ul>
 
