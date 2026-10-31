@@ -827,7 +827,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <h2>Provider comparison</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Google Drive</strong> — one click with LicenPro's own Google app (no Google Cloud project); LicenPro sees only the files it creates; upload/list/delete via <code>/api/storage/google-drive/…</code>; Pro plan.</li>
-        <li><strong>OneDrive</strong> — Microsoft OAuth; similar list/upload semantics via <code>/api/OneDriveStorage/…</code>; Pro plan.</li>
+        <li><strong>OneDrive</strong> — one click with LicenPro's own Microsoft app (no Azure app registration); personal and work or school accounts; a <code>LicenPro</code> folder is created on connect; list/upload via <code>/api/storage/onedrive/…</code>; Pro plan.</li>
         <li><strong>Custom server</strong> — your HTTPS endpoint; LicenPro proxies list/upload/delete per <code>/api/CustomServerStorage/…</code>; included on every plan (the Free plan's only storage).</li>
         <li><strong>S3-compatible</strong> — your own bucket on Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner or MinIO; access key instead of OAuth; list/upload via <code>/api/storage/s3/…</code>; Pro plan.</li>
       </ul>
@@ -839,6 +839,16 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Upload through LicenPro</strong> — files you add to Drive yourself are not visible to LicenPro, so upload release files from the release form or the Storage page.</li>
         <li><strong>Connected before October 2026 with your own Google Cloud client?</strong> Click <strong>Connect</strong> once more. Release files linked before the change keep downloading for your customers; upload one again from its release to move it to the new connection.</li>
         <li>Tokens are stored encrypted. <strong>Disconnect</strong> removes LicenPro's access; you can also remove it from your Google account's third-party access page.</li>
+      </ul>
+
+      <h2>OneDrive</h2>
+      <p>Open <strong>Storage → OneDrive</strong> (or pick OneDrive in a release) and click <strong>Connect OneDrive</strong>. Sign in with the Microsoft account for your release files (personal, or work or school; not necessarily the one you use for LicenPro) and approve one consent screen. No Azure app registration, client ID, secret or redirect URI is needed.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>What LicenPro can access</strong> — your own OneDrive files (Microsoft's <code>Files.ReadWrite</code> permission, shown as "read and write your files"), your email (<code>User.Read</code>) and a lasting connection (<code>offline_access</code>). LicenPro works only in the folders you use for releases.</li>
+        <li><strong>LicenPro folder</strong> — created at the root of your OneDrive when you connect; an existing <code>LicenPro</code> folder is reused.</li>
+        <li><strong>Work or school accounts</strong> — some organizations let only an admin approve new apps. If Microsoft asks for admin approval, ask your Microsoft 365 admin to approve "LicenPro Storage", or connect a personal account. A work account also needs a OneDrive (SharePoint Online) license.</li>
+        <li><strong>Connected earlier with your own Azure app?</strong> Click <strong>Connect</strong> once more with the same Microsoft account: your folder and the release files already linked keep working.</li>
+        <li>Tokens are stored encrypted and refreshed automatically. <strong>Disconnect</strong> removes LicenPro's access; you can also remove it at <code>account.microsoft.com/privacy/app-access</code> (personal) or <code>myapps.microsoft.com</code> (work).</li>
       </ul>
 
       <h2>S3-compatible storage</h2>

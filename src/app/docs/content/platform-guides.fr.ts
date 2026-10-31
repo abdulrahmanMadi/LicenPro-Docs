@@ -827,7 +827,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <h2>Comparaison fournisseurs</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Google Drive</strong> — un clic avec l'application Google de LicenPro (sans projet Google Cloud) ; LicenPro ne voit que les fichiers qu'il crée ; upload/list/delete via <code>/api/storage/google-drive/…</code> ; forfait Pro.</li>
-        <li><strong>OneDrive</strong> — OAuth Microsoft ; sémantiques list/upload similaires via <code>/api/OneDriveStorage/…</code> ; forfait Pro.</li>
+        <li><strong>OneDrive</strong> — en un clic avec l'application Microsoft de LicenPro (aucune inscription d'application Azure) ; comptes personnels et professionnels ou scolaires ; un dossier <code>LicenPro</code> est créé à la connexion ; liste/téléversement via <code>/api/storage/onedrive/…</code> ; forfait Pro.</li>
         <li><strong>Custom server</strong> — votre endpoint HTTPS ; LicenPro proxy list/upload/delete via <code>/api/CustomServerStorage/…</code> ; inclus dans tous les forfaits (seul stockage du forfait Free).</li>
         <li><strong>S3-compatible</strong> — votre propre bucket sur Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner ou MinIO ; clé d'accès au lieu d'OAuth ; list/upload via <code>/api/storage/s3/…</code> ; forfait Pro.</li>
       </ul>
@@ -839,6 +839,16 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Téléverser via LicenPro</strong> — les fichiers ajoutés à Drive par vous-même ne sont pas visibles par LicenPro : téléversez les fichiers de version depuis le formulaire de version ou la page Stockage.</li>
         <li><strong>Connecté avant octobre 2026 avec votre propre client Google Cloud ?</strong> Cliquez une fois de plus sur <strong>Connecter</strong>. Les fichiers liés avant le changement restent téléchargeables par vos clients ; téléversez-en un à nouveau depuis sa version pour le passer à la nouvelle connexion.</li>
         <li>Les jetons sont stockés chiffrés. <strong>Déconnecter</strong> retire l'accès de LicenPro ; vous pouvez aussi le retirer depuis la page d'accès tiers de votre compte Google.</li>
+      </ul>
+
+      <h2>OneDrive</h2>
+      <p>Ouvrez <strong>Stockage → OneDrive</strong> (ou choisissez OneDrive dans une version) et cliquez sur <strong>Connecter OneDrive</strong>. Connectez-vous avec le compte Microsoft de vos fichiers de version (personnel, professionnel ou scolaire ; pas forcément celui que vous utilisez pour LicenPro) et validez un seul écran de consentement. Aucune inscription d'application Azure, aucun Client ID, secret ou URI de redirection n'est nécessaire.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Ce à quoi LicenPro a accès</strong> — vos propres fichiers OneDrive (autorisation Microsoft <code>Files.ReadWrite</code>, affichée comme « lire et écrire vos fichiers »), votre e-mail (<code>User.Read</code>) et une connexion durable (<code>offline_access</code>). LicenPro travaille uniquement dans les dossiers que vous utilisez pour les versions.</li>
+        <li><strong>Dossier LicenPro</strong> — créé à la racine de votre OneDrive à la connexion ; un dossier <code>LicenPro</code> existant est réutilisé.</li>
+        <li><strong>Comptes professionnels ou scolaires</strong> — certaines organisations ne laissent qu'un administrateur approuver de nouvelles applications. Si Microsoft demande l'approbation d'un administrateur, demandez à votre administrateur Microsoft 365 d'approuver « LicenPro Storage », ou connectez un compte personnel. Un compte professionnel nécessite aussi une licence OneDrive (SharePoint Online).</li>
+        <li><strong>Déjà connecté avec votre propre application Azure ?</strong> Cliquez encore une fois sur <strong>Connecter</strong> avec le même compte Microsoft : votre dossier et les fichiers de version déjà liés continuent de fonctionner.</li>
+        <li>Les jetons sont stockés chiffrés et renouvelés automatiquement. <strong>Déconnecter</strong> retire l'accès de LicenPro ; vous pouvez aussi le retirer sur <code>account.microsoft.com/privacy/app-access</code> (personnel) ou <code>myapps.microsoft.com</code> (professionnel).</li>
       </ul>
 
       <h2>Stockage compatible S3</h2>

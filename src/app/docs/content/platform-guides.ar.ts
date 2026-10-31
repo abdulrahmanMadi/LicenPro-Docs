@@ -827,7 +827,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <h2>مقارنة المزودين</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Google Drive</strong> — بضغطة واحدة عبر تطبيق Google الخاص بـ LicenPro (بدون مشروع Google Cloud)؛ يرى LicenPro الملفات التي ينشئها فقط؛ upload/list/delete عبر <code>/api/storage/google-drive/…</code>؛ خطة Pro.</li>
-        <li><strong>OneDrive</strong> — OAuth Microsoft؛ دلالات list/upload مشابهة عبر <code>/api/OneDriveStorage/…</code>؛ خطة Pro.</li>
+        <li><strong>OneDrive</strong> — بضغطة واحدة عبر تطبيق LicenPro المسجّل عند Microsoft (بدون تسجيل تطبيق في Azure)؛ حسابات شخصية وحسابات عمل أو دراسة؛ يُنشأ مجلد <code>LicenPro</code> عند الربط؛ العرض والرفع عبر <code>/api/storage/onedrive/…</code>؛ خطة Pro.</li>
         <li><strong>Custom server</strong> — نقطة HTTPS خاصة بك؛ LicenPro يوكّل list/upload/delete عبر <code>/api/CustomServerStorage/…</code>؛ متاح في كل الخطط (التخزين الوحيد في الخطة المجانية).</li>
         <li><strong>S3-compatible</strong> — حاويتك الخاصة على Amazon S3 أو Cloudflare R2 أو Backblaze B2 أو Wasabi أو DigitalOcean Spaces أو Hetzner أو MinIO؛ مفتاح وصول بدلاً من OAuth؛ list/upload عبر <code>/api/storage/s3/…</code>؛ خطة Pro.</li>
       </ul>
@@ -839,6 +839,16 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>الرفع عن طريق LicenPro</strong> — الملفات التي تضيفها إلى Drive بنفسك لا يراها LicenPro، لذلك ارفع ملفات الإصدارات من نموذج الإصدار أو من صفحة التخزين.</li>
         <li><strong>ربطت قبل أكتوبر 2026 بعميل Google Cloud خاص بك؟</strong> اضغط <strong>ربط</strong> مرة أخرى. ملفات الإصدارات المربوطة قبل التغيير يستمر تحميلها لعملائك؛ ارفع أحدها من جديد من صفحة إصداره لنقله إلى الربط الجديد.</li>
         <li>تُحفظ رموز الوصول مشفّرة. <strong>قطع الاتصال</strong> يزيل وصول LicenPro، ويمكنك أيضاً إزالته من صفحة وصول الجهات الخارجية في حساب Google.</li>
+      </ul>
+
+      <h2>OneDrive</h2>
+      <p>افتح <strong>التخزين ← OneDrive</strong> (أو اختر OneDrive في الإصدار) واضغط <strong>ربط OneDrive</strong>. سجّل الدخول بحساب Microsoft الذي تريد ملفات الإصدارات فيه (شخصي أو عمل أو دراسة، وليس بالضرورة الحساب الذي تستخدمه في LicenPro) ووافق على شاشة موافقة واحدة. لا تحتاج تسجيل تطبيق في Azure ولا Client ID ولا Secret ولا Redirect URI.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>ما الذي يصل إليه LicenPro</strong> — ملفات OneDrive الخاصة بك (صلاحية <code>Files.ReadWrite</code> من Microsoft، وتظهر كـ "قراءة ملفاتك وكتابتها")، وبريدك (<code>User.Read</code>)، واتصال دائم (<code>offline_access</code>). يعمل LicenPro فقط في المجلدات التي تستخدمها للإصدارات.</li>
+        <li><strong>مجلد LicenPro</strong> — يُنشأ في جذر OneDrive عند الربط، ويُستخدم مجلد <code>LicenPro</code> الموجود إن وُجد.</li>
+        <li><strong>حسابات العمل أو الدراسة</strong> — بعض المؤسسات تسمح للمسؤول فقط بالموافقة على التطبيقات الجديدة. إذا طلبت Microsoft موافقة المسؤول، اطلب من مسؤول Microsoft 365 الموافقة على "LicenPro Storage" أو اربط حساباً شخصياً. يحتاج حساب العمل أيضاً إلى ترخيص OneDrive (SharePoint Online).</li>
+        <li><strong>ربطت سابقاً بتطبيقك الخاص في Azure؟</strong> اضغط <strong>ربط</strong> مرة أخرى بنفس حساب Microsoft: يبقى مجلدك وملفات الإصدارات المربوطة تعمل.</li>
+        <li>تُخزَّن الرموز مشفّرة وتُجدَّد تلقائياً. <strong>قطع الاتصال</strong> يزيل وصول LicenPro، ويمكنك أيضاً إزالته من <code>account.microsoft.com/privacy/app-access</code> (شخصي) أو <code>myapps.microsoft.com</code> (عمل).</li>
       </ul>
 
       <h2>التخزين المتوافق مع S3</h2>

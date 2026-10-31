@@ -189,7 +189,7 @@ export const API_TOPICS_FR: Record<string, DocTopic> = {
       <p>Quatre surfaces parallèles pour backends différents :</p>
       <ul>
         <li><code>/api/storage/google-drive/...</code> — Google Drive avec le client OAuth de LicenPro : <code>connect-url</code> (<code>returnUrl</code> optionnel, un chemin du tableau de bord) renvoie l'URL de consentement Google, <code>callback</code> reçoit <code>code</code> et le <code>state</code> signé ; puis <code>status</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Portée <code>drive.file</code> uniquement. Forfait Pro.</li>
-        <li><code>/api/OneDriveStorage/...</code> — intégration Microsoft Graph / OneDrive.</li>
+        <li><code>/api/storage/onedrive/...</code> — OneDrive avec l'application Microsoft de LicenPro (tout compte personnel ou professionnel/scolaire) : <code>connect-url</code> (<code>returnUrl</code> optionnel, un chemin du tableau de bord) renvoie l'URL de consentement Microsoft, <code>callback</code> reçoit <code>code</code> et le <code>state</code> signé et crée le dossier <code>LicenPro</code> ; puis <code>config</code>, <code>test</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Autorisations <code>Files.ReadWrite User.Read offline_access</code>. Forfait Pro.</li>
         <li><code>/api/CustomServerStorage/...</code> — votre propre point de stockage SFTP/HTTP.</li>
         <li><code>/api/storage/s3/...</code> — tout bucket compatible S3 (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO…) : <code>config</code>, <code>test</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Forfait Pro.</li>
       </ul>

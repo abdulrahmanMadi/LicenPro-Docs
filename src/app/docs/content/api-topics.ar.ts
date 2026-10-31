@@ -189,7 +189,7 @@ export const API_TOPICS_AR: Record<string, DocTopic> = {
       <p>أربعة أسطح متوازية لخلفيات مختلفة:</p>
       <ul>
         <li><code>/api/storage/google-drive/...</code> — Google Drive عبر عميل OAuth الخاص بـ LicenPro: <code>connect-url</code> (مع <code>returnUrl</code> اختياري، مسار في لوحة التحكم) يعيد رابط موافقة Google، و<code>callback</code> يستقبل <code>code</code> و<code>state</code> الموقّع؛ ثم <code>status</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. صلاحية <code>drive.file</code> فقط. خطة Pro.</li>
-        <li><code>/api/OneDriveStorage/...</code> — تكامل Microsoft Graph / OneDrive.</li>
+        <li><code>/api/storage/onedrive/...</code> — OneDrive عبر تطبيق LicenPro المسجّل عند Microsoft (أي حساب شخصي أو عمل/دراسة): <code>connect-url</code> (مع <code>returnUrl</code> اختياري، مسار داخل لوحة التحكم) يعيد رابط موافقة Microsoft، و<code>callback</code> يأخذ <code>code</code> و<code>state</code> الموقّع وينشئ مجلد <code>LicenPro</code>؛ ثم <code>config</code> و<code>test</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. الصلاحيات <code>Files.ReadWrite User.Read offline_access</code>. خطة Pro.</li>
         <li><code>/api/CustomServerStorage/...</code> — نقطة تخزين SFTP/HTTP خاصة بك.</li>
         <li><code>/api/storage/s3/...</code> — أي حاوية متوافقة مع S3 (Amazon S3 وCloudflare R2 وBackblaze B2 وWasabi وMinIO…): <code>config</code> و<code>test</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. خطة Pro.</li>
       </ul>
