@@ -188,7 +188,7 @@ export const API_TOPICS_EN: Record<string, DocTopic> = {
     body: `
       <p>Four parallel surfaces for different backends:</p>
       <ul>
-        <li><code>/api/Storage/...</code> — Google Drive–backed flows (as configured).</li>
+        <li><code>/api/storage/google-drive/...</code> — Google Drive with LicenPro's own OAuth client: <code>connect-url</code> (optional <code>returnUrl</code>, a dashboard path) returns Google's consent URL, <code>callback</code> takes <code>code</code> and the signed <code>state</code>; then <code>status</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Scope <code>drive.file</code> only. Pro plan.</li>
         <li><code>/api/OneDriveStorage/...</code> — Microsoft Graph / OneDrive integration.</li>
         <li><code>/api/CustomServerStorage/...</code> — your own SFTP/HTTP storage endpoint.</li>
         <li><code>/api/storage/s3/...</code> — any S3-compatible bucket (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO…): <code>config</code>, <code>test</code>, <code>folders</code>, <code>files</code>, <code>upload</code>, <code>disconnect</code>. Pro plan.</li>

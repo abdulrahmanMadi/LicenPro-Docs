@@ -826,10 +826,19 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
 
       <h2>Comparaison fournisseurs</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth Google ; parcourir dossiers ; upload/list/delete via <code>/api/Storage/…</code> ou routes Drive ; forfait Pro.</li>
+        <li><strong>Google Drive</strong> — un clic avec l'application Google de LicenPro (sans projet Google Cloud) ; LicenPro ne voit que les fichiers qu'il crée ; upload/list/delete via <code>/api/storage/google-drive/…</code> ; forfait Pro.</li>
         <li><strong>OneDrive</strong> — OAuth Microsoft ; sémantiques list/upload similaires via <code>/api/OneDriveStorage/…</code> ; forfait Pro.</li>
         <li><strong>Custom server</strong> — votre endpoint HTTPS ; LicenPro proxy list/upload/delete via <code>/api/CustomServerStorage/…</code> ; inclus dans tous les forfaits (seul stockage du forfait Free).</li>
         <li><strong>S3-compatible</strong> — votre propre bucket sur Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner ou MinIO ; clé d'accès au lieu d'OAuth ; list/upload via <code>/api/storage/s3/…</code> ; forfait Pro.</li>
+      </ul>
+
+      <h2>Google Drive</h2>
+      <p>Ouvrez <strong>Stockage → Google Drive</strong> (ou choisissez Google Drive dans une version) et cliquez sur <strong>Connecter Google Drive</strong>. Choisissez le compte Google de vos fichiers de version (n'importe lequel, pas forcément celui de LicenPro) et validez un seul écran de consentement. Aucun projet Google Cloud, Client ID ou secret n'est nécessaire.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Ce à quoi LicenPro accède</strong> — uniquement les fichiers et dossiers qu'il crée dans votre Drive (autorisation Google <code>drive.file</code>). Il ne peut ni voir ni modifier vos autres fichiers. Un dossier <code>LicenPro</code> est créé pour vos versions.</li>
+        <li><strong>Téléverser via LicenPro</strong> — les fichiers ajoutés à Drive par vous-même ne sont pas visibles par LicenPro : téléversez les fichiers de version depuis le formulaire de version ou la page Stockage.</li>
+        <li><strong>Connecté avant octobre 2026 avec votre propre client Google Cloud ?</strong> Cliquez une fois de plus sur <strong>Connecter</strong>. Les fichiers liés avant le changement restent téléchargeables par vos clients ; téléversez-en un à nouveau depuis sa version pour le passer à la nouvelle connexion.</li>
+        <li>Les jetons sont stockés chiffrés. <strong>Déconnecter</strong> retire l'accès de LicenPro ; vous pouvez aussi le retirer depuis la page d'accès tiers de votre compte Google.</li>
       </ul>
 
       <h2>Stockage compatible S3</h2>

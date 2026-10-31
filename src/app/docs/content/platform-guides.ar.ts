@@ -826,10 +826,19 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
 
       <h2>مقارنة المزودين</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth إلى Google؛ تصفح المجلدات؛ upload/list/delete عبر <code>/api/Storage/…</code> أو مسارات Drive؛ خطة Pro.</li>
+        <li><strong>Google Drive</strong> — بضغطة واحدة عبر تطبيق Google الخاص بـ LicenPro (بدون مشروع Google Cloud)؛ يرى LicenPro الملفات التي ينشئها فقط؛ upload/list/delete عبر <code>/api/storage/google-drive/…</code>؛ خطة Pro.</li>
         <li><strong>OneDrive</strong> — OAuth Microsoft؛ دلالات list/upload مشابهة عبر <code>/api/OneDriveStorage/…</code>؛ خطة Pro.</li>
         <li><strong>Custom server</strong> — نقطة HTTPS خاصة بك؛ LicenPro يوكّل list/upload/delete عبر <code>/api/CustomServerStorage/…</code>؛ متاح في كل الخطط (التخزين الوحيد في الخطة المجانية).</li>
         <li><strong>S3-compatible</strong> — حاويتك الخاصة على Amazon S3 أو Cloudflare R2 أو Backblaze B2 أو Wasabi أو DigitalOcean Spaces أو Hetzner أو MinIO؛ مفتاح وصول بدلاً من OAuth؛ list/upload عبر <code>/api/storage/s3/…</code>؛ خطة Pro.</li>
+      </ul>
+
+      <h2>Google Drive</h2>
+      <p>افتح <strong>التخزين ← Google Drive</strong> (أو اختر Google Drive في نموذج الإصدار) واضغط <strong>ربط Google Drive</strong>. اختر حساب Google الذي تريد حفظ ملفات الإصدارات فيه (أي حساب، وليس بالضرورة حساب دخولك إلى LicenPro) ووافق على شاشة موافقة واحدة. لا تحتاج مشروع Google Cloud ولا Client ID ولا Secret.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>ما الذي يصل إليه LicenPro</strong> — الملفات والمجلدات التي ينشئها في Drive فقط (صلاحية <code>drive.file</code> من Google). لا يستطيع رؤية ملفاتك الأخرى أو تغييرها. يُنشأ مجلد <code>LicenPro</code> لإصداراتك.</li>
+        <li><strong>الرفع عن طريق LicenPro</strong> — الملفات التي تضيفها إلى Drive بنفسك لا يراها LicenPro، لذلك ارفع ملفات الإصدارات من نموذج الإصدار أو من صفحة التخزين.</li>
+        <li><strong>ربطت قبل أكتوبر 2026 بعميل Google Cloud خاص بك؟</strong> اضغط <strong>ربط</strong> مرة أخرى. ملفات الإصدارات المربوطة قبل التغيير يستمر تحميلها لعملائك؛ ارفع أحدها من جديد من صفحة إصداره لنقله إلى الربط الجديد.</li>
+        <li>تُحفظ رموز الوصول مشفّرة. <strong>قطع الاتصال</strong> يزيل وصول LicenPro، ويمكنك أيضاً إزالته من صفحة وصول الجهات الخارجية في حساب Google.</li>
       </ul>
 
       <h2>التخزين المتوافق مع S3</h2>

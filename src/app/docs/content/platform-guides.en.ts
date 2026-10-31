@@ -826,10 +826,19 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
 
       <h2>Provider comparison</h2>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Google Drive</strong> — OAuth to Google; browse folders; upload/list/delete via <code>/api/Storage/…</code> or Drive-specific routes; Pro plan.</li>
+        <li><strong>Google Drive</strong> — one click with LicenPro's own Google app (no Google Cloud project); LicenPro sees only the files it creates; upload/list/delete via <code>/api/storage/google-drive/…</code>; Pro plan.</li>
         <li><strong>OneDrive</strong> — Microsoft OAuth; similar list/upload semantics via <code>/api/OneDriveStorage/…</code>; Pro plan.</li>
         <li><strong>Custom server</strong> — your HTTPS endpoint; LicenPro proxies list/upload/delete per <code>/api/CustomServerStorage/…</code>; included on every plan (the Free plan's only storage).</li>
         <li><strong>S3-compatible</strong> — your own bucket on Amazon S3, Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces, Hetzner or MinIO; access key instead of OAuth; list/upload via <code>/api/storage/s3/…</code>; Pro plan.</li>
+      </ul>
+
+      <h2>Google Drive</h2>
+      <p>Open <strong>Storage → Google Drive</strong> (or pick Google Drive in a release) and click <strong>Connect Google Drive</strong>. Choose the Google account for your release files (any account, not necessarily the one you use for LicenPro) and approve one consent screen. No Google Cloud project, client ID or secret is needed.</p>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>What LicenPro can access</strong> — only the files and folders it creates in your Drive (Google's <code>drive.file</code> permission). It cannot see or change your other files. A <code>LicenPro</code> folder is created for your releases.</li>
+        <li><strong>Upload through LicenPro</strong> — files you add to Drive yourself are not visible to LicenPro, so upload release files from the release form or the Storage page.</li>
+        <li><strong>Connected before October 2026 with your own Google Cloud client?</strong> Click <strong>Connect</strong> once more. Release files linked before the change keep downloading for your customers; upload one again from its release to move it to the new connection.</li>
+        <li>Tokens are stored encrypted. <strong>Disconnect</strong> removes LicenPro's access; you can also remove it from your Google account's third-party access page.</li>
       </ul>
 
       <h2>S3-compatible storage</h2>

@@ -188,7 +188,7 @@ export const API_TOPICS_AR: Record<string, DocTopic> = {
     body: `
       <p>أربعة أسطح متوازية لخلفيات مختلفة:</p>
       <ul>
-        <li><code>/api/Storage/...</code> — تدفقات مدعومة بـ Google Drive (كما هو مُعد).</li>
+        <li><code>/api/storage/google-drive/...</code> — Google Drive عبر عميل OAuth الخاص بـ LicenPro: <code>connect-url</code> (مع <code>returnUrl</code> اختياري، مسار في لوحة التحكم) يعيد رابط موافقة Google، و<code>callback</code> يستقبل <code>code</code> و<code>state</code> الموقّع؛ ثم <code>status</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. صلاحية <code>drive.file</code> فقط. خطة Pro.</li>
         <li><code>/api/OneDriveStorage/...</code> — تكامل Microsoft Graph / OneDrive.</li>
         <li><code>/api/CustomServerStorage/...</code> — نقطة تخزين SFTP/HTTP خاصة بك.</li>
         <li><code>/api/storage/s3/...</code> — أي حاوية متوافقة مع S3 (Amazon S3 وCloudflare R2 وBackblaze B2 وWasabi وMinIO…): <code>config</code> و<code>test</code> و<code>folders</code> و<code>files</code> و<code>upload</code> و<code>disconnect</code>. خطة Pro.</li>
