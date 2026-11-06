@@ -133,8 +133,8 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <h2>دورة حياة المؤسسة</h2>
       <ol style="margin-left:1.25rem;">
         <li><strong>إنشاء</strong> — معالج في <code>/dashboard/organizations</code> (الهوية: الاسم، الموقع، دور الدخول الافتراضي؛ العلامة التجارية: الشعار، الألوان، الوصف).</li>
-        <li><strong>تكوين</strong> — علامة تبويب الإعدادات: السياسات (التسجيل الذاتي، الموافقة)، دور العضو الافتراضي، العلامة التجارية.</li>
-        <li><strong>دعوة</strong> — دعوات بريد إلكتروني مع دور؛ القبول عبر <code>/auth/accept-invitation?token=…</code> (يتطلب تسجيل الدخول).</li>
+        <li><strong>تكوين</strong> — علامة تبويب الإعدادات: دور العضو الافتراضي (يُحدَّد مسبقًا عند الدعوة)، العلامة التجارية. ينضم الأشخاص بالدعوة فقط.</li>
+        <li><strong>دعوة</strong> — دعوة بدور، حتى لمن لديه حساب LicenPro: لا يُضاف أحد قبل أن يقبل. أصحاب الحسابات يرونها داخل LicenPro (إشعار، ثم <strong>المؤسسات ← دعوات لك</strong>: قبول أو رفض)، ويمكن لأي شخص القبول من رابط البريد <code>/auth/accept-invitation?token=…</code> (يتطلب تسجيل الدخول).</li>
         <li><strong>تعيين المنتجات</strong> — ربط المنتجات بالمؤسسة؛ إضافة مالكي المنتجات وصفوف access matrix لكل إصدار.</li>
         <li><strong>تشغيل</strong> — الأعضاء يستخدمون تحليلات نظرة عامة المؤسسة؛ المسؤولون يديرون الفريق والتدقيق.</li>
         <li><strong>نقل أو حذف</strong> — نقل الملكية (Owner)؛ حذف المؤسسة (Owner فقط، مدمر).</li>
@@ -166,8 +166,8 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <h3>الأعضاء</h3>
       <p>دليل الفريق المعتمد للمؤسسة: من ينتمي، ما دور المؤسسة الذي يحمله، ومتى انضم.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>دعوة</strong> — بريد + دور: Member، Viewer، ProductOwner، أو Admin (Owner فقط يمكنه تعيين Admin).</li>
-        <li><strong>تغيير الدور</strong> — Owner، Admin، أو ResellerAdmin؛ قواعد Owner-only تنطبق عند الترقية إلى Admin.</li>
+        <li><strong>دعوة</strong> — بريد + دور: Member، Viewer، ProductOwner، Admin أو ResellerAdmin. المالك فقط يمكنه منح Admin أو ResellerAdmin.</li>
+        <li><strong>تغيير الدور</strong> — Owner، Admin، أو ResellerAdmin؛ المالك فقط يمنح Admin أو ResellerAdmin، ولا يمكن منح دور Owner لأحد.</li>
         <li><strong>إزالة</strong> — Owner، Admin، ProductOwner، ResellerAdmin؛ لا يمكن إزالة Owner.</li>
         <li><strong>الدور مقابل وصول المنتج</strong> — دور المؤسسة يتحكم في علامات تبويب المؤسسة؛ مالكو المنتج وaccess matrix يتحكمون في عمل الترخيص لكل منتج.</li>
       </ul>
@@ -181,7 +181,7 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
         <li><strong>إعادة الإرسال</strong> — يولّد بريداً برمز جديد دون تغيير الدور المختار.</li>
         <li><strong>إلغاء</strong> — يبطل الرابط فوراً؛ يجب أن يستلم المستلم دعوة جديدة.</li>
         <li><strong>انتهاء الصلاحية</strong> — كل صف يعرض متى ينتهي الرمز؛ الدعوات المنتهية لا يمكن قبولها حتى إعادة الإرسال.</li>
-        <li><strong>الأدوار في واجهة المستخدم</strong> — Member، Viewer، Admin في هذه العلامة؛ علامة الأعضاء تقدم أيضاً ProductOwner عند الدعوة.</li>
+        <li><strong>الأدوار في واجهة المستخدم</strong> — نفس أدوار علامة الأعضاء؛ يظهر Admin وResellerAdmin معطّلين لغير المالك.</li>
       </ul>
       ${screenshot('platform-organization-invitations.png', 'علامة تبويب Institution Team Invitations: دعوات معلقة مع الدور والحالة وانتهاء الصلاحية')}
 
@@ -201,30 +201,30 @@ export const PLATFORM_GUIDES_AR: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>عام</strong> — اسم الكيان، معرف السجل، وصف نص غني، وURL الموقع العام المعروض في ملف المؤسسة.</li>
         <li><strong>العلامة التجارية</strong> — الشعار والألوان لعرض المؤسسة في لوحة التحكم والدعوات.</li>
-        <li><strong>السياسات</strong> — <code>allowSelfRegistration</code>، <code>requireApprovalForJoining</code>، و<code>defaultMemberRole</code> للمنضمين الجدد (Member، Viewer، أو Admin).</li>
+        <li><strong>الدعوات</strong> — <code>defaultMemberRole</code>: الدور المحدد مسبقًا في نافذة الدعوة. (لا تظهر إعدادات التسجيل الذاتي والموافقة: لا يوجد مسار لطلبات الانضمام.)</li>
         <li><strong>الحوكمة</strong> — نقل الملكية ومفاتيح سياسة متقدمة حيث يعرضها نشرك.</li>
-        <li><strong>منطقة الخطر</strong> — حذف المؤسسة (Owner فقط؛ لا رجعة؛ التراخيص تحت منتجات المؤسسة قد تتتابع حسب سياسة الخادم).</li>
+        <li><strong>منطقة الخطر</strong> — حذف المؤسسة (المالك فقط؛ لا رجعة): يُزال الأعضاء والمنتجات المعيّنة والدعوات المعلّقة، وتبقى المنتجات والإصدارات والتراخيص مع أصحابها.</li>
       </ul>
-      <p><strong>قبل الحفظ:</strong> الوصف والموقع موجهان للعملاء في رأس المؤسسة؛ تغييرات السياسة تؤثر على الدعوة أو محاولة التسجيل الذاتي التالية، وليس بأثر رجعي على الأعضاء الحاليين.</p>
+      <p><strong>قبل الحفظ:</strong> الوصف والموقع موجهان للعملاء في رأس المؤسسة؛ الدور الافتراضي ينطبق على الدعوة التالية، وليس على الأعضاء الحاليين.</p>
       ${screenshot('platform-organization-settings-general.png', 'الإعدادات العامة للمؤسسة: الاسم، الوصف، الموقع، وتنقل Branding الفرعي')}
 
       <h2>مصفوفة أدوار المؤسسة</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Owner</strong> — تحكم كامل بالمستأجر: حذف المؤسسة، نقل الملكية، تعيين Admin، جميع عمليات الدعوة/الإزالة/الدور.</li>
-        <li><strong>Admin</strong> — دعوة، تغيير الأدوار (ليس إلى Owner؛ لا يمكن تعيين Admin — ذلك Owner-only)، إزالة الأعضاء؛ لا يمكن حذف المؤسسة.</li>
+        <li><strong>Admin</strong> — دعوة، تغيير الأدوار (لا إلى Owner أبدًا؛ Admin وResellerAdmin للمالك فقط)، إزالة الأعضاء؛ لا يمكن حذف المؤسسة.</li>
         <li><strong>ProductOwner</strong> — دعوة وإزالة الأعضاء؛ إدارة المنتجات/التراخيص المعيّنة؛ لا حذف مؤسسة ولا ترقية Admin.</li>
         <li><strong>Member</strong> — عرض نظرة عامة المؤسسة والمنتجات المعيّنة؛ استخدام التراخيص حسب access matrix للمنتج؛ لا علامات إدارة الأعضاء في واجهة المستخدم.</li>
         <li><strong>Viewer</strong> — وصول قراءة فقط للمؤسسة؛ رؤية المنتج عبر access matrix فقط.</li>
-        <li><strong>ResellerAdmin</strong> — دور backend يُعامل كـ Admin لكثير من عمليات المؤسسة (عرض جزئي في واجهة المستخدم).</li>
+        <li><strong>ResellerAdmin</strong> — نفس صلاحيات Admin: الأعضاء والمنتجات والإعدادات وتراخيص منتجات المؤسسة. مناسب لشريك يبيع منتجاتك؛ يمنحه المالك فقط.</li>
       </ul>
 
       <h2>سير عمل الدعوة (خطوة بخطوة)</h2>
       <ol style="margin-left:1.25rem;">
         <li>Admin يفتح <strong>الأعضاء</strong> أو <strong>الدعوات</strong> → <strong>دعوة</strong>.</li>
         <li>أدخل البريد، اختر الدور، رسالة اختيارية → إرسال.</li>
-        <li>المستلم يستلم بريداً برابط رمز.</li>
-        <li>المستلم يسجّل الدخول (أو يسجّل) → <code>/auth/accept-invitation?token=…</code>.</li>
-        <li>عند النجاح، يُضاف المستخدم للمؤسسة بالدور المختار → إعادة توجيه إلى <code>/dashboard/organization/:orgId</code>.</li>
+        <li>المستلم يستلم بريدًا برابط رمز. إن كان لديه حساب، يصله أيضًا إشعار ويرى الدعوة في <strong>المؤسسات ← دعوات لك</strong>.</li>
+        <li>المستلم يقبل أو يرفض داخل LicenPro، أو يسجّل الدخول (أو يسجّل) من رابط البريد → <code>/auth/accept-invitation?token=…</code>.</li>
+        <li>عند القبول ينضم بالدور المختار ويُبلَّغ المديرون. عند الرفض يُبلَّغ الداعي والمديرون، ويمكن دعوة البريد مرة أخرى.</li>
         <li>المشغّل يمكنه إعادة الإرسال أو إلغاء الصفوف المعلقة من <strong>الدعوات</strong>.</li>
       </ol>
 

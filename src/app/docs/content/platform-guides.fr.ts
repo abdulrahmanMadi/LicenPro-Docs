@@ -133,8 +133,8 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <h2>Cycle de vie de l'institution</h2>
       <ol style="margin-left:1.25rem;">
         <li><strong>Créer</strong> — assistant à <code>/dashboard/organizations</code> (Identité : nom, site web, rôle d'entrée par défaut ; Branding : logo, couleurs, description).</li>
-        <li><strong>Configurer</strong> — onglet paramètres : politiques (auto-inscription, approbation), rôle membre par défaut, branding.</li>
-        <li><strong>Inviter</strong> — invitations email avec rôle ; accepter via <code>/auth/accept-invitation?token=…</code> (connexion requise).</li>
+        <li><strong>Configurer</strong> — onglet paramètres : rôle membre par défaut (présélectionné à l'invitation), branding. On rejoint uniquement sur invitation.</li>
+        <li><strong>Inviter</strong> — une invitation avec un rôle, y compris pour les personnes qui ont déjà un compte LicenPro : personne n'est ajouté avant d'accepter. Les comptes la voient dans LicenPro (notification, puis <strong>Institutions → Invitations pour vous</strong> : Accepter ou Refuser) ; tout le monde peut accepter depuis le lien de l'e-mail <code>/auth/accept-invitation?token=…</code> (connexion requise).</li>
         <li><strong>Assigner produits</strong> — lier produits à l'institution ; ajouter propriétaires produit et lignes access matrix par version.</li>
         <li><strong>Exploiter</strong> — membres utilisent analytics aperçu org ; admins gèrent équipe et audit.</li>
         <li><strong>Transférer ou supprimer</strong> — transfert de propriété (Owner) ; suppression org (Owner uniquement, destructif).</li>
@@ -166,8 +166,8 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <h3>Membres</h3>
       <p>Annuaire équipe faisant foi pour l'institution : qui appartient, quel rôle org il détient, et quand il a rejoint.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Inviter</strong> — email + rôle : Member, Viewer, ProductOwner ou Admin (seul Owner peut assigner Admin).</li>
-        <li><strong>Changer rôle</strong> — Owner, Admin ou ResellerAdmin ; règles Owner-only s'appliquent en promotion vers Admin.</li>
+        <li><strong>Inviter</strong> — email + rôle : Member, Viewer, ProductOwner, Admin ou ResellerAdmin. Seul le propriétaire peut attribuer Admin ou ResellerAdmin.</li>
+        <li><strong>Changer rôle</strong> — Owner, Admin ou ResellerAdmin ; seul le propriétaire attribue Admin ou ResellerAdmin, et personne ne peut recevoir le rôle Owner.</li>
         <li><strong>Retirer</strong> — Owner, Admin, ProductOwner, ResellerAdmin ; impossible de retirer Owner.</li>
         <li><strong>Rôle vs accès produit</strong> — rôle org contrôle onglets org ; propriétaires produit et access matrix contrôlent le travail licence par produit.</li>
       </ul>
@@ -181,7 +181,7 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
         <li><strong>Renvoyer</strong> — génère un email token frais sans changer le rôle choisi.</li>
         <li><strong>Révoquer</strong> — invalide le lien immédiatement ; le destinataire doit recevoir une nouvelle invite.</li>
         <li><strong>Expiration</strong> — chaque ligne montre quand le token expire ; invites expirées inacceptables jusqu'au renvoi.</li>
-        <li><strong>Rôles dans l'UI</strong> — Member, Viewer, Admin sur cet onglet ; onglet Members propose aussi ProductOwner à l'invitation.</li>
+        <li><strong>Rôles dans l'UI</strong> — les mêmes rôles que l'onglet Members ; Admin et ResellerAdmin sont grisés pour tous sauf le propriétaire.</li>
       </ul>
       ${screenshot('platform-organization-invitations.png', 'Onglet Institution Team Invitations : invites en attente avec rôle, statut et expiration')}
 
@@ -201,30 +201,30 @@ export const PLATFORM_GUIDES_FR: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>Général</strong> — nom entité, ID registre, description rich-text et URL site public sur le profil org.</li>
         <li><strong>Image de marque</strong> — logo et couleurs pour présentation org dans tableau de bord et invitations.</li>
-        <li><strong>Politiques</strong> — <code>allowSelfRegistration</code>, <code>requireApprovalForJoining</code> et <code>defaultMemberRole</code> pour nouveaux arrivants (Member, Viewer ou Admin).</li>
+        <li><strong>Invitations</strong> — <code>defaultMemberRole</code> : le rôle présélectionné dans la fenêtre d'invitation. (Les réglages d'auto-inscription et d'approbation ne sont pas affichés : il n'y a pas de demande d'adhésion.)</li>
         <li><strong>Gouvernance</strong> — transfert propriété et bascules politique avancées où votre déploiement les expose.</li>
-        <li><strong>Zone de danger</strong> — supprimer institution (Owner uniquement ; irréversible ; licences sous produits org peuvent cascader selon politique serveur).</li>
+        <li><strong>Zone de danger</strong> — supprimer l'institution (propriétaire uniquement ; irréversible) : ses membres, affectations de produits et invitations en attente sont retirés ; les produits, versions et licences restent à leurs propriétaires.</li>
       </ul>
-      <p><strong>Avant enregistrement :</strong> description et site web sont orientés client sur l'en-tête org ; changements politique affectent la prochaine invitation ou tentative auto-inscription, pas rétroactivement les membres existants.</p>
+      <p><strong>Avant enregistrement :</strong> description et site web sont orientés client sur l'en-tête org ; le rôle par défaut s'applique à la prochaine invitation, pas aux membres existants.</p>
       ${screenshot('platform-organization-settings-general.png', 'Configuration générale institution : nom, description, site web et sous-nav Branding')}
 
       <h2>Matrice rôles institution</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Owner</strong> — contrôle locataire complet : supprimer org, transférer propriété, assigner Admin, toutes opérations invite/retire/rôle.</li>
-        <li><strong>Admin</strong> — inviter, changer rôles (pas vers Owner ; ne peut assigner Admin — Owner-only), retirer membres ; ne peut pas supprimer org.</li>
+        <li><strong>Admin</strong> — inviter, changer rôles (jamais vers Owner ; Admin et ResellerAdmin réservés au propriétaire), retirer membres ; ne peut pas supprimer org.</li>
         <li><strong>ProductOwner</strong> — inviter et retirer membres ; gérer produits/licences assignés ; pas suppression org ni promotion Admin.</li>
         <li><strong>Member</strong> — voir aperçu org et produits assignés ; utiliser licences selon access matrix produit ; pas d'onglets gestion membres dans l'UI.</li>
         <li><strong>Viewer</strong> — accès org lecture seule ; visibilité produit via access matrix uniquement.</li>
-        <li><strong>ResellerAdmin</strong> — rôle backend traité comme Admin pour beaucoup d'opérations org (affichage UI partiel).</li>
+        <li><strong>ResellerAdmin</strong> — mêmes droits qu'Admin : membres, produits, paramètres et licences des produits de l'institution. Pour un partenaire qui vend vos produits ; attribué par le propriétaire uniquement.</li>
       </ul>
 
       <h2>Workflow invitation (étape par étape)</h2>
       <ol style="margin-left:1.25rem;">
         <li>Admin ouvre <strong>Membres</strong> ou <strong>Invitations</strong> → <strong>Inviter</strong>.</li>
         <li>Saisir email, choisir rôle, message optionnel → envoyer.</li>
-        <li>Destinataire reçoit email avec lien token.</li>
-        <li>Destinataire se connecte (ou s'inscrit) → <code>/auth/accept-invitation?token=…</code>.</li>
-        <li>En succès, utilisateur ajouté à l'org avec rôle choisi → redirection vers <code>/dashboard/organization/:orgId</code>.</li>
+        <li>Destinataire reçoit l'e-mail avec un lien token. S'il a déjà un compte, il reçoit aussi une notification et voit l'invitation sous <strong>Institutions → Invitations pour vous</strong>.</li>
+        <li>Destinataire accepte ou refuse dans LicenPro, ou se connecte (ou s'inscrit) depuis le lien de l'e-mail → <code>/auth/accept-invitation?token=…</code>.</li>
+        <li>À l'acceptation, l'utilisateur rejoint avec le rôle choisi et les admins sont informés. Au refus, l'invitant et les admins sont informés, et l'adresse peut être invitée à nouveau.</li>
         <li>Opérateur peut renvoyer ou annuler lignes pending depuis <strong>Invitations</strong>.</li>
       </ol>
 

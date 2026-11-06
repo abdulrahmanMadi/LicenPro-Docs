@@ -133,8 +133,8 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <h2>Institution lifecycle</h2>
       <ol style="margin-left:1.25rem;">
         <li><strong>Create</strong> — wizard at <code>/dashboard/organizations</code> (Identity: name, website, default entry role; Branding: logo, colors, description).</li>
-        <li><strong>Configure</strong> — settings tab: policies (self-registration, approval), default member role, branding.</li>
-        <li><strong>Invite</strong> — email invitations with role; accept via <code>/auth/accept-invitation?token=…</code> (login required).</li>
+        <li><strong>Configure</strong> — settings tab: default member role (preselected when you invite someone), branding. People join only by invitation.</li>
+        <li><strong>Invite</strong> — an invitation with a role, also for people who already have a LicenPro account: nobody is added before they accept. Accounts see it in LicenPro (notification, then <strong>Institutions → Invitations for you</strong>: Accept or Decline); anyone can accept from the email link <code>/auth/accept-invitation?token=…</code> (login required).</li>
         <li><strong>Assign products</strong> — link products to the org; add product owners and access-matrix rows per release.</li>
         <li><strong>Operate</strong> — members use org overview analytics; admins manage team and audit.</li>
         <li><strong>Transfer or delete</strong> — ownership transfer (Owner); org delete (Owner only, destructive).</li>
@@ -166,8 +166,8 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <h3>Members</h3>
       <p>Authoritative team directory for the organization: who belongs, what org role they hold, and when they joined.</p>
       <ul style="margin-left:1.25rem;">
-        <li><strong>Invite</strong> — email + role: Member, Viewer, ProductOwner, or Admin (only Owner can assign Admin).</li>
-        <li><strong>Change role</strong> — Owner, Admin, or ResellerAdmin; Owner-only rules apply when promoting to Admin.</li>
+        <li><strong>Invite</strong> — email + role: Member, Viewer, ProductOwner, Admin or ResellerAdmin. Only the Owner can give Admin or ResellerAdmin.</li>
+        <li><strong>Change role</strong> — Owner, Admin, or ResellerAdmin; only the Owner can give Admin or ResellerAdmin, and nobody can be given Owner.</li>
         <li><strong>Remove</strong> — Owner, Admin, ProductOwner, ResellerAdmin; cannot remove the Owner.</li>
         <li><strong>Role vs product access</strong> — org role controls org tabs; product owners and access matrix control per-product license work.</li>
       </ul>
@@ -181,7 +181,7 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
         <li><strong>Resend</strong> — generates a fresh token email without changing the chosen role.</li>
         <li><strong>Revoke</strong> — invalidates the link immediately; recipient must receive a new invite.</li>
         <li><strong>Expiry</strong> — each row shows when the token expires; expired invites cannot be accepted until resent.</li>
-        <li><strong>Roles in UI</strong> — Member, Viewer, Admin on this tab; Members tab also offers ProductOwner when inviting.</li>
+        <li><strong>Roles in UI</strong> — the same roles as the Members tab; Admin and ResellerAdmin are greyed out for everyone but the Owner.</li>
       </ul>
       ${screenshot('platform-organization-invitations.png', 'Institution Team Invitations tab: pending invites with role, status, and expiry')}
 
@@ -201,30 +201,30 @@ export const PLATFORM_GUIDES_EN: Record<string, DocTopic> = {
       <ul style="margin-left:1.25rem;">
         <li><strong>General</strong> — entity name, registry ID, rich-text description, and public website URL shown on the org profile.</li>
         <li><strong>Branding</strong> — logo and colors for org presentation in the dashboard and invitations.</li>
-        <li><strong>Policies</strong> — <code>allowSelfRegistration</code>, <code>requireApprovalForJoining</code>, and <code>defaultMemberRole</code> for new joiners (Member, Viewer, or Admin).</li>
+        <li><strong>Invitations</strong> — <code>defaultMemberRole</code>: the role preselected in the invite dialog. (Self-registration and approval settings are not shown: there is no join-request flow.)</li>
         <li><strong>Governance</strong> — ownership transfer and advanced policy toggles where your deployment exposes them.</li>
-        <li><strong>Danger zone</strong> — delete organization (Owner only; irreversible; licenses under org products may cascade per server policy).</li>
+        <li><strong>Danger zone</strong> — delete the institution (Owner only; irreversible): its members, product assignments and pending invitations are removed; products, releases and licenses stay with their owners.</li>
       </ul>
-      <p><strong>Before you save:</strong> description and website are customer-facing on the org header; policy changes affect the next invitation or self-registration attempt, not retroactively on existing members.</p>
+      <p><strong>Before you save:</strong> description and website are customer-facing on the org header; the default role applies to the next invitation, not to existing members.</p>
       ${screenshot('platform-organization-settings-general.png', 'Institution Settings General Configuration: name, description, website, and branding sub-nav')}
 
       <h2>Institution roles matrix</h2>
       <ul style="margin-left:1.25rem;">
         <li><strong>Owner</strong> — full tenant control: delete org, transfer ownership, assign Admin, all invite/remove/role operations.</li>
-        <li><strong>Admin</strong> — invite, change roles (not to Owner; cannot assign Admin—that is Owner-only), remove members; cannot delete org.</li>
+        <li><strong>Admin</strong> — invite, change roles (never to Owner; Admin and ResellerAdmin are Owner-only), remove members; cannot delete org.</li>
         <li><strong>ProductOwner</strong> — invite and remove members; manage assigned products/licenses; no org delete or Admin promotion.</li>
         <li><strong>Member</strong> — view org overview and assigned products; use licenses per product access matrix; no member management tabs in UI.</li>
         <li><strong>Viewer</strong> — read-only org access; product visibility via access matrix only.</li>
-        <li><strong>ResellerAdmin</strong> — backend role treated like Admin for many org operations (partial UI surfacing).</li>
+        <li><strong>ResellerAdmin</strong> — same rights as Admin: members, products, settings, and licenses of the institution's products. Meant for a partner who sells your products; given by the Owner only.</li>
       </ul>
 
       <h2>Invitation workflow (step-by-step)</h2>
       <ol style="margin-left:1.25rem;">
         <li>Admin opens <strong>Members</strong> or <strong>Invitations</strong> → <strong>Invite</strong>.</li>
         <li>Enter email, pick role, optional message → send.</li>
-        <li>Recipient receives email with token link.</li>
-        <li>Recipient signs in (or registers) → <code>/auth/accept-invitation?token=…</code>.</li>
-        <li>On success, user is added to org with chosen role → redirect to <code>/dashboard/organization/:orgId</code>.</li>
+        <li>Recipient receives the email with a token link. If they already have an account, they also get a notification and see the invitation under <strong>Institutions → Invitations for you</strong>.</li>
+        <li>Recipient accepts or declines in LicenPro, or signs in (or registers) from the email link → <code>/auth/accept-invitation?token=…</code>.</li>
+        <li>On accept, the user joins with the chosen role and the admins are notified. On decline, the inviter and admins are notified and the email can be invited again.</li>
         <li>Operator can resend or cancel pending rows from <strong>Invitations</strong>.</li>
       </ol>
 
