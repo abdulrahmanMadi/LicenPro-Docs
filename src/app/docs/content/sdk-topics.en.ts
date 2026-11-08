@@ -55,7 +55,7 @@ export const SDK_TOPICS_EN: Record<string, DocTopic> = {
     body: `
       <p><code>ActivationManager</code> coordinates device binding and seat consumption against ${L('/api/activations-sessions', 'activation routes')} on <code>${HOST}/api</code>.</p>
       <p><code>SessionManager</code> maintains heartbeat intervals against ${L('/api/activations-sessions', 'session routes')} when your license policy requires concurrent or online enforcement. The cadence comes from the server's connect response, not from the license file.</p>
-      <p><code>SessionDisconnected</code> fires when a heartbeat reports the license invalid (revoked, suspended, expired, blocked — the license's features are disabled), when a reconnect fails, and once with reason <code>Unreachable</code> after 3 unanswered heartbeats (the license stays loaded and retries continue). Handle it to tell the user what happened.</p>
+      <p><code>SessionDisconnected</code> fires when a heartbeat reports that this device may no longer use the license (revoked, suspended, expired, device blocked or deactivated, Floating seat ended from the dashboard — the license's features are disabled), when a reconnect fails, and once with reason <code>Unreachable</code> after 3 unanswered heartbeats (the license stays loaded and retries continue). A session that timed out during an outage reconnects by itself. Handle it to tell the user what happened.</p>
       <p>${L('/sessions-activations', 'Dashboard narrative')} · ${L('/guides/platform/activations', 'Activations platform guide')}</p>
     `,
   },
